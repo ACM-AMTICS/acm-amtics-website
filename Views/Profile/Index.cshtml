@@ -1,0 +1,105 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin Profile";
+    var profileUserName = User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(User.Identity.Name)
+        ? User.Identity.Name
+        : "ACM AMTICS Administrator";
+    var profileUserEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "admin@acmamtics.org";
+    var profileUserInitial = !string.IsNullOrWhiteSpace(profileUserName) ? profileUserName.Substring(0, 1).ToUpper() : "A";
+}
+
+<!-- Page Header Row -->
+<div class="page-header-row">
+    <div class="header-titles">
+        <h1 class="page-title">Admin Profile</h1>
+        <p class="page-subtitle">Manage administrative privileges and database configuration.</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+    <!-- Admin Info Card -->
+    <div class="card-section" style="padding: 2rem;">
+        <div style="display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1.75rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background-color: var(--primary-subtle); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; font-weight: 800;">
+                @profileUserInitial
+            </div>
+            <div>
+                <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">@profileUserName</h2>
+                <p style="font-size: 0.875rem; color: var(--text-secondary);">Chapter Administrator &bull; AMTICS Chapter</p>
+            </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Email Address</div>
+                <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-top: 0.2rem;">@profileUserEmail</div>
+            </div>
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Chapter Role</div>
+                <div style="margin-top: 0.25rem;">
+                    <span class="badge-role badge-role-president">Chapter Administrator</span>
+                </div>
+            </div>
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Session Security</div>
+                <div style="font-size: 0.8125rem; color: var(--text-secondary); margin-top: 0.2rem;">Cookie Authentication with Sliding Expiration</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MongoDB Configuration Card -->
+    <div class="card-section" style="padding: 2rem;">
+        <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+            MongoDB Connection Status
+        </h2>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Database connectivity details and active collections.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Connection Status</div>
+                <div style="margin-top: 0.35rem;">
+                    @if (ViewBag.IsMongoConnected == true)
+                    {
+                        <span class="badge-status badge-status-active" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+                            &bull; Connected to MongoDB
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge-status" style="background-color: #FEF3C7; color: #92400E; padding: 0.4rem 0.8rem; font-size: 0.75rem;">
+                            &bull; Resilient In-Memory Mode (Local MongoDB server offline)
+                        </span>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Configured Database Name</div>
+                <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin-top: 0.2rem;">
+                    @(ViewBag.MongoDatabase ?? "acm_amtics_admin_db")
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Connection URL / Source</div>
+                <div style="font-family: monospace; font-size: 0.8125rem; background: #F3F4F6; padding: 0.5rem 0.75rem; border-radius: 6px; margin-top: 0.3rem; word-break: break-all;">
+                    @(ViewBag.MongoConnection ?? "mongodb://localhost:27017")
+                </div>
+            </div>
+
+            <div style="margin-top: 0.5rem; background: #F8FAFC; border: 1px dashed #CBD5E1; border-radius: 8px; padding: 1rem;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">
+                    MongoDB Collections Configured:
+                </div>
+                <ul style="font-size: 0.75rem; color: var(--text-secondary); margin-left: 1.2rem; line-height: 1.6;">
+                    <li><strong>Members</strong> &ndash; Member documents with Roles, Events, and Status</li>
+                    <li><strong>Events</strong> &ndash; Hackathons, workshops, bootcamps</li>
+                    <li><strong>Attendance</strong> &ndash; Member check-ins</li>
+                    <li><strong>Admins</strong> &ndash; Administrative users</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
