@@ -33,10 +33,10 @@
             </button>
 
             <ul class="nav-menu" id="navMenu">
-                <li><a href="javascript:void(0);" class="nav-link-item">Home</a></li>
-                <li><a href="javascript:void(0);" class="nav-link-item">Events</a></li>
-                <li><a href="javascript:void(0);" class="nav-link-item">Projects</a></li>
-                <li><a href="javascript:void(0);" class="nav-link-item">Gallery</a></li>
+                <li><a asp-controller="Home" asp-action="Index" class="nav-link-item active">Home</a></li>
+                <li><a href="#events" class="nav-link-item">Events</a></li>
+                <li><a href="#projects" class="nav-link-item">Projects</a></li>
+                <li><a href="#gallery" class="nav-link-item">Gallery</a></li>
                 <li><a href="javascript:void(0);" class="nav-link-item">Heads</a></li>
                 <li><a href="javascript:void(0);" class="nav-link-item">Contributors</a></li>
             </ul>
@@ -58,7 +58,7 @@
     </header>
 
     <!-- Main Container -->
-    <main class="main-wrapper">
+    <main class="main-wrapper-landing">
         @RenderBody()
     </main>
 
