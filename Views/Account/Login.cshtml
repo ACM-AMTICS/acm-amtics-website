@@ -1,0 +1,109 @@
+@model acm_amtics_website.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-card-container">
+    <div class="login-card">
+        <!-- Logo Header -->
+        <img src="~/images/acm-logo.svg" alt="ACM Amtics Logo" class="card-header-logo" />
+
+        <!-- Titles -->
+        <h1 class="card-title">Welcome Back</h1>
+        <p class="card-subtitle">Login to continue to ACM Amtics</p>
+
+        <!-- Flash Messages & Validation -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert-success-box">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert-error-box">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+        }
+
+        <!-- Form -->
+        <form asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="login-form">
+            @Html.AntiForgeryToken()
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <div class="input-field-wrapper">
+                    <svg class="input-icon-left" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <input asp-for="Email" class="form-control-custom" placeholder="Email Address" autocomplete="email" />
+                </div>
+                <span asp-validation-for="Email" class="field-validation-error"></span>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <div class="input-field-wrapper">
+                    <svg class="input-icon-left" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <input asp-for="Password" id="passwordInput" type="password" class="form-control-custom" placeholder="Password" autocomplete="current-password" />
+                    <button type="button" id="togglePasswordBtn" class="input-icon-right" aria-label="Toggle password visibility">
+                        <svg id="eyeIcon" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                <span asp-validation-for="Password" class="field-validation-error"></span>
+            </div>
+
+            <!-- Form Options Row -->
+            <div class="form-options-row">
+                <label class="remember-me-label">
+                    <input asp-for="RememberMe" class="custom-checkbox" type="checkbox" />
+                    <span>Remember me</span>
+                </label>
+                <a href="javascript:void(0);" class="forgot-password-link">Forgot Password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-submit-primary">
+                <span>Login</span>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+            const passwordInput = document.getElementById("passwordInput");
+            const eyeIcon = document.getElementById("eyeIcon");
+
+            if (togglePasswordBtn && passwordInput) {
+                togglePasswordBtn.addEventListener("click", function () {
+                    const isPassword = passwordInput.getAttribute("type") === "password";
+                    passwordInput.setAttribute("type", isPassword ? "text" : "password");
+                    
+                    if (isPassword) {
+                        eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a8.962 8.962 0 014.122-.963c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18" />`;
+                    } else {
+                        eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+                    }
+                });
+            }
+        });
+    </script>
+}

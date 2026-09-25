@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <path id="a" d="M120 400a180 180 0 0 0 260 0"/>
+  </defs>
+  <circle cx="250" cy="250" r="235" fill="#fff"/>
+  <circle cx="250" cy="250" r="215" fill="#6cb9e3"/>
+  <circle cx="250" cy="250" r="165" fill="none" stroke="#fff" stroke-width="12"/>
+  <text x="250" y="268" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="95" fill="#fff" text-anchor="middle" letter-spacing="2">acm</text>
+  <text font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="32" fill="#fff" letter-spacing="8" text-anchor="middle">
+    <textPath href="#a" startOffset="50%">AMTICS</textPath>
+  </text>
+</svg>

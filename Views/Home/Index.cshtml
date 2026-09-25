@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="login-card-container">
+    <div class="login-card">
+        <img src="~/images/acm-logo.svg" alt="ACM Amtics Logo" class="card-header-logo" />
+        <h1 class="card-title">Welcome, @User.Identity?.Name!</h1>
+        <p class="card-subtitle">You are securely logged into ACM Amtics Website.</p>
+        
+        <form asp-controller="Account" asp-action="Logout" method="post" style="width:100%; margin-top: 1.5rem;">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn-submit-primary">
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+</div>
