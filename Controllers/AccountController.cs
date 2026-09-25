@@ -25,7 +25,12 @@ namespace acm_amtics_website.Controllers
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                var role = User.FindFirst(ClaimTypes.Role)?.Value ?? "Admin";
+                if (role.Equals("Coordinator", StringComparison.OrdinalIgnoreCase))
+                {
+                    return RedirectToAction("Index", "Events");
+                }
+                return RedirectToAction("Index", "Dashboard");
             }
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -73,7 +78,10 @@ namespace acm_amtics_website.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id ?? string.Empty),
                     new Claim(ClaimTypes.Name, user.FullName ?? "ACM Member"),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role ?? "Admin"),
+                    new Claim("AssignedEventName", user.AssignedEventName ?? string.Empty),
+                    new Claim("AssignedEventId", user.AssignedEventId ?? string.Empty)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -88,7 +96,7 @@ namespace acm_amtics_website.Controllers
                     new ClaimsPrincipal(claimsIdentity),
                     authProperties);
 
-                _logger.LogInformation("User {Email} logged in successfully.", user.Email);
+                _logger.LogInformation("User {Email} ({Role}) logged in successfully.", user.Email, user.Role);
 
                 if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                 {
@@ -96,7 +104,11 @@ namespace acm_amtics_website.Controllers
                 }
 
                 TempData["SuccessMessage"] = "Successfully logged in!";
-                return RedirectToAction("Index", "Home");
+                if (string.Equals(user.Role, "Coordinator", StringComparison.OrdinalIgnoreCase))
+                {
+                    return RedirectToAction("Index", "Events");
+                }
+                return RedirectToAction("Index", "Dashboard");
             }
             catch (Exception ex)
             {

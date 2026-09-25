@@ -1,0 +1,287 @@
+@model acm_amtics_website.Models.EventItem
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = $"Attendees - {Model?.Name ?? "Event"}";
+    var eventDateFormatted = Model?.Date.ToString("dd MMM yyyy") ?? DateTime.Now.ToString("dd MMM yyyy");
+    var categoryClass = (Model?.Category?.ToLowerInvariant()) switch
+    {
+        "workshop" => "badge-type-workshop",
+        "seminar" => "badge-type-seminar",
+        "competition" => "badge-type-competition",
+        "talk" => "badge-type-talk",
+        _ => "badge-type-workshop"
+    };
+}
+
+<!-- Top Navigation Row -->
+<div class="attendees-top-navigation">
+    <a href="/Events" class="btn-back-link">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span>Back to Events</span>
+    </a>
+
+    <button type="button" class="btn-view-details" id="openEventDetailsBtn">
+        <span>View Event Details</span>
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+    </button>
+</div>
+
+<!-- Header -->
+<div class="page-header-row" style="margin-bottom: 0.5rem;">
+    <div class="header-titles">
+        <h1 class="page-title">Attendees</h1>
+        <p class="page-subtitle" style="font-size: 1.05rem; font-weight: 600; color: var(--text-primary); margin-top: 0.25rem;">
+            @(Model?.Name ?? "Web Development Workshop")
+        </p>
+    </div>
+</div>
+
+<!-- Event Meta Row Banner -->
+<div class="event-meta-banner" style="margin-bottom: 2rem;">
+    <!-- Date + Today Badge -->
+    <div class="event-meta-item">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>@eventDateFormatted</span>
+        @if (Model?.IsToday == true)
+        {
+            <span class="badge-today" style="margin-left: 0.35rem;">Today</span>
+        }
+    </div>
+
+    <!-- Time Range -->
+    <div class="event-meta-item">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>@(Model?.Time ?? "10:00 AM - 1:00 PM")</span>
+    </div>
+
+    <!-- Venue -->
+    <div class="event-meta-item">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        <span>@(Model?.Venue ?? "Seminar Hall, AMTICS")</span>
+    </div>
+
+    <!-- Category Badge -->
+    <div class="event-meta-item">
+        <span class="badge-type @categoryClass">
+            @(Model?.Category ?? "Workshop")
+        </span>
+    </div>
+</div>
+
+<!-- 4 Stat Cards Grid -->
+<div class="stat-cards-grid-4">
+    <!-- Card 1: Total Attendees -->
+    <div class="stat-card">
+        <div class="stat-card-left">
+            <div class="stat-icon-wrapper">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5-3.512M9 20H4v-2a3 3 0 015-3.512M12 11a4 4 0 100-8 4 4 0 000 8zm0 2a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <div class="stat-label">Total Attendees</div>
+            <div class="stat-value" id="statAttendeesTotal">120</div>
+        </div>
+    </div>
+
+    <!-- Card 2: Members -->
+    <div class="stat-card">
+        <div class="stat-card-left">
+            <div class="stat-icon-wrapper">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <div class="stat-label">Members</div>
+            <div class="stat-value" id="statAttendeesMembers">86</div>
+            <div class="stat-change-text" id="statAttendeesMembersPct" style="margin-top: 0.35rem; font-weight: 500;">
+                71.7% of attendees
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 3: Non-Members -->
+    <div class="stat-card">
+        <div class="stat-card-left">
+            <div class="stat-icon-wrapper">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5-3.512M9 20H4v-2a3 3 0 015-3.512M12 11a4 4 0 100-8 4 4 0 000 8zm0 2a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            </div>
+            <div class="stat-label">Non-Members</div>
+            <div class="stat-value" id="statAttendeesNonMembers">34</div>
+            <div class="stat-change-text" id="statAttendeesNonMembersPct" style="margin-top: 0.35rem; font-weight: 500;">
+                28.3% of attendees
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 4: Attendance Rate -->
+    <div class="stat-card">
+        <div class="stat-card-left">
+            <div class="stat-icon-wrapper">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+            </div>
+            <div class="stat-label">Attendance Rate</div>
+            <div class="stat-value" id="statAttendanceRate">92%</div>
+            <div class="stat-change-indicator">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+                <span id="statAttendanceRateChange">+12%</span>
+                <span class="stat-change-text">vs last event</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attendees Table Card -->
+<div class="card-section">
+    <div class="card-section-header">
+        <div class="header-left">
+            <h2 class="section-title" id="attendeesSectionTitle">Attendees (120)</h2>
+            <p class="section-subtitle">List of all students who attended this event.</p>
+        </div>
+        <div class="section-actions">
+            <!-- Search Input -->
+            <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" id="attendeeSearchInput" class="search-input" placeholder="Search by name, email or enrollment..." autocomplete="off" />
+            </div>
+
+            <!-- Export Button (Streams CSV download filtered by search query) -->
+            <button type="button" class="btn-export" id="exportAttendeesBtn">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Export</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Attendees Table -->
+    <div class="table-responsive">
+        <table class="members-table">
+            <thead>
+                <tr>
+                    <th class="col-num">#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Enrollment No.</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Joined At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="attendeesTableBody">
+                <!-- Dynamically populated via AJAX in admin-attendees.js -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="card-section-footer">
+        <div class="pagination-info" id="attendeePaginationInfo">
+            Showing 1 to 8 of 120 attendees
+        </div>
+        <div class="pagination-controls" id="attendeePaginationControls">
+            <!-- Dynamically populated via AJAX in admin-attendees.js -->
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================================
+     View Event Details Modal
+     ========================================================================== -->
+<div class="modal-overlay" id="eventDetailsModalOverlay" aria-hidden="true">
+    <div class="modal-card" style="max-width: 500px;" role="dialog" aria-modal="true">
+        <button type="button" class="modal-close-btn" id="closeEventDetailsModalBtn" aria-label="Close Modal">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <div class="modal-header">
+            <h3 class="modal-title">Event Overview</h3>
+            <p class="modal-subtitle">Official registration and session configuration.</p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.15rem; font-size: 0.875rem;">
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Event Title</div>
+                <div style="font-weight: 700; color: var(--text-primary); font-size: 1.1rem; margin-top: 0.2rem;">
+                    @(Model?.Name ?? "Web Development Workshop")
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Category</div>
+                    <div style="margin-top: 0.25rem;">
+                        <span class="badge-type @categoryClass">@(Model?.Category ?? "Workshop")</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Status</div>
+                    <div style="margin-top: 0.25rem;">
+                        <span class="badge-status badge-status-active">@(Model?.Status ?? "Active")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Date & Time</div>
+                    <div style="font-weight: 500; color: var(--text-primary); margin-top: 0.2rem;">
+                        @eventDateFormatted
+                        <div style="font-size: 0.8125rem; color: var(--text-secondary);">@(Model?.Time ?? "10:00 AM - 1:00 PM")</div>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Venue Location</div>
+                    <div style="font-weight: 500; color: var(--text-primary); margin-top: 0.2rem;">
+                        @(Model?.Venue ?? "Seminar Hall, AMTICS")
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Description</div>
+                <div style="color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.5; font-size: 0.8125rem;">
+                    @(string.IsNullOrWhiteSpace(Model?.Description) ? "Comprehensive technical session organized by ACM AMTICS Student Chapter for college engineering students." : Model.Description)
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="margin-top: 2rem;">
+            <button type="button" class="modal-btn-submit" id="dismissEventDetailsBtn" style="width: 100%;">
+                Done
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification Container -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+@section Scripts {
+    <script>
+        window.currentEventId = "@(Model?.Id ?? ViewBag.EventId ?? "")";
+    </script>
+    <script src="~/js/admin-attendees.js" asp-append-version="true"></script>
+}

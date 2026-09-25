@@ -8,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB"));
 
 // Register Services
+builder.Services.AddSingleton<IMongoDbContext, MongoDbContext>();
 builder.Services.AddSingleton<IUserService, UserService>();
+builder.Services.AddSingleton<IMemberService, MemberService>();
+builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<IAttendanceService, AttendanceService>();
+builder.Services.AddSingleton<IDashboardService, DashboardService>();
 
 // Configure Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -45,6 +50,13 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+
+// Ensure admin credentials and database collections are seeded
+using (var scope = app.Services.CreateScope())
+{
+    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+    await userService.SeedDefaultAdminAsync();
+}
 
 app.Run();

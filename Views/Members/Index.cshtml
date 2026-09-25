@@ -1,0 +1,70 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Members";
+}
+
+<!-- Page Header Row -->
+<div class="page-header-row">
+    <div class="header-titles">
+        <h1 class="page-title">Members</h1>
+        <p class="page-subtitle">Directory of all registered members across ACM AMTICS Student Chapter.</p>
+    </div>
+</div>
+
+<!-- All Members Section Card (Read-only management view: Add Member button strictly excluded) -->
+<div class="card-section">
+    <div class="card-section-header">
+        <div class="header-left">
+            <h2 class="section-title">All Members</h2>
+            <p class="section-subtitle">Manage and view all registered members of ACM Amtics.</p>
+        </div>
+        <div class="section-actions">
+            <!-- Search Input -->
+            <div class="search-wrapper">
+                <svg class="search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" id="memberSearchInput" class="search-input" placeholder="Search members..." autocomplete="off" />
+            </div>
+            <!-- NOTE: "+ Add Member" button is strictly EXCLUDED on this standalone /Members view as required -->
+        </div>
+    </div>
+
+    <!-- Members Table -->
+    <div class="table-responsive">
+        <table class="members-table">
+            <thead>
+                <tr>
+                    <th class="col-num">#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Join Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="membersTableBody">
+                <!-- Dynamically populated via AJAX in admin-members.js -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="card-section-footer">
+        <div class="pagination-info" id="paginationInfo">
+            Showing 1 to 8 of 124 members
+        </div>
+        <div class="pagination-controls" id="paginationControls">
+            <!-- Dynamically populated via AJAX in admin-members.js -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set view context explicitly to 'Members' (Add member action cannot be performed from here)
+        window.adminViewContext = 'Members';
+    </script>
+    <script src="~/js/admin-members.js" asp-append-version="true"></script>
+}

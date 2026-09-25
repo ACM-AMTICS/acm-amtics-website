@@ -1,0 +1,289 @@
+@{
+    var currentUserName = User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(User.Identity.Name) 
+        ? User.Identity.Name 
+        : "Admin";
+    var currentUserEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "adminauth@gmail.com";
+    var currentUserRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value 
+        ?? (currentUserEmail.Contains("hetvi022", StringComparison.OrdinalIgnoreCase) || currentUserEmail.Contains("coord", StringComparison.OrdinalIgnoreCase) || currentUserEmail.Contains("yahiya", StringComparison.OrdinalIgnoreCase) ? "Coordinator" : "Admin");
+    var isCoordinator = currentUserRole.Equals("Coordinator", StringComparison.OrdinalIgnoreCase);
+    var isAdmin = !isCoordinator;
+    var currentUserInitial = !string.IsNullOrWhiteSpace(currentUserName) ? currentUserName.Substring(0, 1).ToUpper() : (isCoordinator ? "H" : "A");
+    var assignedEventName = User.FindFirst("AssignedEventName")?.Value;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ACM AMTICS Admin Panel</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Admin Stylesheet -->
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="admin-body">
+    <!-- Layout Wrapper -->
+    <div class="admin-layout">
+        <!-- Sidebar Backdrop for Mobile -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <!-- Brand / Logo -->
+            <div class="sidebar-brand">
+                <a href="@(isCoordinator ? "/Events" : "/Dashboard")" class="brand-link">
+                    <img src="~/images/acm-logo.svg" alt="ACM Amtics Logo" class="brand-logo-img" />
+                    <div class="brand-text-group">
+                        <span class="brand-title">ACM AMTICS</span>
+                        <span class="brand-subtitle">Admin Panel</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    @if (isAdmin)
+                    {
+                        <!-- Dashboard (Admin only) -->
+                        <li class="nav-item">
+                            <a href="/Dashboard" class="nav-link @(ViewBag.ActiveMenu == "Dashboard" ? "active" : "")">
+                                <span class="nav-icon">
+                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                </span>
+                                <span class="nav-label">Dashboard</span>
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Profile -->
+                    <li class="nav-item">
+                        <a href="/Profile" class="nav-link @(ViewBag.ActiveMenu == "Profile" ? "active" : "")">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Profile</span>
+                        </a>
+                    </li>
+
+                    <!-- Members -->
+                    <li class="nav-item">
+                        <a href="/Members" class="nav-link @(ViewBag.ActiveMenu == "Members" ? "active" : "")">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5-3.512M9 20H4v-2a3 3 0 015-3.512M12 11a4 4 0 100-8 4 4 0 000 8zm0 2a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Members</span>
+                        </a>
+                    </li>
+
+                    @if (isCoordinator)
+                    {
+                        <!-- Events & Attendance (Coordinator Member of Event) -->
+                        <li class="nav-item">
+                            <a href="/Events" class="nav-link @(ViewBag.ActiveMenu == "Events" ? "active" : "")">
+                                <span class="nav-icon">
+                                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-label">Events & Attendance</span>
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Attendance -->
+                    <li class="nav-item">
+                        <a href="/Attendance" class="nav-link @(ViewBag.ActiveMenu == "Attendance" ? "active" : "")">
+                            <span class="nav-icon">
+                                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                                </svg>
+                            </span>
+                            <span class="nav-label">Attendance</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- MongoDB Connectivity Badge at bottom of sidebar -->
+            <div class="sidebar-footer-status">
+                <div class="db-status-pill @(ViewBag.IsMongoConnected == true ? "status-connected" : "status-fallback")" title="MongoDB Connection Status">
+                    <span class="status-dot"></span>
+                    <span class="status-text">
+                        @(ViewBag.IsMongoConnected == true ? "MongoDB Connected" : "Local Fallback Mode")
+                    </span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="admin-main">
+            <!-- Top Navbar -->
+            <header class="admin-topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Toggle Navigation">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <!-- Header title badge -->
+                    <div class="topbar-page-name">
+                        ACM AMTICS &ndash; @(isCoordinator ? "Event Coordinator Portal" : "Admin Panel")
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <!-- Profile Dropdown -->
+                    <div class="profile-dropdown-wrapper" id="profileDropdownWrapper">
+                        <button class="profile-btn" id="profileDropdownBtn" aria-expanded="false" aria-label="User Menu">
+                            <div class="avatar-circle">
+                                <span>@currentUserInitial</span>
+                            </div>
+                            <span class="profile-name">@(isAdmin && (currentUserName == "ACM Member" || currentUserName == "Admin") ? "Admin" : currentUserName)</span>
+                            <svg class="chevron-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                            <div class="dropdown-header">
+                                <div class="dropdown-user-name">@currentUserName</div>
+                                <div class="dropdown-user-email">@currentUserEmail</div>
+                                <div class="dropdown-user-badge-role">
+                                    <span class="role-pill-badge @(isCoordinator ? "role-coord-badge" : "role-admin-badge")">
+                                        @(isCoordinator ? "Coordinator Member" : "Chapter Admin")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            @if (isAdmin)
+                            {
+                                <a href="/Dashboard" class="dropdown-item">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    <span>Dashboard Overview</span>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="/Events" class="dropdown-item">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span>Events & Attendance</span>
+                                </a>
+                            }
+                            <a href="/Profile" class="dropdown-item">
+                                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                <span>Profile Settings</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="dropdown-item logout-item">
+                                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                    <span>Sign Out</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Body Content -->
+            <main class="admin-content-body">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastNotification" class="toast-container" aria-live="polite">
+        <div class="toast-card" id="toastCard">
+            <span class="toast-icon" id="toastIcon"></span>
+            <div class="toast-message" id="toastMessage"></div>
+        </div>
+    </div>
+
+    <!-- Global Layout Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Profile dropdown toggle
+            const profileBtn = document.getElementById("profileDropdownBtn");
+            const profileMenu = document.getElementById("profileDropdownMenu");
+
+            if (profileBtn && profileMenu) {
+                profileBtn.addEventListener("click", function (e) {
+                    e.stopPropagation();
+                    const isOpen = profileMenu.classList.contains("show");
+                    if (isOpen) {
+                        profileMenu.classList.remove("show");
+                        profileBtn.setAttribute("aria-expanded", "false");
+                    } else {
+                        profileMenu.classList.add("show");
+                        profileBtn.setAttribute("aria-expanded", "true");
+                    }
+                });
+
+                document.addEventListener("click", function (e) {
+                    if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+                        profileMenu.classList.remove("show");
+                        profileBtn.setAttribute("aria-expanded", "false");
+                    }
+                });
+            }
+
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById("mobileMenuToggle");
+            const sidebar = document.getElementById("adminSidebar");
+            const backdrop = document.getElementById("sidebarBackdrop");
+
+            if (mobileToggle && sidebar && backdrop) {
+                mobileToggle.addEventListener("click", function () {
+                    sidebar.classList.toggle("open");
+                    backdrop.classList.toggle("open");
+                });
+
+                backdrop.addEventListener("click", function () {
+                    sidebar.classList.remove("open");
+                    backdrop.classList.remove("open");
+                });
+            }
+        });
+
+        // Global Toast helper
+        window.showToast = function (message, type = 'success') {
+            const toast = document.getElementById("toastNotification");
+            const card = document.getElementById("toastCard");
+            const icon = document.getElementById("toastIcon");
+            const text = document.getElementById("toastMessage");
+
+            if (!toast || !card) return;
+
+            card.className = "toast-card " + (type === 'error' ? 'toast-error' : 'toast-success');
+            icon.innerHTML = type === 'error' ? '&#10006;' : '&#10004;';
+            text.textContent = message;
+
+            toast.classList.add("visible");
+            setTimeout(() => {
+                toast.classList.remove("visible");
+            }, 3500);
+        };
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
