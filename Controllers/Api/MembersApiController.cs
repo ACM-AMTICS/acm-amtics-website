@@ -101,6 +101,41 @@ namespace acm_amtics_website.Controllers.Api
             }
         }
 
+        // PUT: /api/members/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMember(string id, [FromBody] MemberCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.AssignedEventId) && string.IsNullOrWhiteSpace(dto.AssignedEventName))
+            {
+                var events = await _eventService.GetActiveEventsAsync();
+                var ev = events.FirstOrDefault(e => e.Id == dto.AssignedEventId);
+                if (ev != null)
+                {
+                    dto.AssignedEventName = ev.Name;
+                }
+            }
+
+            try
+            {
+                var updatedMember = await _memberService.UpdateMemberAsync(id, dto);
+                if (updatedMember == null)
+                {
+                    return NotFound(new { message = "Member not found." });
+                }
+                return Ok(updatedMember);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update member {Id}", id);
+                return StatusCode(500, new { success = false, message = "Database error while updating member." });
+            }
+        }
+
         // DELETE: /api/members/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMember(string id)

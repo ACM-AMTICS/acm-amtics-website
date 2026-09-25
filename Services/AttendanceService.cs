@@ -35,11 +35,20 @@ namespace acm_amtics_website.Services
                 {
                     try
                     {
+                        var allowedEventIds = new[] { "65b000000000000000000001", "65b000000000000000000004" };
+                        var deleteFilter = Builders<AttendanceRecord>.Filter.Nin(a => a.EventId, allowedEventIds);
+                        var deleteResult = _context.AttendanceCollection.DeleteMany(deleteFilter);
+                        if (deleteResult.DeletedCount > 0)
+                        {
+                            _logger.LogInformation("Cleaned up {Count} attendance records for removed events from MongoDB.", deleteResult.DeletedCount);
+                        }
+
                         var count = _context.AttendanceCollection.CountDocuments(FilterDefinition<AttendanceRecord>.Empty);
                         if (count == 0)
                         {
                             _logger.LogInformation("Seeding {Count} attendance records into MongoDB...", initialRecords.Count);
                             _context.AttendanceCollection.InsertMany(initialRecords);
+                            _logger.LogInformation("Successfully seeded attendance records into MongoDB.");
                         }
                     }
                     catch (Exception ex)

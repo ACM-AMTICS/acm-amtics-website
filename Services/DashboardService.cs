@@ -6,48 +6,35 @@ namespace acm_amtics_website.Services
     {
         private readonly IMemberService _memberService;
         private readonly IEventService _eventService;
+        private readonly IAttendanceService _attendanceService;
 
-        public DashboardService(IMemberService memberService, IEventService eventService)
+        public DashboardService(IMemberService memberService, IEventService eventService, IAttendanceService attendanceService)
         {
             _memberService = memberService;
             _eventService = eventService;
+            _attendanceService = attendanceService;
         }
 
         public async Task<DashboardStatsDto> GetStatsAsync()
         {
             var memberCount = await _memberService.GetTotalMembersCountAsync();
             var eventCount = await _eventService.GetTotalEventsCountAsync();
+            var attendeeCount = await _attendanceService.GetTotalAttendeesCountAsync();
 
             return new DashboardStatsDto
             {
                 Members = new StatItem
                 {
-                    Count = memberCount > 0 ? memberCount : 124,
-                    ChangePercentage = "+12%",
-                    IsPositive = true,
-                    Label = "from last month"
+                    Count = memberCount,
                 },
                 Events = new StatItem
                 {
-                    Count = eventCount > 0 ? eventCount : 18,
-                    ChangePercentage = "+20%",
-                    IsPositive = true,
-                    Label = "from last month"
+                    Count = eventCount,
                 },
                 Attendees = new StatItem
                 {
-                    Count = 860,
-                    ChangePercentage = "+16%",
-                    IsPositive = true,
-                    Label = "from last month"
+                    Count = attendeeCount,
                 },
-                Projects = new StatItem
-                {
-                    Count = 12,
-                    ChangePercentage = "+33%",
-                    IsPositive = true,
-                    Label = "from last month"
-                }
             };
         }
     }

@@ -53,11 +53,13 @@
             });
         }
 
-        // Modal initialization (only if on Dashboard)
-        if (isDashboard && openAddMemberBtn && modalBackdrop) {
-            openAddMemberBtn.addEventListener('click', function () {
-                openModal();
-            });
+        // Modal initialization
+        if (modalBackdrop) {
+            if (openAddMemberBtn) {
+                openAddMemberBtn.addEventListener('click', function () {
+                    openModal();
+                });
+            }
 
             if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
             if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
@@ -274,11 +276,48 @@
     }
 
     // =========================================================================
-    // Modal & Add Member Functions
+    // Modal & Add/Edit Member Functions
     // =========================================================================
 
-    function openModal() {
+    function openModal(memberToEdit = null) {
         if (!modalBackdrop) return;
+
+        const modalTitle = document.getElementById('modalTitle');
+        const modalSubtitle = document.getElementById('modalSubtitle');
+        const editingMemberIdInput = document.getElementById('editingMemberId');
+
+        if (memberToEdit) {
+            if (modalTitle) modalTitle.textContent = 'Edit Member Details';
+            if (modalSubtitle) modalSubtitle.textContent = 'Update member profile, role, and event assignments.';
+            if (submitBtn) submitBtn.textContent = 'Save Changes';
+            if (editingMemberIdInput) editingMemberIdInput.value = memberToEdit.id || memberToEdit.Id;
+
+            // Populate fields
+            document.getElementById('memberName').value = memberToEdit.name || memberToEdit.Name || '';
+            document.getElementById('memberEmail').value = memberToEdit.email || memberToEdit.Email || '';
+            document.getElementById('memberPhone').value = memberToEdit.phone || memberToEdit.Phone || '';
+            document.getElementById('memberCountryCode').value = memberToEdit.countryCode || memberToEdit.CountryCode || '+91';
+            document.getElementById('memberEnrollment').value = memberToEdit.enrollmentNumber || memberToEdit.EnrollmentNumber || '';
+            
+            const role = memberToEdit.role || memberToEdit.Role || 'Member';
+            if (roleSelect) roleSelect.value = role;
+
+            handleRoleChange(role);
+
+            const eventId = memberToEdit.assignedEventId || memberToEdit.AssignedEventId || '';
+            if (assignEventSelect && eventId) {
+                assignEventSelect.value = eventId;
+            }
+        } else {
+            if (modalTitle) modalTitle.textContent = 'Add Member';
+            if (modalSubtitle) modalSubtitle.textContent = 'Add a new member to ACM Amtics.';
+            if (submitBtn) submitBtn.textContent = 'Add Member';
+            if (editingMemberIdInput) editingMemberIdInput.value = '';
+
+            if (addMemberForm) addMemberForm.reset();
+            if (dynamicEventGroup) dynamicEventGroup.classList.remove('visible');
+        }
+
         modalBackdrop.classList.add('open');
         document.body.style.overflow = 'hidden';
 
@@ -291,6 +330,8 @@
         if (!modalBackdrop) return;
         modalBackdrop.classList.remove('open');
         document.body.style.overflow = '';
+        const editingMemberIdInput = document.getElementById('editingMemberId');
+        if (editingMemberIdInput) editingMemberIdInput.value = '';
         if (addMemberForm) {
             addMemberForm.reset();
             clearValidationErrors();
@@ -318,7 +359,8 @@
         try {
             const res = await fetch('/api/events');
             if (res.ok) {
-                const events = await res.json();
+                const data = await res.json();
+                const events = data.items || data;
                 assignEventSelect.innerHTML = '<option value="">Select an Event</option>';
                 events.forEach(ev => {
                     const opt = document.createElement('option');
@@ -335,6 +377,9 @@
     async function handleFormSubmit(e) {
         e.preventDefault();
         clearValidationErrors();
+
+        const editingId = document.getElementById('editingMemberId')?.value || '';
+        const isEditMode = !!editingId;
 
         const name = document.getElementById('memberName')?.value.trim() || '';
         const email = document.getElementById('memberEmail')?.value.trim() || '';
@@ -369,10 +414,6 @@
             isValid = false;
         }
 
-        if (role !== 'Member' && !eventId) {
-            // Optional warning if no event selected for leadership role
-        }
-
         if (!isValid) return;
 
         // Prepare payload
@@ -389,17 +430,19 @@
 
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Adding...';
+            submitBtn.textContent = isEditMode ? 'Saving...' : 'Adding...';
         }
 
         try {
-            // Include X-View-Context header: strictly validated on server
-            const res = await fetch('/api/members', {
-                method: 'POST',
+            const url = isEditMode ? `/api/members/${editingId}` : '/api/members';
+            const method = isEditMode ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'X-View-Context': viewContext // Strictly passes "Dashboard"
+                    'X-View-Context': 'Dashboard' // Pass context for server validation
                 },
                 body: JSON.stringify(payload)
             });
@@ -409,25 +452,24 @@
             if (res.ok) {
                 closeModal();
                 if (window.showToast) {
-                    window.showToast(`Member "${escapeHtml(name)}" added successfully!`, 'success');
+                    window.showToast(isEditMode ? `Member "${escapeHtml(name)}" updated successfully!` : `Member "${escapeHtml(name)}" added successfully!`, 'success');
                 }
-                // Refresh list on page 1 to see newly added member at top
-                loadMembers(1);
+                loadMembers(currentPage);
             } else {
-                const errMsg = result.message || 'Failed to add member. Please verify data.';
+                const errMsg = result.message || 'Failed to save member details. Please verify data.';
                 if (window.showToast) {
                     window.showToast(errMsg, 'error');
                 }
             }
         } catch (err) {
-            console.error('Error adding member:', err);
+            console.error('Error saving member:', err);
             if (window.showToast) {
                 window.showToast('Network error while connecting to server.', 'error');
             }
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Add Member';
+                submitBtn.textContent = isEditMode ? 'Save Changes' : 'Add Member';
             }
         }
     }
@@ -542,9 +584,17 @@
         }
     };
 
-    window.editMember = function (id) {
-        if (window.showToast) {
-            window.showToast(`Edit mode opened for member ID: ${id}`, 'success');
+    window.editMember = async function (id) {
+        try {
+            const res = await fetch(`/api/members/${id}`);
+            if (res.ok) {
+                const member = await res.json();
+                openModal(member);
+            } else {
+                if (window.showToast) window.showToast('Failed to load member details for editing.', 'error');
+            }
+        } catch (e) {
+            console.error('Error fetching member details for edit:', e);
         }
     };
 

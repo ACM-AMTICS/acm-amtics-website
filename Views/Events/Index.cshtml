@@ -138,8 +138,11 @@
 <!-- ==========================================================================
      Page 2 — Add Event Modal
      ========================================================================== -->
-<div class="modal-overlay" id="addEventModalOverlay" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="addEventModalTitle">
+<!-- ==========================================================================
+     Page 2 — Add Event Modal (Centered Floating Popover)
+     ========================================================================== -->
+<div class="modal-backdrop" id="addEventModalOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="addEventModalTitle">
+    <div class="modal-container" style="max-width: 480px;">
         <!-- Close Button -->
         <button type="button" class="modal-close-btn" id="closeAddEventModalBtn" aria-label="Close Modal">
             <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,40 +253,6 @@
                 <button type="submit" class="modal-btn-submit" id="submitAddEventBtn">Add Event</button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     QR Scan Modal (for Active / Today Events)
-     ========================================================================== -->
-<div class="modal-overlay" id="qrModalOverlay" aria-hidden="true">
-    <div class="modal-card" style="max-width: 420px; text-align: center;" role="dialog" aria-modal="true">
-        <button type="button" class="modal-close-btn" id="closeQrModalBtn" aria-label="Close QR Modal">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-        <div style="margin-bottom: 1.5rem;">
-            <h3 class="modal-title" id="qrEventTitle">Event Check-In QR</h3>
-            <p class="modal-subtitle">Scan to record attendee presence in real-time.</p>
-        </div>
-        <div style="padding: 1.5rem; background: #FAF5FF; border-radius: 12px; display: inline-block; margin-bottom: 1.25rem;">
-            <svg width="180" height="180" viewBox="0 0 24 24" fill="none" stroke="#6D28D9" stroke-width="1.5">
-                <rect x="2" y="2" width="8" height="8" rx="2" />
-                <rect x="4" y="4" width="4" height="4" fill="#6D28D9" />
-                <rect x="14" y="2" width="8" height="8" rx="2" />
-                <rect x="16" y="4" width="4" height="4" fill="#6D28D9" />
-                <rect x="2" y="14" width="8" height="8" rx="2" />
-                <rect x="4" y="16" width="4" height="4" fill="#6D28D9" />
-                <path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h4v4h-4z" fill="#6D28D9" />
-            </svg>
-        </div>
-        <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Students can scan using the ACM AMTICS Student Portal to mark attendance.
-        </p>
-        <button type="button" class="btn-primary" style="width: 100%; justify-content: center;" id="dismissQrModalBtn">
-            Close Scanner
-        </button>
     </div>
 </div>
 

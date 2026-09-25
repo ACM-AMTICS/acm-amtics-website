@@ -30,11 +30,7 @@
     const addEventForm = document.getElementById('addEventForm');
     const submitAddEventBtn = document.getElementById('submitAddEventBtn');
 
-    // QR Modal Elements
-    const qrModalOverlay = document.getElementById('qrModalOverlay');
-    const closeQrModalBtn = document.getElementById('closeQrModalBtn');
-    const dismissQrModalBtn = document.getElementById('dismissQrModalBtn');
-    const qrEventTitle = document.getElementById('qrEventTitle');
+
 
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
@@ -42,7 +38,6 @@
         loadEvents();
         setupSearch();
         setupModal();
-        setupQrModal();
     });
 
     // --------------------------------------------------------------------------
@@ -143,15 +138,7 @@
             const isToday = ev.isToday || (rowNumber === 1 && currentPage === 1);
             const todayBadgeHtml = isToday ? '<span class="badge-today">Today</span>' : '';
 
-            // QR scan button (visible on today's row or active row)
-            const hasQr = ev.hasActiveQr || isToday;
-            const qrBtnHtml = hasQr ? `
-                <button type="button" class="btn-scan-qr" data-event-name="${escapeHtml(ev.name)}" title="Show Check-In QR Code">
-                    <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                    </svg>
-                </button>
-            ` : '';
+
 
             html += `
                 <tr>
@@ -181,9 +168,8 @@
                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--text-muted);">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5-3.512M9 20H4v-2a3 3 0 015-3.512M12 11a4 4 0 100-8 4 4 0 000 8zm0 2a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
-                                <span>${ev.attendeesCount || (rowNumber === 1 ? 120 : (rowNumber === 2 ? 95 : (rowNumber === 3 ? 180 : 80)))}</span>
+                                <span>${ev.attendeesCount ?? 0}</span>
                             </span>
-                            ${qrBtnHtml}
                         </div>
                     </td>
                     <td>
@@ -345,7 +331,7 @@
 
     function openAddModal() {
         if (!addEventModalOverlay) return;
-        addEventModalOverlay.classList.add('active');
+        addEventModalOverlay.classList.add('open');
         addEventModalOverlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
 
@@ -358,7 +344,7 @@
 
     function closeAddModal() {
         if (!addEventModalOverlay) return;
-        addEventModalOverlay.classList.remove('active');
+        addEventModalOverlay.classList.remove('open');
         addEventModalOverlay.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
         if (addEventForm) addEventForm.reset();
@@ -444,44 +430,9 @@
     }
 
     // --------------------------------------------------------------------------
-    // 6. QR Code Scanner Modal
-    // --------------------------------------------------------------------------
-    function setupQrModal() {
-        if (closeQrModalBtn) closeQrModalBtn.addEventListener('click', closeQrModal);
-        if (dismissQrModalBtn) dismissQrModalBtn.addEventListener('click', closeQrModal);
-        if (qrModalOverlay) {
-            qrModalOverlay.addEventListener('click', (e) => {
-                if (e.target === qrModalOverlay) closeQrModal();
-            });
-        }
-    }
-
-    function openQrModal(eventName) {
-        if (!qrModalOverlay) return;
-        if (qrEventTitle) qrEventTitle.textContent = `${eventName} - Attendance QR`;
-        qrModalOverlay.classList.add('active');
-        qrModalOverlay.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeQrModal() {
-        if (!qrModalOverlay) return;
-        qrModalOverlay.classList.remove('active');
-        qrModalOverlay.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-    }
-
-    // --------------------------------------------------------------------------
-    // 7. Row Event Listeners (QR Scan, Delete, Edit)
+    // 6. Row Event Listeners (Delete, Edit)
     // --------------------------------------------------------------------------
     function attachRowEventListeners() {
-        // QR buttons
-        document.querySelectorAll('.btn-scan-qr').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const eventName = btn.getAttribute('data-event-name') || 'Active Event';
-                openQrModal(eventName);
-            });
-        });
 
         // Delete buttons
         document.querySelectorAll('.delete-event-btn').forEach(btn => {

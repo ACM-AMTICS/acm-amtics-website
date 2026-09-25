@@ -28,14 +28,14 @@ namespace acm_amtics_website.Services
 
                 _fallbackUsers.Clear();
 
-                // 1. Seed requested Admin account: adminauth@gmail.com / admin
+                // 1. Seed requested Admin account: 24amtics131@gmail.com / 87654321
                 _fallbackUsers.Add(new User
                 {
                     Id = "admin_auth_01",
-                    Email = "adminauth@gmail.com",
+                    Email = "24amtics131@gmail.com",
                     FullName = "Admin",
                     Role = "Admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("87654321"),
                     CreatedAt = DateTime.UtcNow
                 });
 
@@ -94,17 +94,6 @@ namespace acm_amtics_website.Services
         private async Task SeedMongoAdminsAsync()
         {
             if (_context.AdminsCollection == null) return;
-
-            try
-            {
-                // Delete previous legacy admin logins as requested by user
-                var legacyAdminsFilter = Builders<User>.Filter.In(u => u.Email, new[] { "hetvidholiya77@gmail.com", "admin@acmamtics.org" });
-                await _context.AdminsCollection.DeleteManyAsync(legacyAdminsFilter);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Could not delete legacy admin logins from MongoDB");
-            }
 
             foreach (var fallbackUser in _fallbackUsers)
             {
@@ -224,6 +213,84 @@ namespace acm_amtics_website.Services
             }
 
             return user;
+        }
+
+        public async Task UpsertCoordinatorUserAsync(string email, string fullName, string? assignedEventId, string? assignedEventName)
+        {
+            if (string.IsNullOrWhiteSpace(email)) return;
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+
+            // Extract temporary password as email prefix (part before '@')
+            var tempPassword = normalizedEmail.Split('@')[0];
+            if (string.IsNullOrWhiteSpace(tempPassword))
+            {
+                tempPassword = "password";
+            }
+            var tempPasswordHash = BCrypt.Net.BCrypt.HashPassword(tempPassword);
+
+            if (_context.IsConnected && _context.AdminsCollection != null)
+            {
+                try
+                {
+                    var filter = Builders<User>.Filter.Eq(u => u.Email, normalizedEmail);
+                    var existing = await _context.AdminsCollection.Find(filter).FirstOrDefaultAsync();
+                    if (existing != null)
+                    {
+                        var update = Builders<User>.Update
+                            .Set(u => u.FullName, fullName)
+                            .Set(u => u.Role, "Coordinator")
+                            .Set(u => u.AssignedEventId, assignedEventId)
+                            .Set(u => u.AssignedEventName, assignedEventName);
+                        await _context.AdminsCollection.UpdateOneAsync(filter, update);
+                    }
+                    else
+                    {
+                        var userToInsert = new User
+                        {
+                            Id = ObjectId.GenerateNewId().ToString(),
+                            Email = normalizedEmail,
+                            FullName = fullName,
+                            Role = "Coordinator",
+                            AssignedEventId = assignedEventId,
+                            AssignedEventName = assignedEventName,
+                            PasswordHash = tempPasswordHash,
+                            CreatedAt = DateTime.UtcNow
+                        };
+                        await _context.AdminsCollection.InsertOneAsync(userToInsert);
+                        _logger.LogInformation("Inserted new coordinator user {Email} with temporary password derived from username.", normalizedEmail);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error upserting coordinator user in MongoDB for {Email}", email);
+                }
+            }
+
+            lock (_lock)
+            {
+                var existingInMem = _fallbackUsers.FirstOrDefault(u => u.Email.Equals(normalizedEmail, StringComparison.OrdinalIgnoreCase));
+                if (existingInMem != null)
+                {
+                    existingInMem.FullName = fullName;
+                    existingInMem.Role = "Coordinator";
+                    existingInMem.AssignedEventId = assignedEventId;
+                    existingInMem.AssignedEventName = assignedEventName;
+                }
+                else
+                {
+                    _fallbackUsers.Add(new User
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Email = normalizedEmail,
+                        FullName = fullName,
+                        Role = "Coordinator",
+                        AssignedEventId = assignedEventId,
+                        AssignedEventName = assignedEventName,
+                        PasswordHash = tempPasswordHash,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
+            }
         }
 
         public async Task UpdateLastLoginAsync(string id)

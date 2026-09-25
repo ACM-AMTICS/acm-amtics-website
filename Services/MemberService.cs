@@ -7,14 +7,16 @@ namespace acm_amtics_website.Services
     public class MemberService : IMemberService
     {
         private readonly IMongoDbContext _context;
+        private readonly IUserService _userService;
         private readonly ILogger<MemberService> _logger;
         private static readonly List<Member> _fallbackMembers = new();
         private static readonly object _lock = new();
         private static bool _seeded = false;
 
-        public MemberService(IMongoDbContext context, ILogger<MemberService> logger)
+        public MemberService(IMongoDbContext context, IUserService userService, ILogger<MemberService> logger)
         {
             _context = context;
+            _userService = userService;
             _logger = logger;
             EnsureDataSeeded();
         }
@@ -28,21 +30,26 @@ namespace acm_amtics_website.Services
                 var initialList = GenerateInitialMembers();
                 _fallbackMembers.AddRange(initialList);
 
-                // If Mongo is connected, seed into MongoDB if empty
+                // If Mongo is connected, ensure preserved members exist without deleting custom members
                 if (_context.IsConnected && _context.MembersCollection != null)
                 {
                     try
                     {
-                        var count = _context.MembersCollection.CountDocuments(FilterDefinition<Member>.Empty);
-                        if (count == 0)
+                        var allowedIds = new[] { "65a100000000000000000000", "65a10000000000000000000a" };
+                        // Ensure the preserved members exist
+                        foreach (var member in initialList.Where(m => allowedIds.Contains(m.Id)))
                         {
-                            _logger.LogInformation("Seeding {Count} initial members into MongoDB...", initialList.Count);
-                            _context.MembersCollection.InsertMany(initialList);
+                            var filter = Builders<Member>.Filter.Eq(m => m.Id, member.Id);
+                            var existing = _context.MembersCollection.Find(filter).FirstOrDefault();
+                            if (existing == null)
+                            {
+                                _context.MembersCollection.InsertOne(member);
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Failed to seed members collection in MongoDB; using fallback cache.");
+                        _logger.LogWarning(ex, "Failed to cleanup/seed members collection in MongoDB; using fallback cache.");
                     }
                 }
 
@@ -177,7 +184,76 @@ namespace acm_amtics_website.Services
                 _fallbackMembers.Insert(0, member);
             }
 
+            if (string.Equals(member.Role, "Coordinator", StringComparison.OrdinalIgnoreCase))
+            {
+                await _userService.UpsertCoordinatorUserAsync(member.Email, member.Name, member.AssignedEventId, member.AssignedEventName);
+            }
+
             return member;
+        }
+
+        public async Task<Member?> UpdateMemberAsync(string id, MemberCreateDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return null;
+
+            Member? updatedMember = null;
+
+            if (_context.IsConnected && _context.MembersCollection != null)
+            {
+                try
+                {
+                    var filter = Builders<Member>.Filter.Eq(m => m.Id, id);
+                    var update = Builders<Member>.Update
+                        .Set(m => m.Name, dto.Name.Trim())
+                        .Set(m => m.Email, dto.Email.Trim().ToLowerInvariant())
+                        .Set(m => m.Phone, dto.Phone.Trim())
+                        .Set(m => m.CountryCode, string.IsNullOrWhiteSpace(dto.CountryCode) ? "+91" : dto.CountryCode.Trim())
+                        .Set(m => m.EnrollmentNumber, dto.EnrollmentNumber.Trim())
+                        .Set(m => m.Role, dto.Role.Trim())
+                        .Set(m => m.AssignedEventId, dto.AssignedEventId)
+                        .Set(m => m.AssignedEventName, dto.AssignedEventName)
+                        .Set(m => m.Status, string.IsNullOrWhiteSpace(dto.Status) ? "Active" : dto.Status.Trim());
+
+                    updatedMember = await _context.MembersCollection.FindOneAndUpdateAsync(
+                        filter,
+                        update,
+                        new FindOneAndUpdateOptions<Member> { ReturnDocument = ReturnDocument.After }
+                    );
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to update member in MongoDB");
+                }
+            }
+
+            lock (_lock)
+            {
+                var existing = _fallbackMembers.FirstOrDefault(m => m.Id == id);
+                if (existing != null)
+                {
+                    existing.Name = dto.Name.Trim();
+                    existing.Email = dto.Email.Trim().ToLowerInvariant();
+                    existing.Phone = dto.Phone.Trim();
+                    existing.CountryCode = string.IsNullOrWhiteSpace(dto.CountryCode) ? "+91" : dto.CountryCode.Trim();
+                    existing.EnrollmentNumber = dto.EnrollmentNumber.Trim();
+                    existing.Role = dto.Role.Trim();
+                    existing.AssignedEventId = dto.AssignedEventId;
+                    existing.AssignedEventName = dto.AssignedEventName;
+                    existing.Status = string.IsNullOrWhiteSpace(dto.Status) ? "Active" : dto.Status.Trim();
+
+                    if (updatedMember == null)
+                    {
+                        updatedMember = existing;
+                    }
+                }
+            }
+
+            if (updatedMember != null && string.Equals(updatedMember.Role, "Coordinator", StringComparison.OrdinalIgnoreCase))
+            {
+                await _userService.UpsertCoordinatorUserAsync(updatedMember.Email, updatedMember.Name, updatedMember.AssignedEventId, updatedMember.AssignedEventName);
+            }
+
+            return updatedMember;
         }
 
         public async Task<bool> DeleteMemberAsync(string id)
@@ -231,7 +307,7 @@ namespace acm_amtics_website.Services
 
         private static List<Member> GenerateInitialMembers()
         {
-            var list = new List<Member>
+            return new List<Member>
             {
                 new Member
                 {
@@ -259,153 +335,8 @@ namespace acm_amtics_website.Services
                     JoinDate = new DateTime(2024, 1, 1, 9, 0, 0, DateTimeKind.Utc),
                     Status = "Active",
                     OrderIndex = 0
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000001",
-                    Name = "Aarav Sharma",
-                    Email = "aarav.sharma@amtics.acm.org",
-                    Phone = "9876543210",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035001",
-                    Role = "President",
-                    JoinDate = new DateTime(2024, 1, 12, 10, 0, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 1,
-                    AvatarUrl = "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop&crop=face"
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000002",
-                    Name = "Neha Verma",
-                    Email = "neha.verma@amtics.acm.org",
-                    Phone = "9876543211",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035002",
-                    Role = "Vice President",
-                    JoinDate = new DateTime(2024, 1, 15, 11, 30, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 2,
-                    AvatarUrl = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face"
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000003",
-                    Name = "Rohan Mehta",
-                    Email = "rohan.mehta@amtics.acm.org",
-                    Phone = "9876543212",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035003",
-                    Role = "Technical Head",
-                    JoinDate = new DateTime(2024, 1, 20, 14, 0, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 3,
-                    AvatarUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000004",
-                    Name = "Priya Singh",
-                    Email = "priya.singh@amtics.acm.org",
-                    Phone = "9876543213",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035004",
-                    Role = "Event Head",
-                    JoinDate = new DateTime(2024, 1, 22, 9, 15, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 4,
-                    AvatarUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face"
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000005",
-                    Name = "Vikram Rao",
-                    Email = "vikram.rao@amtics.acm.org",
-                    Phone = "9876543214",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035005",
-                    Role = "Member",
-                    JoinDate = new DateTime(2024, 1, 28, 16, 45, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 5
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000006",
-                    Name = "Isha Jain",
-                    Email = "isha.jain@amtics.acm.org",
-                    Phone = "9876543215",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035006",
-                    Role = "Member",
-                    JoinDate = new DateTime(2024, 1, 30, 13, 20, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 6
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000007",
-                    Name = "Aditya Patel",
-                    Email = "aditya.patel@amtics.acm.org",
-                    Phone = "9876543216",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035007",
-                    Role = "Member",
-                    JoinDate = new DateTime(2024, 2, 2, 10, 0, 0, DateTimeKind.Utc),
-                    Status = "Inactive",
-                    OrderIndex = 7
-                },
-                new Member
-                {
-                    Id = "65a100000000000000000008",
-                    Name = "Sneha Kapoor",
-                    Email = "sneha.kapoor@amtics.acm.org",
-                    Phone = "9876543217",
-                    CountryCode = "+91",
-                    EnrollmentNumber = "2024031035008",
-                    Role = "Member",
-                    JoinDate = new DateTime(2024, 2, 5, 15, 10, 0, DateTimeKind.Utc),
-                    Status = "Active",
-                    OrderIndex = 8
                 }
             };
-
-            // Seed up to 124 members to match "Showing 1 to 8 of 124 members"
-            var additionalNames = new[]
-            {
-                "Shaikh Yahiya", "Devansh Vashi", "Ananya Deshmukh", "Karan Joshi", "Riddhi Shah", "Aryan Bhatt",
-                "Tanvi Kulkarni", "Manav Trivedi", "Dhruv Parmar", "Meera Nair", "Ayush Agrawal", "Pooja Hegde",
-                "Varun Malhotra", "Siddharth Iyer", "Kavya Menon", "Harshil Dave", "Diya Sengupta", "Nikhil Rao"
-            };
-
-            for (int i = 9; i <= 124; i++)
-            {
-                var nameIndex = (i - 9) % additionalNames.Length;
-                var baseName = additionalNames[nameIndex];
-                var fullName = i > 26 ? $"{baseName} {i}" : baseName;
-                var emailPrefix = fullName.ToLower().Replace(" ", ".");
-                var role = i % 15 == 0 ? "Coordinator" : "Member";
-                var status = i % 7 == 0 ? "Inactive" : "Active";
-                var dayOffset = (i * 3) % 28 + 1;
-                var monthOffset = (i % 11) + 1;
-
-                list.Add(new Member
-                {
-                    Id = ObjectId.GenerateNewId().ToString(),
-                    Name = fullName,
-                    Email = $"{emailPrefix}@amtics.acm.org",
-                    Phone = $"9876543{i:D3}",
-                    CountryCode = "+91",
-                    EnrollmentNumber = $"2024031035{i:D3}",
-                    Role = role,
-                    AssignedEventName = role == "Coordinator" ? "ACM Hackathon 2024" : null,
-                    JoinDate = new DateTime(2024, monthOffset, dayOffset, 12, 0, 0, DateTimeKind.Utc),
-                    Status = status,
-                    OrderIndex = i
-                });
-            }
-
-            return list;
         }
     }
 }

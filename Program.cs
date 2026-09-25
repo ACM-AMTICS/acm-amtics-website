@@ -57,6 +57,11 @@ using (var scope = app.Services.CreateScope())
 {
     var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
     await userService.SeedDefaultAdminAsync();
+
+    // Trigger constructor seeding for Members, Events, and Attendance collections in MongoDB
+    scope.ServiceProvider.GetRequiredService<IMemberService>();
+    scope.ServiceProvider.GetRequiredService<IEventService>();
+    scope.ServiceProvider.GetRequiredService<IAttendanceService>();
 }
 
 app.Run();

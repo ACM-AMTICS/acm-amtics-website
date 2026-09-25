@@ -29,7 +29,42 @@ namespace acm_amtics_website.Controllers.Api
         {
             try
             {
+                var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "";
+                var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "";
+                var assignedEventId = User.FindFirst("AssignedEventId")?.Value;
+                var assignedEventName = User.FindFirst("AssignedEventName")?.Value;
+
+                bool isCoordinator = role.Equals("Coordinator", StringComparison.OrdinalIgnoreCase) ||
+                                     email.Contains("hetvi022", StringComparison.OrdinalIgnoreCase) ||
+                                     email.Contains("coord", StringComparison.OrdinalIgnoreCase) ||
+                                     email.Contains("yahiya", StringComparison.OrdinalIgnoreCase);
+
                 var result = await _eventService.GetEventsAsync(search, page, pageSize);
+
+                if (isCoordinator)
+                {
+                    // Filter items down strictly to assigned event if specified, or match by assigned event name
+                    var filteredItems = result.Items.Where(e =>
+                    {
+                        if (!string.IsNullOrEmpty(assignedEventId) && e.Id == assignedEventId)
+                            return true;
+                        if (!string.IsNullOrEmpty(assignedEventName) && e.Name.Equals(assignedEventName, StringComparison.OrdinalIgnoreCase))
+                            return true;
+                        // If no specific assigned event ID/Name set on token claim, default to showing their assigned event
+                        if (string.IsNullOrEmpty(assignedEventId) && string.IsNullOrEmpty(assignedEventName))
+                            return true;
+                        return false;
+                    }).ToList();
+
+                    result = new PaginatedResult<EventItem>
+                    {
+                        Items = filteredItems,
+                        Page = 1,
+                        PageSize = pageSize,
+                        TotalCount = filteredItems.Count
+                    };
+                }
+
                 return Ok(result);
             }
             catch (Exception ex)

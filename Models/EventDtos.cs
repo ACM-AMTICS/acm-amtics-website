@@ -29,7 +29,7 @@ namespace acm_amtics_website.Models
         public string EventsChangePercentage { get; set; } = "+20%";
         public string EventsChangeText { get; set; } = "from last semester";
 
-        public int TotalAttendees { get; set; } = 860;
+        public int TotalAttendees { get; set; } = 0;
         public string AttendeesChangePercentage { get; set; } = "+16%";
         public string AttendeesChangeText { get; set; } = "from last semester";
     }

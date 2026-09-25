@@ -7,14 +7,16 @@ namespace acm_amtics_website.Services
     public class EventService : IEventService
     {
         private readonly IMongoDbContext _context;
+        private readonly IAttendanceService _attendanceService;
         private readonly ILogger<EventService> _logger;
         private static readonly List<EventItem> _fallbackEvents = new();
         private static readonly object _lock = new();
         private static bool _seeded = false;
 
-        public EventService(IMongoDbContext context, ILogger<EventService> logger)
+        public EventService(IMongoDbContext context, IAttendanceService attendanceService, ILogger<EventService> logger)
         {
             _context = context;
+            _attendanceService = attendanceService;
             _logger = logger;
             EnsureDataSeeded();
         }
@@ -32,16 +34,20 @@ namespace acm_amtics_website.Services
                 {
                     try
                     {
-                        var count = _context.EventsCollection.CountDocuments(FilterDefinition<EventItem>.Empty);
-                        if (count == 0)
+                        var allowedIds = new[] { "65b000000000000000000001", "65b000000000000000000004" };
+                        foreach (var eventItem in initialEvents.Where(e => allowedIds.Contains(e.Id)))
                         {
-                            _logger.LogInformation("Seeding {Count} events into MongoDB...", initialEvents.Count);
-                            _context.EventsCollection.InsertMany(initialEvents);
+                            var filter = Builders<EventItem>.Filter.Eq(e => e.Id, eventItem.Id);
+                            var existing = _context.EventsCollection.Find(filter).FirstOrDefault();
+                            if (existing == null)
+                            {
+                                _context.EventsCollection.InsertOne(eventItem);
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogWarning(ex, "Failed to seed events collection in MongoDB; using fallback memory store.");
+                        _logger.LogWarning(ex, "Failed to cleanup/seed events collection in MongoDB; using fallback memory store.");
                     }
                 }
 
@@ -78,6 +84,15 @@ namespace acm_amtics_website.Services
                         .Skip((page - 1) * pageSize)
                         .Limit(pageSize)
                         .ToListAsync();
+
+                    foreach (var item in items)
+                    {
+                        if (!string.IsNullOrEmpty(item.Id))
+                        {
+                            var stats = await _attendanceService.GetEventAttendeesStatsAsync(item.Id);
+                            item.AttendeesCount = stats.TotalAttendees;
+                        }
+                    }
 
                     return new PaginatedResult<EventItem>
                     {
@@ -125,13 +140,13 @@ namespace acm_amtics_website.Services
         {
             if (string.IsNullOrWhiteSpace(id)) return null;
 
+            EventItem? item = null;
             if (_context.IsConnected && _context.EventsCollection != null)
             {
                 try
                 {
                     var filter = Builders<EventItem>.Filter.Eq(e => e.Id, id);
-                    var item = await _context.EventsCollection.Find(filter).FirstOrDefaultAsync();
-                    if (item != null) return item;
+                    item = await _context.EventsCollection.Find(filter).FirstOrDefaultAsync();
                 }
                 catch (Exception ex)
                 {
@@ -139,10 +154,21 @@ namespace acm_amtics_website.Services
                 }
             }
 
-            lock (_lock)
+            if (item == null)
             {
-                return _fallbackEvents.FirstOrDefault(e => e.Id == id);
+                lock (_lock)
+                {
+                    item = _fallbackEvents.FirstOrDefault(e => e.Id == id);
+                }
             }
+
+            if (item != null && !string.IsNullOrEmpty(item.Id))
+            {
+                var stats = await _attendanceService.GetEventAttendeesStatsAsync(item.Id);
+                item.AttendeesCount = stats.TotalAttendees;
+            }
+
+            return item;
         }
 
         public async Task<EventItem> CreateEventAsync(EventCreateDto dto, string createdBy = "Admin")
@@ -271,13 +297,7 @@ namespace acm_amtics_website.Services
         public async Task<EventsStatsDto> GetEventsStatsAsync()
         {
             var totalEvents = await GetTotalEventsCountAsync();
-            var totalAttendees = 860;
-
-            lock (_lock)
-            {
-                var sum = _fallbackEvents.Sum(e => e.AttendeesCount);
-                if (sum > 0) totalAttendees = sum;
-            }
+            var totalAttendees = await _attendanceService.GetTotalAttendeesCountAsync();
 
             return new EventsStatsDto
             {
@@ -338,35 +358,9 @@ namespace acm_amtics_website.Services
                 },
                 new EventItem
                 {
-                    Id = "65b000000000000000000002",
-                    Name = "Introduction to AI/ML",
-                    Date = today.AddDays(1),
-                    Time = "11:00 AM - 1:30 PM",
-                    Venue = "Lab 4, AMTICS",
-                    Category = "Seminar",
-                    AttendeesCount = 95,
-                    Status = "Upcoming",
-                    OrderIndex = 2,
-                    Description = "Foundational insights into machine learning algorithms and real-world neural network pipelines."
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000003",
-                    Name = "ACM Hackathon 2024",
-                    Date = today.AddDays(16),
-                    Time = "09:00 AM - 09:00 PM",
-                    Venue = "AMTICS Auditorium & Labs",
-                    Category = "Competition",
-                    AttendeesCount = 180,
-                    Status = "Upcoming",
-                    OrderIndex = 3,
-                    Description = "Annual 36-hour flagship hackathon of ACM AMTICS with mentorship and sponsor prizes."
-                },
-                new EventItem
-                {
                     Id = "65b000000000000000000004",
                     Name = "Open Source and GSoC Session",
-                    Date = today.AddDays(24),
+                    Date = new DateTime(2026, 10, 19, 0, 0, 0, DateTimeKind.Utc),
                     Time = "02:00 PM - 04:30 PM",
                     Venue = "Seminar Hall B",
                     Category = "Talk",
@@ -374,179 +368,6 @@ namespace acm_amtics_website.Services
                     Status = "Upcoming",
                     OrderIndex = 4,
                     Description = "Getting started with open source contributions, git workflows, and GSoC proposal writing."
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000005",
-                    Name = "Flutter Development Workshop",
-                    Date = today.AddDays(42),
-                    Time = "10:00 AM - 01:00 PM",
-                    Venue = "Lab 2, AMTICS",
-                    Category = "Workshop",
-                    AttendeesCount = 110,
-                    Status = "Upcoming",
-                    OrderIndex = 5,
-                    Description = "Cross-platform mobile application development with Flutter, Dart, and Firebase backend."
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000006",
-                    Name = "Career Guidance Session",
-                    Date = today.AddDays(57),
-                    Time = "03:00 PM - 05:00 PM",
-                    Venue = "Main Auditorium",
-                    Category = "Seminar",
-                    AttendeesCount = 85,
-                    Status = "Upcoming",
-                    OrderIndex = 6,
-                    Description = "Navigating placement interviews, open-source portfolio development, and resume building."
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000007",
-                    Name = "UI/UX Design Workshop",
-                    Date = today.AddDays(81),
-                    Time = "10:30 AM - 01:30 PM",
-                    Venue = "Design Studio Lab",
-                    Category = "Workshop",
-                    AttendeesCount = 75,
-                    Status = "Upcoming",
-                    OrderIndex = 7,
-                    Description = "Interactive UI/UX design systems, Figma component auto-layouts, and user usability testing."
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000008",
-                    Name = "Tech for Social Good",
-                    Date = today.AddDays(100),
-                    Time = "02:00 PM - 04:00 PM",
-                    Venue = "Seminar Hall A",
-                    Category = "Talk",
-                    AttendeesCount = 60,
-                    Status = "Upcoming",
-                    OrderIndex = 8,
-                    Description = "Leveraging open tech, accessible computing, and ethical AI to drive meaningful societal impact."
-                },
-                // Additional events to reach 18 events total
-                new EventItem
-                {
-                    Id = "65b000000000000000000009",
-                    Name = "Cloud Architecture & DevOps",
-                    Date = today.AddDays(115),
-                    Time = "11:00 AM - 01:30 PM",
-                    Venue = "Lab 3, AMTICS",
-                    Category = "Workshop",
-                    AttendeesCount = 20,
-                    Status = "Upcoming",
-                    OrderIndex = 9
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000010",
-                    Name = "Competitive Programming Round 1",
-                    Date = today.AddDays(128),
-                    Time = "04:00 PM - 06:00 PM",
-                    Venue = "Online Portal",
-                    Category = "Competition",
-                    AttendeesCount = 15,
-                    Status = "Upcoming",
-                    OrderIndex = 10
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000011",
-                    Name = "Cybersecurity & Ethical Hacking",
-                    Date = today.AddDays(140),
-                    Time = "10:00 AM - 01:00 PM",
-                    Venue = "Seminar Hall B",
-                    Category = "Seminar",
-                    AttendeesCount = 10,
-                    Status = "Upcoming",
-                    OrderIndex = 11
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000012",
-                    Name = "Data Science with Python",
-                    Date = today.AddDays(155),
-                    Time = "02:00 PM - 05:00 PM",
-                    Venue = "Lab 1, AMTICS",
-                    Category = "Workshop",
-                    AttendeesCount = 10,
-                    Status = "Upcoming",
-                    OrderIndex = 12
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000013",
-                    Name = "Web3 & Blockchain Deep Dive",
-                    Date = today.AddDays(170),
-                    Time = "03:00 PM - 05:00 PM",
-                    Venue = "Seminar Hall A",
-                    Category = "Talk",
-                    AttendeesCount = 8,
-                    Status = "Upcoming",
-                    OrderIndex = 13
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000014",
-                    Name = "ACM AMTICS Annual General Meeting",
-                    Date = today.AddDays(185),
-                    Time = "04:00 PM - 06:00 PM",
-                    Venue = "Auditorium",
-                    Category = "Seminar",
-                    AttendeesCount = 5,
-                    Status = "Upcoming",
-                    OrderIndex = 14
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000015",
-                    Name = "Research Paper Writing Workshop",
-                    Date = today.AddDays(200),
-                    Time = "10:00 AM - 12:30 PM",
-                    Venue = "Conference Room",
-                    Category = "Workshop",
-                    AttendeesCount = 5,
-                    Status = "Upcoming",
-                    OrderIndex = 15
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000016",
-                    Name = "Git & GitHub Crash Course",
-                    Date = today.AddDays(215),
-                    Time = "02:00 PM - 04:00 PM",
-                    Venue = "Lab 4, AMTICS",
-                    Category = "Workshop",
-                    AttendeesCount = 5,
-                    Status = "Upcoming",
-                    OrderIndex = 16
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000017",
-                    Name = "Linux & Shell Scripting 101",
-                    Date = today.AddDays(230),
-                    Time = "11:00 AM - 01:00 PM",
-                    Venue = "Lab 2, AMTICS",
-                    Category = "Workshop",
-                    AttendeesCount = 4,
-                    Status = "Upcoming",
-                    OrderIndex = 17
-                },
-                new EventItem
-                {
-                    Id = "65b000000000000000000018",
-                    Name = "ACM Student Chapter Orientation",
-                    Date = today.AddDays(245),
-                    Time = "10:00 AM - 12:00 PM",
-                    Venue = "Auditorium",
-                    Category = "Talk",
-                    AttendeesCount = 3,
-                    Status = "Upcoming",
-                    OrderIndex = 18
                 }
             };
         }
