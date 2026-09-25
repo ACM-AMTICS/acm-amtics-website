@@ -1,0 +1,200 @@
+{
+  "hero": {
+    "badge": "Association for Computing Machinery",
+    "titleLine1": "Build. Collaborate.",
+    "titleLine2": "Inspire.",
+    "subtitle": "ACM AMTICS Student Chapter",
+    "description": "A community of learners, builders, and changemakers from the Department of Computer Science & Engineering, AMTICS. We organize events, workshops, projects and initiatives to explore, learn and grow together.",
+    "exploreEventsText": "Explore Events",
+    "learnMoreText": "Learn More",
+    "communityStatsText": "Join 500+ students growing with ACM AMTICS"
+  },
+  "stats": [
+    {
+      "icon": "users",
+      "number": "500+",
+      "label": "Active Members"
+    },
+    {
+      "icon": "calendar",
+      "number": "30+",
+      "label": "Events Conducted"
+    },
+    {
+      "icon": "folder",
+      "number": "60+",
+      "label": "Student Projects"
+    },
+    {
+      "icon": "trophy",
+      "number": "10+",
+      "label": "Awards & Recognitions"
+    }
+  ],
+  "about": {
+    "sectionTag": "ABOUT US",
+    "title": "About ACM AMTICS",
+    "description": "ACM AMTICS is the official student chapter of the Association for Computing Machinery at the Department of Computer Science & Engineering, AMTICS. We aim to create a platform for students to learn, build, collaborate and make a positive impact through technology and innovation.",
+    "buttonText": "Our Journey",
+    "features": [
+      {
+        "icon": "academic-cap",
+        "title": "Learn",
+        "description": "Workshops, talks and knowledge sharing"
+      },
+      {
+        "icon": "users-group",
+        "title": "Collaborate",
+        "description": "Work with peers, faculty and industry experts"
+      },
+      {
+        "icon": "bulb",
+        "title": "Build",
+        "description": "Projects, hackathons and real-world solutions"
+      },
+      {
+        "icon": "sparkles",
+        "title": "Create Impact",
+        "description": "Use technology for a better tomorrow"
+      }
+    ]
+  },
+  "whatWeDo": {
+    "sectionTag": "OUR FOCUS",
+    "title": "What We Do",
+    "learnMoreText": "Learn More",
+    "items": [
+      {
+        "icon": "academic-cap",
+        "title": "Workshops & Learning",
+        "description": "Technical workshops, expert talks and hands-on sessions to learn new skills."
+      },
+      {
+        "icon": "trophy",
+        "title": "Hackathons & Competitions",
+        "description": "Organize and participate in hackathons, coding competitions and challenges."
+      },
+      {
+        "icon": "folder",
+        "title": "Projects & Innovation",
+        "description": "Support student projects and innovative ideas from concept to deployment."
+      },
+      {
+        "icon": "users-group",
+        "title": "Community & Networking",
+        "description": "Build a vibrant community of like-minded leaders and creators."
+      }
+    ]
+  },
+  "eventsSection": {
+    "sectionTag": "EVENTS",
+    "title": "Recent Events",
+    "subtitle": "A glimpse of our latest workshops, talks and community initiatives.",
+    "viewAllText": "View All Events",
+    "events": [
+      {
+        "id": "1",
+        "badge": "Workshop",
+        "date": "24 Sep 2025",
+        "title": "Web Development Workshop",
+        "description": "Hands-on session on modern web development with industry experts.",
+        "image": "/images/events/web-dev-workshop.jpg"
+      },
+      {
+        "id": "2",
+        "badge": "Seminar",
+        "date": "20 Sep 2025",
+        "title": "Introduction to AI/ML",
+        "description": "An engaging seminar on the fundamentals of Artificial Intelligence and Machine Learning.",
+        "image": "/images/events/ai-ml-intro.jpg"
+      },
+      {
+        "id": "3",
+        "badge": "Competition",
+        "date": "10 Oct 2025",
+        "title": "ACM Hackathon 2025",
+        "description": "A 24-hour hackathon to build innovative solutions for real-world problems.",
+        "image": "/images/events/acm-hackathon.jpg"
+      }
+    ]
+  },
+  "projectsSection": {
+    "sectionTag": "PROJECTS",
+    "title": "Student Projects",
+    "subtitle": "Innovative projects built by our talented community members.",
+    "viewAllText": "View All Projects",
+    "projects": [
+      {
+        "id": "1",
+        "title": "Campus Connect",
+        "description": "A platform to connect students, share resources and collaborate on projects.",
+        "tags": ["Web App", "Open Source"],
+        "image": "/images/projects/campus-connect.jpg"
+      },
+      {
+        "id": "2",
+        "title": "Amal Tracker",
+        "description": "A productive habit tracking app for Ramzan with a clean and minimal UI.",
+        "tags": ["Flutter", "Mobile App"],
+        "image": "/images/projects/amal-tracker.jpg"
+      },
+      {
+        "id": "3",
+        "title": "Neograb",
+        "description": "A hyperlocal commerce platform connecting local shops and customers.",
+        "tags": ["Full Stack", "Production"],
+        "image": "/images/projects/neograb.jpg"
+      }
+    ]
+  },
+  "whyJoinSection": {
+    "sectionTag": "COMMUNITY",
+    "title": "Why Join ACM AMTICS?",
+    "description": "Be a part of a vibrant community of learners, builders and changemakers. ACM AMTICS gives you the platform, people and opportunities to grow beyond the classroom.",
+    "badgeOverlay": "More than a student chapter",
+    "badgeSubtext": "A growing community",
+    "image": "/images/community/group-photo.jpg",
+    "benefits": [
+      {
+        "icon": "academic-cap",
+        "title": "Learn from peers",
+        "description": "Gain knowledge through workshops and discussions."
+      },
+      {
+        "icon": "folder",
+        "title": "Build real projects",
+        "description": "Turn ideas into impactful solutions."
+      },
+      {
+        "icon": "users-group",
+        "title": "Meet industry professionals",
+        "description": "Interact with experts and get career insights."
+      },
+      {
+        "icon": "sparkles",
+        "title": "Showcase your work",
+        "description": "Get visibility for your projects and achievements."
+      }
+    ]
+  },
+  "gallerySection": {
+    "sectionTag": "GALLERY",
+    "title": "Moments from Our Journey",
+    "viewAllText": "View Full Gallery",
+    "images": [
+      { "id": "1", "src": "/images/gallery/moment-1.jpg", "alt": "ACM Group Photo" },
+      { "id": "2", "src": "/images/gallery/moment-2.jpg", "alt": "Speaker Event" },
+      { "id": "3", "src": "/images/gallery/moment-3.jpg", "alt": "Hackathon Collaboration" },
+      { "id": "4", "src": "/images/gallery/moment-4.jpg", "alt": "UI UX Session" },
+      { "id": "5", "src": "/images/gallery/moment-5.jpg", "alt": "Workshop Attendees" },
+      { "id": "6", "src": "/images/gallery/moment-6.jpg", "alt": "Team Event" },
+      { "id": "7", "src": "/images/gallery/moment-7.jpg", "alt": "Audience at Seminar" }
+    ]
+  },
+  "ctaSection": {
+    "sectionTag": "JOIN THE COMMUNITY",
+    "title": "Build something meaningful with us.",
+    "subtitle": "Be a part of ACM AMTICS and connect with a community that learns, builds and creates impact together.",
+    "buttonText": "Join Our Community"
+  }
+}
