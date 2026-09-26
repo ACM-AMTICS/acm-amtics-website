@@ -50,7 +50,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 // Ensure admin credentials and database collections are seeded
 using (var scope = app.Services.CreateScope())

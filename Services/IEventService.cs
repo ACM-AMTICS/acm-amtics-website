@@ -12,6 +12,7 @@ namespace acm_amtics_website.Services
         Task<EventsStatsDto> GetEventsStatsAsync();
         Task<List<EventItem>> GetActiveEventsAsync();
         Task<int> GetTotalEventsCountAsync();
+        Task<EventsViewModel> GetPublicEventsAsync(string? search, string? type, int? year, string? sortBy, string? tab, int page = 1, int pageSize = 8);
     }
 
     public interface IDashboardService

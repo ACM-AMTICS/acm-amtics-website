@@ -1,5 +1,5 @@
+using acm_amtics_website.Models;
 using acm_amtics_website.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acm_amtics_website.Controllers
@@ -18,13 +18,66 @@ namespace acm_amtics_website.Controllers
         // GET: /Events
         [HttpGet]
         [Route("Events")]
-        public IActionResult Index()
+        [Route("Events/Index")]
+        public async Task<IActionResult> Index(
+            [FromQuery] string? search = null,
+            [FromQuery] string? type = null,
+            [FromQuery] int? year = null,
+            [FromQuery] string? sortBy = "recent",
+            [FromQuery] string? tab = "completed",
+            [FromQuery] int page = 1,
+            [FromQuery] string? view = null)
+        {
+            // If explicit admin management requested or coordinator redirected without public flag
+            if (string.Equals(view, "admin", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(view, "manage", StringComparison.OrdinalIgnoreCase))
+            {
+                return RedirectToAction(nameof(Manage));
+            }
+
+            if (User.IsInRole("Coordinator") &&
+                string.IsNullOrEmpty(search) &&
+                string.IsNullOrEmpty(type) &&
+                !year.HasValue &&
+                !Request.Query.ContainsKey("tab") &&
+                !Request.Query.ContainsKey("public"))
+            {
+                return RedirectToAction(nameof(Manage));
+            }
+
+            ViewBag.ActiveMenu = "Events";
+            ViewBag.IsMongoConnected = _mongoDbContext.IsConnected;
+
+            var viewModel = await _eventService.GetPublicEventsAsync(search, type, year, sortBy, tab, page, pageSize: 8);
+            return View("Index", viewModel);
+        }
+
+        // GET: /Events/Manage (Admin Events & Attendance page)
+        [HttpGet]
+        [Route("Events/Manage")]
+        public IActionResult Manage()
         {
             ViewBag.ActiveMenu = "Events";
             ViewBag.ShowAddEventButton = true; // Server-side enforced: exposed ONLY on Events & Attendance list page
             ViewBag.ViewContext = "Events";
             ViewBag.IsMongoConnected = _mongoDbContext.IsConnected;
-            return View();
+            return View("Manage");
+        }
+
+        // GET: /Events/Details/{id}
+        [HttpGet]
+        [Route("Events/Details/{id}")]
+        public async Task<IActionResult> Details(string id)
+        {
+            var eventItem = await _eventService.GetEventByIdAsync(id);
+            if (eventItem == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.ActiveMenu = "Events";
+            ViewBag.IsMongoConnected = _mongoDbContext.IsConnected;
+            return View(eventItem);
         }
 
         // GET: /Events/{id}/Attendees
@@ -35,7 +88,7 @@ namespace acm_amtics_website.Controllers
             var eventItem = await _eventService.GetEventByIdAsync(id);
             if (eventItem == null)
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Manage));
             }
 
             ViewBag.ActiveMenu = "Events";

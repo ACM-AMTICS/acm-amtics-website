@@ -1,393 +1,702 @@
+@model acm_amtics_website.Models.LandingViewModel
 @{
     ViewData["Title"] = "Home - ACM AMTICS Student Chapter";
 }
 
-<div class="landing-page-container">
-    <!-- HERO SECTION -->
-    <section class="hero-section" id="hero">
-        <div class="hero-container">
-            <!-- Left Hero Content -->
-            <div class="hero-content">
-                <div class="hero-badge" id="hero-badge">
-                    <span class="badge-dot"></span>
-                    <span id="hero-badge-text">Association for Computing Machinery</span>
+<!-- HERO SECTION -->
+<section class="hero-section" id="hero">
+    <div class="hero-container">
+        <!-- Left Hero Content -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-sparkle-dot"></span>
+                <span>Association for Computing Machinery</span>
+            </div>
+
+            <h1 class="hero-title">
+                Build. Collaborate.<br />
+                <span class="text-primary-gradient">Inspire.</span>
+            </h1>
+
+            <h2 class="hero-subtitle">ACM AMTICS Student Chapter</h2>
+
+            <p class="hero-description">
+                A community of learners, builders, and changemakers from the Department of Computer Science & Engineering, AMTICS. We organize events, workshops, projects and initiatives to explore, learn and grow together.
+            </p>
+
+            <div class="hero-actions">
+                <a href="/Events" class="btn-hero-primary">
+                    <span>Explore Events</span>
+                    <svg class="btn-arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+                <a href="#about" class="btn-hero-secondary">Learn More</a>
+            </div>
+
+            <div class="hero-community-bar">
+                <div class="avatar-stack">
+                    <img src="~/images/avatars/avatar-1.jpg" alt="Student Member" class="avatar-img" />
+                    <div class="avatar-circle avatar-bg-indigo"><span>AK</span></div>
+                    <div class="avatar-circle avatar-bg-purple"><span>RP</span></div>
+                    <div class="avatar-circle avatar-bg-blue"><span>SM</span></div>
+                </div>
+                <span class="community-text">Join @Model.ActiveMembersCount+ students growing with ACM AMTICS</span>
+            </div>
+        </div>
+
+        <!-- Right Hero Visual Card with Orbiting Icons & Sketchy Notes -->
+        <div class="hero-illustration">
+            <div class="hero-visual-card">
+                <!-- Ambient Backlight Glow -->
+                <div class="hero-ambient-glow" aria-hidden="true"></div>
+
+                <!-- Decorative Background Accents from Reference Mockup -->
+                <div class="decor-circle-soft" aria-hidden="true"></div>
+                <div class="decor-dot-grid" aria-hidden="true"></div>
+
+                <!-- Top-Left Sketchy Note with Arrow (Stacked 4 lines) -->
+                <div class="sketchy-note note-top-left" aria-hidden="true">
+                    <div class="note-stacked-lines text-right">
+                        <span>Ideas</span>
+                        <span>Community</span>
+                        <span>Technology</span>
+                        <span>Impact</span>
+                    </div>
+                    <svg class="note-arrow-top-left" viewBox="0 0 50 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                        <path d="M 6,6 C 24,10 38,20 42,32" />
+                        <polyline points="32,32 42,32 42,22" />
+                    </svg>
                 </div>
 
-                <h1 class="hero-title">
-                    <span id="hero-title-line1">Build. Collaborate.</span><br />
-                    <span class="text-primary-solid" id="hero-title-line2">Inspire.</span>
-                </h1>
+                <!-- Graphic Orbits & Big Medallion -->
+                <div class="graphic-orbits-wrapper">
+                    <!-- Outer Dashed Ring & Inner Solid Ring -->
+                    <div class="orbit-circle-outer"></div>
+                    <div class="orbit-circle-middle"></div>
 
-                <h2 class="hero-subtitle" id="hero-subtitle">ACM AMTICS Student Chapter</h2>
+                    <!-- 4 Small Solid Purple Cardinal Dots (12, 3, 6, 9 o'clock) -->
+                    <div class="orbit-dot dot-top" aria-hidden="true"></div>
+                    <div class="orbit-dot dot-right" aria-hidden="true"></div>
+                    <div class="orbit-dot dot-bottom" aria-hidden="true"></div>
+                    <div class="orbit-dot dot-left" aria-hidden="true"></div>
 
-                <p class="hero-description" id="hero-description">
-                    A community of learners, builders, and changemakers from the Department of Computer Science & Engineering, AMTICS. We organize events, workshops, projects and initiatives to explore, learn and grow together.
+                    <!-- Center Medallion with Iridescent Ring & Big Logo -->
+                    <div class="orbit-center-medallion">
+                        <div class="medallion-inner-disc">
+                            <img src="~/images/acm-logo.svg" alt="ACM AMTICS Logo" class="medallion-logo" />
+                        </div>
+                    </div>
+
+                    <!-- 4 Orbiting Diagonal Floating Badges (10:30, 1:30, 4:30, 7:30) -->
+                    <div class="floating-badge badge-top-left" title="Coding & Development">
+                        <span class="badge-code-text">&lt;/&gt;</span>
+                    </div>
+                    <div class="floating-badge badge-top-right" title="Creative Ideas & Innovation">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <div class="floating-badge badge-bottom-right" title="System Engineering & Development">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <div class="floating-badge badge-bottom-left" title="Community & Collaboration">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Right Sketchy Note with Arrow (Stacked 4 lines) -->
+                <div class="sketchy-note note-right-side" aria-hidden="true">
+                    <div class="note-stacked-lines text-left">
+                        <span>Learn</span>
+                        <span>Collaborate</span>
+                        <span>Build</span>
+                        <span>Create Impact</span>
+                    </div>
+                    <svg class="note-arrow-right-side" viewBox="0 0 52 38" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                        <path d="M 44,4 C 30,12 16,24 6,30" />
+                        <polyline points="18,30 6,30 10,18" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS COUNTER SECTION -->
+<section class="stats-counter-section">
+    <div class="stats-elevated-card">
+        <div class="stat-col">
+            <div class="stat-icon-box icon-box-purple">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <div class="stat-details">
+                <span class="stat-value">@Model.ActiveMembersCount+</span>
+                <span class="stat-label">Active Members</span>
+            </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-col">
+            <div class="stat-icon-box icon-box-indigo">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <div class="stat-details">
+                <span class="stat-value">@Model.EventsCount+</span>
+                <span class="stat-label">Events Conducted</span>
+            </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-col">
+            <div class="stat-icon-box icon-box-blue">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+            </div>
+            <div class="stat-details">
+                <span class="stat-value">@Model.ProjectsCount+</span>
+                <span class="stat-label">Student Projects</span>
+            </div>
+        </div>
+
+        <div class="stat-divider"></div>
+
+        <div class="stat-col">
+            <div class="stat-icon-box icon-box-violet">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+            </div>
+            <div class="stat-details">
+                <span class="stat-value">@Model.AwardsCount+</span>
+                <span class="stat-label">Awards & Recognitions</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT US SECTION -->
+<section class="section-wrapper" id="about">
+    <div class="section-container">
+        <div class="about-two-col-layout">
+            <!-- Left Info -->
+            <div class="about-info-col">
+                <span class="section-badge-tag">ABOUT US</span>
+                <h2 class="section-heading-large">About ACM AMTICS</h2>
+                <p class="section-body-text">
+                    ACM AMTICS is the official student chapter of the Association for Computing Machinery at the Department of Computer Science & Engineering, AMTICS. We aim to create a platform for students to learn, build, collaborate and make a positive impact through technology and innovation.
+                </p>
+                <a href="#why-join" class="btn-outline-purple">
+                    <span>Our Journey</span>
+                    <svg class="btn-arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Right 2x2 Feature Cards -->
+            <div class="about-features-2x2">
+                <div class="feature-card">
+                    <div class="feature-icon-circle icon-blue">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="feature-heading">Learn</h4>
+                        <p class="feature-subtext">Workshops, talks and knowledge sharing</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-circle icon-purple">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="feature-heading">Collaborate</h4>
+                        <p class="feature-subtext">Work with peers, faculty and industry experts</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-circle icon-orange">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="feature-heading">Build</h4>
+                        <p class="feature-subtext">Projects, hackathons and real-world solutions</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon-circle icon-green">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="feature-heading">Create Impact</h4>
+                        <p class="feature-subtext">Use technology for a better tomorrow</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OUR FOCUS / WHAT WE DO SECTION -->
+<section class="section-wrapper">
+    <div class="section-container">
+        <div class="section-header-flex">
+            <div>
+                <span class="section-badge-tag">OUR FOCUS</span>
+                <h2 class="section-heading-large">What We Do</h2>
+            </div>
+            <a href="/Events" class="text-link-arrow">
+                <span>Learn More</span>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="focus-cards-row">
+            <div class="focus-pill-card card-pastel-purple">
+                <div class="focus-icon-box box-purple">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                    </svg>
+                </div>
+                <h3 class="focus-title">Workshops & Learning</h3>
+                <p class="focus-description">Technical workshops, expert talks and hands-on sessions to learn new skills.</p>
+            </div>
+
+            <div class="focus-pill-card card-pastel-purple">
+                <div class="focus-icon-box box-purple">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                </div>
+                <h3 class="focus-title">Hackathons & Competitions</h3>
+                <p class="focus-description">Organize and participate in hackathons, coding competitions and challenges.</p>
+            </div>
+
+            <div class="focus-pill-card card-pastel-blue">
+                <div class="focus-icon-box box-blue">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                </div>
+                <h3 class="focus-title">Projects & Innovation</h3>
+                <p class="focus-description">Support student projects and innovative ideas from concept to deployment.</p>
+            </div>
+
+            <div class="focus-pill-card card-pastel-green">
+                <div class="focus-icon-box box-green">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <h3 class="focus-title">Community & Networking</h3>
+                <p class="focus-description">Build a vibrant community of like-minded learners and creators.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- RECENT EVENTS SECTION -->
+<section class="section-wrapper" id="events">
+    <div class="section-container">
+        <div class="section-header-flex">
+            <div>
+                <span class="section-badge-tag">EVENTS</span>
+                <h2 class="section-heading-large">Recent Events</h2>
+                <p class="section-subheading">A glimpse of our latest workshops, talks and community initiatives.</p>
+            </div>
+            <a href="/Events" class="text-link-arrow">
+                <span>View All Events</span>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="cards-3col-grid">
+            <!-- Event 1 -->
+            <article class="event-card-item">
+                <div class="card-image-box">
+                    <a href="/Events/Details/65b000000000000000000001" tabindex="-1">
+                        <img src="~/images/events/web-dev-workshop.jpg" alt="Web Development Workshop" class="card-banner-img" loading="lazy" />
+                    </a>
+                </div>
+                <div class="card-content-block">
+                    <div class="card-meta-pills">
+                        <span class="meta-tag tag-purple">Workshop</span>
+                        <span class="meta-date">
+                            <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            24 Aug 2024
+                        </span>
+                    </div>
+                    <h3 class="card-item-title">
+                        <a href="/Events/Details/65b000000000000000000001" style="color: inherit; text-decoration: none;">Web Development Workshop</a>
+                    </h3>
+                    <p class="card-item-description">Hands-on session on modern web development with industry experts.</p>
+                    <div class="card-footer-action">
+                        <a href="/Events/Details/65b000000000000000000001" class="btn-circle-action" aria-label="Event Details">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Event 2 -->
+            <article class="event-card-item">
+                <div class="card-image-box">
+                    <a href="/Events/Details/65b000000000000000000012" tabindex="-1">
+                        <img src="~/images/events/ai-ml-intro.jpg" alt="Introduction to AI and Machine Learning" class="card-banner-img" loading="lazy" />
+                    </a>
+                </div>
+                <div class="card-content-block">
+                    <div class="card-meta-pills">
+                        <span class="meta-tag tag-blue">Seminar</span>
+                        <span class="meta-date">
+                            <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            10 Nov 2024
+                        </span>
+                    </div>
+                    <h3 class="card-item-title">
+                        <a href="/Events/Details/65b000000000000000000012" style="color: inherit; text-decoration: none;">Introduction to AI/ML</a>
+                    </h3>
+                    <p class="card-item-description">An engaging seminar on the fundamentals of Artificial Intelligence and Machine Learning.</p>
+                    <div class="card-footer-action">
+                        <a href="/Events/Details/65b000000000000000000012" class="btn-circle-action" aria-label="Event Details">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Event 3 -->
+            <article class="event-card-item">
+                <div class="card-image-box">
+                    <a href="/Events/Details/65b000000000000000000013" tabindex="-1">
+                        <img src="~/images/events/acm-hackathon.jpg" alt="ACM Hackathon 2024" class="card-banner-img" loading="lazy" />
+                    </a>
+                </div>
+                <div class="card-content-block">
+                    <div class="card-meta-pills">
+                        <span class="meta-tag tag-coral">Competition</span>
+                        <span class="meta-date">
+                            <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            5 Oct 2024
+                        </span>
+                    </div>
+                    <h3 class="card-item-title">
+                        <a href="/Events/Details/65b000000000000000000013" style="color: inherit; text-decoration: none;">ACM Hackathon 2024</a>
+                    </h3>
+                    <p class="card-item-description">A 24-hour hackathon to build innovative solutions for real-world problems.</p>
+                    <div class="card-footer-action">
+                        <a href="/Events/Details/65b000000000000000000013" class="btn-circle-action" aria-label="Event Details">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- STUDENT PROJECTS SECTION -->
+<section class="section-wrapper" id="projects">
+    <div class="section-container">
+        <div class="section-header-flex">
+            <div>
+                <span class="section-badge-tag">PROJECTS</span>
+                <h2 class="section-heading-large">Student Projects</h2>
+                <p class="section-subheading">Innovative projects built by our talented community members.</p>
+            </div>
+            <a href="#projects" class="text-link-arrow">
+                <span>View All Projects</span>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="cards-3col-grid">
+            <!-- Project 1 -->
+            <article class="project-card-item">
+                <div class="project-preview-box">
+                    <img src="~/images/projects/campus-connect.jpg" alt="Campus Connect Platform" class="project-banner-img" loading="lazy" />
+                </div>
+                <div class="project-content-block">
+                    <h3 class="card-item-title">Campus Connect</h3>
+                    <p class="card-item-description">A platform to connect students, share resources and collaborate on projects.</p>
+                    <div class="project-footer-row">
+                        <div class="project-tag-badges">
+                            <span class="badge-tag tag-soft-purple">Web App</span>
+                            <span class="badge-tag tag-soft-green">Open Source</span>
+                        </div>
+                        <a href="#projects" class="btn-circle-action" aria-label="View Project">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 2 -->
+            <article class="project-card-item">
+                <div class="project-preview-box">
+                    <img src="~/images/projects/amal-tracker.jpg" alt="Amal Tracker App" class="project-banner-img" loading="lazy" />
+                </div>
+                <div class="project-content-block">
+                    <h3 class="card-item-title">Amal Tracker</h3>
+                    <p class="card-item-description">A productive habit-tracking app for Ramadan with a clean and minimal UI.</p>
+                    <div class="project-footer-row">
+                        <div class="project-tag-badges">
+                            <span class="badge-tag tag-soft-blue">Flutter</span>
+                            <span class="badge-tag tag-soft-purple">Mobile App</span>
+                        </div>
+                        <a href="#projects" class="btn-circle-action" aria-label="View Project">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Project 3 -->
+            <article class="project-card-item">
+                <div class="project-preview-box">
+                    <img src="~/images/projects/neograb.jpg" alt="Neograb Commerce Dashboard" class="project-banner-img" loading="lazy" />
+                </div>
+                <div class="project-content-block">
+                    <h3 class="card-item-title">Neograb</h3>
+                    <p class="card-item-description">A hyperlocal eCommerce platform connecting local shops and customers.</p>
+                    <div class="project-footer-row">
+                        <div class="project-tag-badges">
+                            <span class="badge-tag tag-soft-purple">Full Stack</span>
+                            <span class="badge-tag tag-soft-green">Production</span>
+                        </div>
+                        <a href="#projects" class="btn-circle-action" aria-label="View Project">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+<!-- WHY JOIN ACM AMTICS SECTION -->
+<section class="section-wrapper" id="why-join">
+    <div class="section-container">
+        <div class="why-join-layout">
+            <!-- Left Media Col with Floating Badge -->
+            <div class="why-join-media">
+                <span class="section-badge-tag">COMMUNITY</span>
+                <h2 class="section-heading-large" style="margin-bottom: 1.5rem;">Why Join ACM AMTICS?</h2>
+                
+                <div class="team-photo-wrapper">
+                    <img src="~/images/community/team-photo.jpg" alt="ACM AMTICS Student Community Team Photo" class="team-photo-img" loading="lazy" />
+                    <!-- Floating Pill Overlay in Bottom Right of photo -->
+                    <div class="photo-floating-pill">
+                        <div class="pill-text-group">
+                            <span class="pill-lead">More than a</span>
+                            <span class="pill-title">student chapter</span>
+                            <span class="pill-sub">A growing community</span>
+                        </div>
+                        <div class="btn-circle-solid">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content Col -->
+            <div class="why-join-content">
+                <p class="section-body-text">
+                    Be a part of a vibrant community of learners, builders and changemakers. ACM AMTICS gives you the platform, people and opportunities to grow beyond the classroom.
                 </p>
 
-                <div class="hero-actions">
-                    <a href="#events" class="btn-primary-solid" id="hero-btn-events">
-                        <span>Explore Events</span>
-                        <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                    <a href="#about" class="btn-secondary-solid" id="hero-btn-learn">Learn More</a>
-                </div>
-
-                <div class="hero-community-bar">
-                    <div class="avatar-stack">
-                        <div class="avatar-circle">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <div class="benefits-grid-2x2">
+                    <div class="benefit-item-card">
+                        <div class="benefit-icon-box icon-purple">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
                         </div>
-                        <div class="avatar-circle">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        </div>
-                        <div class="avatar-circle">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                        </div>
-                    </div>
-                    <span class="community-text" id="hero-community-text">Join 500+ students growing with ACM AMTICS</span>
-                </div>
-            </div>
-
-            <!-- Right Hero Illustration Graphic -->
-            <div class="hero-illustration">
-                <div class="hero-graphic-card">
-                    <div class="graphic-circle-outer">
-                        <div class="graphic-circle-inner">
-                            <img src="~/images/acm-logo.svg" alt="ACM AMTICS Logo" class="graphic-logo" />
-                        </div>
-                        <!-- Orbiting Icon Floating Badges -->
-                        <div class="orbit-badge badge-top-left">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-                        </div>
-                        <div class="orbit-badge badge-top-right">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                        </div>
-                        <div class="orbit-badge badge-bottom-left">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        </div>
-                        <div class="orbit-badge badge-bottom-right">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+                        <div>
+                            <h4 class="benefit-title">Learn from peers</h4>
+                            <p class="benefit-desc">Gain knowledge through workshops and discussions.</p>
                         </div>
                     </div>
 
-                    <!-- Sketchy Dotted Arrows / Text Overlay -->
-                    <div class="sketchy-text top-right-sketch">Ideas &bull; Community &bull; Technology &bull; Impact</div>
-                    <div class="sketchy-text bottom-right-sketch">Learn &bull; Collaborate &bull; Build &bull; Create Impact</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS COUNTER BAR -->
-    <section class="stats-section">
-        <div class="stats-container" id="stats-container">
-            <div class="stat-card">
-                <div class="stat-icon-wrapper">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-number">500+</span>
-                    <span class="stat-label">Active Members</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon-wrapper">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-number">30+</span>
-                    <span class="stat-label">Events Conducted</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon-wrapper">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-number">60+</span>
-                    <span class="stat-label">Student Projects</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon-wrapper">
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                </div>
-                <div class="stat-info">
-                    <span class="stat-number">10+</span>
-                    <span class="stat-label">Awards & Recognitions</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT SECTION -->
-    <section class="section-wrapper about-section" id="about">
-        <div class="section-container">
-            <div class="about-grid">
-                <div class="about-left">
-                    <span class="section-tag" id="about-tag">ABOUT US</span>
-                    <h2 class="section-title" id="about-title">About ACM AMTICS</h2>
-                    <p class="section-description" id="about-description">
-                        ACM AMTICS is the official student chapter of the Association for Computing Machinery at the Department of Computer Science & Engineering, AMTICS. We aim to create a platform for students to learn, build, collaborate and make a positive impact through technology and innovation.
-                    </p>
-                    <a href="javascript:void(0);" class="btn-outline-solid" id="about-btn">
-                        <span>Our Journey</span>
-                        <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                    </a>
-                </div>
-
-                <div class="about-features-grid" id="about-features-container">
-                    <div class="feature-box">
-                        <div class="feature-icon-box icon-blue">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
+                    <div class="benefit-item-card">
+                        <div class="benefit-icon-box icon-blue">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                            </svg>
                         </div>
-                        <div class="feature-content">
-                            <h3 class="feature-title">Learn</h3>
-                            <p class="feature-desc">Workshops, talks and knowledge sharing</p>
+                        <div>
+                            <h4 class="benefit-title">Build real projects</h4>
+                            <p class="benefit-desc">Turn ideas into impactful solutions.</p>
                         </div>
                     </div>
-                    <div class="feature-box">
-                        <div class="feature-icon-box icon-purple">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+
+                    <div class="benefit-item-card">
+                        <div class="benefit-icon-box icon-indigo">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
                         </div>
-                        <div class="feature-content">
-                            <h3 class="feature-title">Collaborate</h3>
-                            <p class="feature-desc">Work with peers, faculty and industry experts</p>
-                        </div>
-                    </div>
-                    <div class="feature-box">
-                        <div class="feature-icon-box icon-orange">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                        </div>
-                        <div class="feature-content">
-                            <h3 class="feature-title">Build</h3>
-                            <p class="feature-desc">Projects, hackathons and real-world solutions</p>
+                        <div>
+                            <h4 class="benefit-title">Meet industry professionals</h4>
+                            <p class="benefit-desc">Interact with experts and get career insights.</p>
                         </div>
                     </div>
-                    <div class="feature-box">
-                        <div class="feature-icon-box icon-green">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+
+                    <div class="benefit-item-card">
+                        <div class="benefit-icon-box icon-green">
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                            </svg>
                         </div>
-                        <div class="feature-content">
-                            <h3 class="feature-title">Create Impact</h3>
-                            <p class="feature-desc">Use technology for a better tomorrow</p>
+                        <div>
+                            <h4 class="benefit-title">Showcase your work</h4>
+                            <p class="benefit-desc">Get visibility for your projects and achievements.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- WHAT WE DO / OUR FOCUS -->
-    <section class="section-wrapper focus-section">
-        <div class="section-container">
-            <div class="section-header-row">
-                <div>
-                    <span class="section-tag" id="focus-tag">OUR FOCUS</span>
-                    <h2 class="section-title" id="focus-title">What We Do</h2>
+<!-- MOMENTS FROM OUR JOURNEY (GALLERY BENTO MOSAIC) -->
+<section class="section-wrapper" id="gallery">
+    <div class="section-container">
+        <div class="section-header-flex">
+            <div>
+                <span class="section-badge-tag">GALLERY</span>
+                <h2 class="section-heading-large">Moments from Our Journey</h2>
+            </div>
+            <a href="#gallery" class="text-link-arrow">
+                <span>View Full Gallery</span>
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
+        </div>
+
+        <div class="gallery-bento-grid">
+            <!-- Left Large Feature (Group Photo) -->
+            <div class="bento-item bento-large-left">
+                <img src="~/images/gallery/moment-1.jpg" alt="ACM AMTICS Student Community Group Photo" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">ACM AMTICS Chapter Meetup</span>
                 </div>
-                <a href="javascript:void(0);" class="link-arrow" id="focus-link">
-                    <span>Learn More</span>
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </a>
             </div>
 
-            <div class="focus-cards-grid" id="focus-cards-container">
-                <div class="focus-card">
-                    <div class="focus-icon-box">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-                    </div>
-                    <h3 class="focus-card-title">Workshops & Learning</h3>
-                    <p class="focus-card-desc">Technical workshops, expert talks and hands-on sessions to learn new skills.</p>
+            <!-- Top Row: 3 standard items -->
+            <div class="bento-item">
+                <img src="~/images/gallery/moment-2.jpg" alt="Tech Workshop Speaker Session" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">Workshop Speaker Session</span>
                 </div>
+            </div>
 
-                <div class="focus-card">
-                    <div class="focus-icon-box">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                    </div>
-                    <h3 class="focus-card-title">Hackathons & Competitions</h3>
-                    <p class="focus-card-desc">Organize and participate in hackathons, coding competitions and challenges.</p>
+            <div class="bento-item">
+                <img src="~/images/gallery/moment-3.jpg" alt="Hackathon Coding Sprint" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">Hackathon Code Sprint</span>
                 </div>
+            </div>
 
-                <div class="focus-card">
-                    <div class="focus-icon-box">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                    </div>
-                    <h3 class="focus-card-title">Projects & Innovation</h3>
-                    <p class="focus-card-desc">Support student projects and innovative ideas from concept to deployment.</p>
+            <div class="bento-item">
+                <img src="~/images/gallery/moment-4.jpg" alt="UI and UX Design Classroom" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">UI/UX Design Masterclass</span>
                 </div>
+            </div>
 
-                <div class="focus-card">
-                    <div class="focus-icon-box">
-                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    </div>
-                    <h3 class="focus-card-title">Community & Networking</h3>
-                    <p class="focus-card-desc">Build a vibrant community of like-minded leaders and creators.</p>
+            <!-- Bottom Row: 3 standard items -->
+            <div class="bento-item">
+                <img src="~/images/gallery/moment-5.jpg" alt="Students in Discussion" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">Peer Networking Break</span>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <img src="~/images/gallery/moment-6.jpg" alt="Outdoor Chapter Meetup" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">Campus Community Outreach</span>
+                </div>
+            </div>
+
+            <div class="bento-item">
+                <img src="~/images/gallery/moment-7.jpg" alt="Seminar Audience" class="gallery-img" loading="lazy" />
+                <div class="gallery-hover-overlay">
+                    <span class="overlay-caption">National Tech Seminar</span>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- RECENT EVENTS SECTION -->
-    <section class="section-wrapper events-section" id="events">
-        <div class="section-container">
-            <div class="section-header-row">
-                <div>
-                    <span class="section-tag" id="events-tag">EVENTS</span>
-                    <h2 class="section-title" id="events-title">Recent Events</h2>
-                    <p class="section-subtitle" id="events-subtitle">A glimpse of our latest workshops, talks and community initiatives.</p>
-                </div>
-                <a href="javascript:void(0);" class="link-arrow" id="events-link">
-                    <span>View All Events</span>
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </a>
-            </div>
-
-            <div class="events-grid" id="events-grid-container">
-                <!-- Dynamically Populated from homeData.json -->
-            </div>
+<!-- CTA BANNER SECTION -->
+<section class="cta-banner-section">
+    <div class="cta-banner-container">
+        <div class="cta-content">
+            <span class="cta-pill-tag">JOIN THE COMMUNITY</span>
+            <h2 class="cta-banner-title">Build something meaningful with us.</h2>
+            <p class="cta-banner-subtitle">Be a part of ACM AMTICS and connect with a community that learns, builds and creates impact together.</p>
         </div>
-    </section>
-
-    <!-- STUDENT PROJECTS SECTION -->
-    <section class="section-wrapper projects-section" id="projects">
-        <div class="section-container">
-            <div class="section-header-row">
-                <div>
-                    <span class="section-tag" id="projects-tag">PROJECTS</span>
-                    <h2 class="section-title" id="projects-title">Student Projects</h2>
-                    <p class="section-subtitle" id="projects-subtitle">Innovative projects built by our talented community members.</p>
-                </div>
-                <a href="javascript:void(0);" class="link-arrow" id="projects-link">
-                    <span>View All Projects</span>
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </a>
-            </div>
-
-            <div class="projects-grid" id="projects-grid-container">
-                <!-- Dynamically Populated from homeData.json -->
-            </div>
+        <div class="cta-action">
+            <a asp-controller="Account" asp-action="Login" class="btn-cta-white">
+                <span>Join Our Community</span>
+                <svg class="btn-arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </a>
         </div>
-    </section>
-
-    <!-- WHY JOIN ACM AMTICS SECTION -->
-    <section class="section-wrapper why-join-section">
-        <div class="section-container">
-            <div class="section-header-row">
-                <div>
-                    <span class="section-tag" id="whyjoin-tag">COMMUNITY</span>
-                    <h2 class="section-title" id="whyjoin-title">Why Join ACM AMTICS?</h2>
-                </div>
-            </div>
-
-            <div class="why-join-grid">
-                <!-- Left Banner Image with Floating Badge -->
-                <div class="why-join-image-wrapper">
-                    <div class="why-join-img-container" id="whyjoin-img-container">
-                        <!-- Image rendered dynamically or fallback styled box -->
-                    </div>
-                    <div class="why-join-floating-badge">
-                        <div class="badge-title" id="whyjoin-badge-title">More than a</div>
-                        <div class="badge-sub" id="whyjoin-badge-sub">student chapter</div>
-                        <div class="badge-caption">A growing community</div>
-                        <button class="btn-circle-arrow" aria-label="Join Community">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Right Benefits List -->
-                <div class="why-join-right">
-                    <p class="why-join-desc" id="whyjoin-desc">
-                        Be a part of a vibrant community of learners, builders and changemakers. ACM AMTICS gives you the platform, people and opportunities to grow beyond the classroom.
-                    </p>
-
-                    <div class="benefits-list" id="benefits-list-container">
-                        <div class="benefit-item">
-                            <div class="benefit-icon-box icon-purple">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/></svg>
-                            </div>
-                            <div>
-                                <h4 class="benefit-title">Learn from peers</h4>
-                                <p class="benefit-desc">Gain knowledge through workshops and discussions.</p>
-                            </div>
-                        </div>
-
-                        <div class="benefit-item">
-                            <div class="benefit-icon-box icon-blue">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                            </div>
-                            <div>
-                                <h4 class="benefit-title">Build real projects</h4>
-                                <p class="benefit-desc">Turn ideas into impactful solutions.</p>
-                            </div>
-                        </div>
-
-                        <div class="benefit-item">
-                            <div class="benefit-icon-box icon-indigo">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                            </div>
-                            <div>
-                                <h4 class="benefit-title">Meet industry professionals</h4>
-                                <p class="benefit-desc">Interact with experts and get career insights.</p>
-                            </div>
-                        </div>
-
-                        <div class="benefit-item">
-                            <div class="benefit-icon-box icon-green">
-                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                            </div>
-                            <div>
-                                <h4 class="benefit-title">Showcase your work</h4>
-                                <p class="benefit-desc">Get visibility for your projects and achievements.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- GALLERY SECTION -->
-    <section class="section-wrapper gallery-section" id="gallery">
-        <div class="section-container">
-            <div class="section-header-row">
-                <div>
-                    <span class="section-tag" id="gallery-tag">GALLERY</span>
-                    <h2 class="section-title" id="gallery-title">Moments from Our Journey</h2>
-                </div>
-                <a href="javascript:void(0);" class="link-arrow" id="gallery-link">
-                    <span>View Full Gallery</span>
-                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </a>
-            </div>
-
-            <div class="gallery-grid" id="gallery-grid-container">
-                <!-- Dynamically Populated from homeData.json -->
-            </div>
-        </div>
-    </section>
-
-    <!-- BOTTOM CTA BANNER -->
-    <section class="cta-banner-section">
-        <div class="cta-banner-container">
-            <div class="cta-content">
-                <span class="cta-tag" id="cta-tag">JOIN THE COMMUNITY</span>
-                <h2 class="cta-title" id="cta-title">Build something meaningful with us.</h2>
-                <p class="cta-subtitle" id="cta-subtitle">Be a part of ACM AMTICS and connect with a community that learns, builds and creates impact together.</p>
-            </div>
-            <div class="cta-action">
-                <a asp-controller="Account" asp-action="Login" class="btn-cta-white" id="cta-btn">
-                    <span>Join Our Community</span>
-                    <svg class="btn-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                </a>
-            </div>
-        </div>
-    </section>
-</div>
-
-@section Scripts {
-    <script src="~/js/home.js" asp-append-version="true"></script>
-}
+    </div>
+</section>

@@ -19,7 +19,6 @@ namespace acm_amtics_website.Controllers
         }
 
         [HttpGet]
-        [Route("")]
         [Route("Account/Login")]
         public IActionResult Login(string? returnUrl = null)
         {

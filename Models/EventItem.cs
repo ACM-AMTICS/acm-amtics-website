@@ -42,6 +42,9 @@ namespace acm_amtics_website.Models
         [BsonElement("orderIndex")]
         public int OrderIndex { get; set; } = 0;
 
+        [BsonElement("imageUrl")]
+        public string? ImageUrl { get; set; }
+
         [BsonIgnore]
         public bool IsToday => Date.Date == DateTime.UtcNow.Date || Date.Date == DateTime.Today || (Date.Month == DateTime.UtcNow.Month && Date.Day == DateTime.UtcNow.Day);
 
