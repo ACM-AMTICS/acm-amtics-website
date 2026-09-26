@@ -35,7 +35,7 @@ namespace acm_amtics_website.Controllers
                 return RedirectToAction(nameof(Manage));
             }
 
-            if (User.IsInRole("Coordinator") &&
+            if (User.Identity?.IsAuthenticated == true &&
                 string.IsNullOrEmpty(search) &&
                 string.IsNullOrEmpty(type) &&
                 !year.HasValue &&
