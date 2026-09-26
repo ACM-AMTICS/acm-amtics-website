@@ -1,264 +1,382 @@
+@model acm_amtics_website.Models.EventsViewModel
 @{
-    Layout = "_AdminLayout";
-    ViewData["Title"] = "Events & Attendance";
+    Layout = "_Layout";
+    ViewData["Title"] = "Events & Workshops";
+    var isCompleted = Model.ActiveTab != "upcoming";
+    var currentTabTitle = isCompleted ? "Completed Events" : "Upcoming Events";
 }
 
-<!-- Page Header Row -->
-<div class="page-header-row">
-    <div class="header-titles">
-        <h1 class="page-title">Events & Attendance</h1>
-        <p class="page-subtitle">Manage events and view attendance statistics for ACM Amtics.</p>
-    </div>
+<!-- Ambient Decorative Background Gradients & Dot Grids -->
+<div class="events-ambient-bg" aria-hidden="true">
+    <div class="events-blob-top-left"></div>
+    <div class="events-blob-top-right"></div>
+    <div class="events-blob-bottom-left"></div>
+    <div class="events-dot-pattern dot-pattern-left"></div>
+    <div class="events-dot-pattern dot-pattern-right"></div>
 </div>
 
-<!-- 2 Stat Cards Grid -->
-<div class="stat-cards-grid-2">
-    <!-- Card 1: Total Events -->
-    <div class="stat-card">
-        <div class="stat-card-left">
-            <div class="stat-icon-wrapper">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            </div>
-            <div class="stat-label">Total Events</div>
-            <div class="stat-value" id="statTotalEvents">18</div>
-            <div class="stat-change-indicator">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                </svg>
-                <span id="statEventsChange">+20%</span>
-                <span class="stat-change-text">from last semester</span>
-            </div>
-        </div>
-        <!-- Trend Sparkline SVG -->
-        <svg class="stat-card-sparkline" viewBox="0 0 100 50" preserveAspectRatio="none">
-            <defs>
-                <linearGradient id="gradEventSpark" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.35"/>
-                    <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"/>
-                </linearGradient>
-            </defs>
-            <path d="M0,42 Q30,25 55,30 T95,12 L100,10 L100,50 L0,50 Z" fill="url(#gradEventSpark)"/>
-            <path d="M0,42 Q30,25 55,30 T95,12 L100,10" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-    </div>
+<div class="events-page-wrapper">
+    <div class="events-container">
+        
+        <!-- Breadcrumb Row -->
+        <nav class="events-breadcrumb-wrapper" aria-label="Breadcrumb">
+            <ol class="events-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/" class="breadcrumb-link">
+                        <svg class="breadcrumb-home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="breadcrumb-separator" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span>Events</span>
+                </li>
+            </ol>
+        </nav>
 
-    <!-- Card 2: Total Attendees -->
-    <div class="stat-card">
-        <div class="stat-card-left">
-            <div class="stat-icon-wrapper">
-                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5-3.512M9 20H4v-2a3 3 0 015-3.512M12 11a4 4 0 100-8 4 4 0 000 8zm0 2a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-            </div>
-            <div class="stat-label">Total Attendees</div>
-            <div class="stat-value" id="statTotalAttendees">860</div>
-            <div class="stat-change-indicator">
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-                </svg>
-                <span id="statAttendeesChange">+16%</span>
-                <span class="stat-change-text">from last semester</span>
-            </div>
-        </div>
-        <!-- Trend Sparkline SVG -->
-        <svg class="stat-card-sparkline" viewBox="0 0 100 50" preserveAspectRatio="none">
-            <defs>
-                <linearGradient id="gradAttendeeSpark" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.35"/>
-                    <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.0"/>
-                </linearGradient>
-            </defs>
-            <path d="M0,45 Q25,35 48,22 T92,11 L100,9 L100,50 L0,50 Z" fill="url(#gradAttendeeSpark)"/>
-            <path d="M0,45 Q25,35 48,22 T92,11 L100,9" fill="none" stroke="#8B5CF6" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-    </div>
-</div>
-
-<!-- All Events Section Card -->
-<div class="card-section">
-    <div class="card-section-header">
-        <div class="header-left">
-            <h2 class="section-title">All Events</h2>
-            <p class="section-subtitle">View all events conducted by ACM Amtics and their attendance.</p>
-        </div>
-        <div class="section-actions">
-            <!-- Search Input -->
-            <div class="search-wrapper">
-                <svg class="search-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <input type="text" id="eventSearchInput" class="search-input" placeholder="Search events..." autocomplete="off" />
+        <!-- Hero Section -->
+        <section class="events-hero-section">
+            <div class="events-hero-content">
+                <h1 class="events-hero-title">
+                    Events &amp; <span class="title-highlight">Workshops</span>
+                </h1>
+                <p class="events-hero-subtitle">
+                    Explore all the events, workshops, talks and competitions organized by ACM AMTICS.
+                    Discover past events, relive the moments and see the impact we've created together.
+                </p>
             </div>
 
-            <!-- Server-Side Enforced: + Add Event Button ONLY Exposed on /Events -->
-            @if (ViewBag.ShowAddEventButton == true)
+            <!-- Hero Right Decorative Calendar Element -->
+            <div class="events-hero-decor" aria-hidden="true">
+                <div class="decor-calendar-card">
+                    <div class="decor-calendar-glow"></div>
+                    <div class="decor-calendar-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="1.8" />
+                            <line x1="16" y1="2" x2="16" y2="6" stroke-width="2" stroke-linecap="round" />
+                            <line x1="8" y1="2" x2="8" y2="6" stroke-width="2" stroke-linecap="round" />
+                            <line x1="3" y1="10" x2="21" y2="10" stroke-width="1.5" />
+                            <circle cx="8" cy="14" r="1.2" fill="currentColor" />
+                            <circle cx="12" cy="14" r="1.2" fill="currentColor" />
+                            <circle cx="16" cy="14" r="1.2" fill="currentColor" />
+                            <circle cx="8" cy="18" r="1.2" fill="currentColor" />
+                            <circle cx="12" cy="18" r="1.2" fill="currentColor" />
+                            <circle cx="16" cy="18" r="1.2" fill="currentColor" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Handwritten Annotations -->
+                <div class="handwritten-notes-group">
+                    <span class="handwritten-note note-ideas">Ideas</span>
+                    <span class="handwritten-note note-learning">Learning</span>
+                    <span class="handwritten-note note-community">Community</span>
+                    <span class="handwritten-note note-growth">Growth</span>
+                    <svg class="handwritten-arrow-svg" viewBox="0 0 60 40" fill="none">
+                        <path d="M50,32 C40,25 25,28 10,12" stroke="#7C3AED" stroke-width="1.6" stroke-dasharray="3,2" stroke-linecap="round" />
+                        <path d="M12,7 L8,12 L14,15" stroke="#7C3AED" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Status Tabs -->
+        <section class="events-status-tabs-section">
+            <div class="events-status-tabs" role="tablist">
+                <a href="@Url.Action("Index", "Events", new { tab = "upcoming", search = Model.SearchQuery, type = Model.SelectedType, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                   class="tab-btn @(!isCompleted ? "active" : "")" 
+                   role="tab" 
+                   aria-selected="@(!isCompleted ? "true" : "false")">
+                    Upcoming Events
+                </a>
+                <a href="@Url.Action("Index", "Events", new { tab = "completed", search = Model.SearchQuery, type = Model.SelectedType, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                   class="tab-btn @(isCompleted ? "active" : "")" 
+                   role="tab" 
+                   aria-selected="@(isCompleted ? "true" : "false")">
+                    Completed Events
+                </a>
+            </div>
+        </section>
+
+        <!-- Search + Filter Toolbar Form -->
+        <section class="events-filter-toolbar-section">
+            <form method="get" action="@Url.Action("Index", "Events")" class="events-filter-toolbar" id="eventsFilterForm">
+                <input type="hidden" name="tab" value="@Model.ActiveTab" />
+
+                <!-- Left: Search Box -->
+                <div class="filter-search-box">
+                    <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" 
+                           name="search" 
+                           id="eventSearchInput" 
+                           class="filter-search-input" 
+                           placeholder="Search events by name, type or keyword..." 
+                           value="@Model.SearchQuery" 
+                           autocomplete="off" 
+                           aria-label="Search events" />
+                    @if (!string.IsNullOrWhiteSpace(Model.SearchQuery))
+                    {
+                        <a href="@Url.Action("Index", "Events", new { tab = Model.ActiveTab, type = Model.SelectedType, year = Model.SelectedYear, sortBy = Model.SortBy })" class="search-clear-btn" aria-label="Clear search">&times;</a>
+                    }
+                </div>
+
+                <!-- Middle Dropdowns -->
+                <div class="filter-select-group">
+                    <!-- Types Dropdown -->
+                    <div class="filter-select-wrapper">
+                        <select name="type" class="filter-select" id="filterTypeSelect" onchange="this.form.submit()" aria-label="Filter by type">
+                            <option value="">All Types</option>
+                            @foreach (var cat in Model.AvailableTypes)
+                            {
+                                <option value="@cat" selected="@(string.Equals(Model.SelectedType, cat, StringComparison.OrdinalIgnoreCase))">@cat</option>
+                            }
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    <!-- Years Dropdown -->
+                    <div class="filter-select-wrapper">
+                        <select name="year" class="filter-select" id="filterYearSelect" onchange="this.form.submit()" aria-label="Filter by year">
+                            <option value="">All Years</option>
+                            @foreach (var yr in Model.AvailableYears)
+                            {
+                                <option value="@yr" selected="@(Model.SelectedYear == yr)">@yr</option>
+                            }
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Right: Sort Control -->
+                <div class="filter-sort-wrapper">
+                    <span class="sort-prefix-label">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 0.35rem;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                        </svg>
+                        Sort by
+                    </span>
+                    <div class="sort-select-wrapper">
+                        <select name="sortBy" class="sort-select" id="sortBySelect" onchange="this.form.submit()" aria-label="Sort events">
+                            <option value="recent" selected="@(Model.SortBy == "recent")">Most Recent</option>
+                            <option value="oldest" selected="@(Model.SortBy == "oldest")">Oldest</option>
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Section Header with Dynamic Count -->
+        <section class="events-list-header">
+            <h2 class="events-section-title">
+                @currentTabTitle <span class="events-count-badge">(@Model.TotalCount)</span>
+            </h2>
+            <p class="events-section-subtitle">
+                A collection of all the events and workshops conducted by ACM AMTICS.
+            </p>
+        </section>
+
+        <!-- 4-Column Event Cards Grid -->
+        @if (Model.Events != null && Model.Events.Count > 0)
+        {
+            <div class="events-grid-4col" id="eventsGrid">
+                @foreach (var ev in Model.Events)
+                {
+                    var catLower = (ev.Category ?? "Workshop").ToLowerInvariant();
+                    var badgeClass = catLower switch
+                    {
+                        "workshop" => "category-workshop",
+                        "seminar" => "category-seminar",
+                        "competition" => "category-competition",
+                        "hackathon" => "category-competition",
+                        "talk" => "category-talk",
+                        _ => "category-workshop"
+                    };
+
+                    var fallbackImg = catLower switch
+                    {
+                        "workshop" => "/images/events/web-dev-workshop.jpg",
+                        "seminar" => "/images/events/ai-ml-intro.jpg",
+                        "competition" => "/images/events/acm-hackathon.jpg",
+                        "hackathon" => "/images/events/acm-hackathon.jpg",
+                        "talk" => "/images/events/open-source-session.jpg",
+                        _ => "/images/events/ui-ux-workshop.jpg"
+                    };
+
+                    var cardImage = !string.IsNullOrWhiteSpace(ev.ImageUrl) ? ev.ImageUrl : fallbackImg;
+                    var dateFormatted = ev.Date.ToString("d MMM yyyy");
+                    var isCompletedEvent = !string.Equals(ev.Status, "Upcoming", StringComparison.OrdinalIgnoreCase);
+
+                    <article class="public-event-card">
+                        <!-- Top Image -->
+                        <div class="event-card-media">
+                            <img src="@cardImage" 
+                                 alt="@ev.Name" 
+                                 class="event-img" 
+                                 loading="lazy" 
+                                 onerror="this.onerror=null; this.src='@fallbackImg';" />
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="event-card-body">
+                            <!-- Meta Row: Category, Date, Status -->
+                            <div class="event-card-meta-row">
+                                <span class="event-category-pill @badgeClass">@ev.Category</span>
+                                <span class="event-date-text">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="meta-inline-icon">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"/>
+                                        <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"/>
+                                        <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"/>
+                                    </svg>
+                                    @dateFormatted
+                                </span>
+                                <span class="event-status-pill @(isCompletedEvent ? "status-completed" : "status-upcoming")">
+                                    @(isCompletedEvent ? "Completed" : "Upcoming")
+                                </span>
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="event-title">
+                                <a href="@Url.Action("Details", "Events", new { id = ev.Id })" class="event-title-link">
+                                    @ev.Name
+                                </a>
+                            </h3>
+
+                            <!-- Short Description -->
+                            <p class="event-desc">
+                                @ev.Description
+                            </p>
+
+                            <!-- Venue & Attendees Details -->
+                            <div class="event-info-list">
+                                <div class="event-info-item">
+                                    <span class="info-icon" aria-hidden="true">📍</span>
+                                    <span class="info-text">@(string.IsNullOrWhiteSpace(ev.Venue) ? "Seminar Hall, AMTICS" : ev.Venue)</span>
+                                </div>
+                                <div class="event-info-item">
+                                    <span class="info-icon" aria-hidden="true">👥</span>
+                                    <span class="info-text">@(ev.AttendeesCount > 0 ? $"{ev.AttendeesCount} attendees" : (isCompletedEvent ? "80+ attendees" : "Registration Open"))</span>
+                                </div>
+                            </div>
+
+                            <!-- View Details Link Action -->
+                            <div class="event-card-action">
+                                <a href="@Url.Action("Details", "Events", new { id = ev.Id })" class="view-details-btn">
+                                    <span>View Details</span>
+                                    <svg class="view-details-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <!-- Pagination Bar -->
+            @if (Model.TotalPages > 1)
             {
-                <button type="button" class="btn-primary" id="openAddEventModalBtn">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                    </svg>
-                    <span>Add Event</span>
-                </button>
+                <nav class="events-pagination-nav" aria-label="Events pagination">
+                    <ul class="events-pagination-list">
+                        <!-- Previous Page -->
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-nav-item">
+                                <a href="@Url.Action("Index", "Events", new { page = Model.CurrentPage - 1, tab = Model.ActiveTab, search = Model.SearchQuery, type = Model.SelectedType, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                                   class="page-nav-btn prev-btn" 
+                                   aria-label="Previous page">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-nav-item disabled">
+                                <span class="page-nav-btn prev-btn disabled" aria-disabled="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </span>
+                            </li>
+                        }
+
+                        <!-- Numbered Pages -->
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            var pageNum = i;
+                            <li class="page-nav-item">
+                                <a href="@Url.Action("Index", "Events", new { page = pageNum, tab = Model.ActiveTab, search = Model.SearchQuery, type = Model.SelectedType, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                                   class="page-num-btn @(pageNum == Model.CurrentPage ? "active" : "")" 
+                                   aria-current="@(pageNum == Model.CurrentPage ? "page" : null)">
+                                    @pageNum
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Next Page -->
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-nav-item">
+                                <a href="@Url.Action("Index", "Events", new { page = Model.CurrentPage + 1, tab = Model.ActiveTab, search = Model.SearchQuery, type = Model.SelectedType, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                                   class="page-nav-btn next-btn" 
+                                   aria-label="Next page">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-nav-item disabled">
+                                <span class="page-nav-btn next-btn disabled" aria-disabled="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </nav>
             }
-        </div>
-    </div>
-
-    <!-- Events Table -->
-    <div class="table-responsive">
-        <table class="members-table">
-            <thead>
-                <tr>
-                    <th class="col-num">#</th>
-                    <th>Event Name</th>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Attendees</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="eventsTableBody">
-                <!-- Dynamically loaded via AJAX in admin-events.js -->
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination Footer -->
-    <div class="card-section-footer">
-        <div class="pagination-info" id="eventPaginationInfo">
-            Showing 1 to 8 of 18 events
-        </div>
-        <div class="pagination-controls" id="eventPaginationControls">
-            <!-- Dynamically populated via AJAX in admin-events.js -->
-        </div>
-    </div>
-</div>
-
-<!-- ==========================================================================
-     Page 2 — Add Event Modal
-     ========================================================================== -->
-<!-- ==========================================================================
-     Page 2 — Add Event Modal (Centered Floating Popover)
-     ========================================================================== -->
-<div class="modal-backdrop" id="addEventModalOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="addEventModalTitle">
-    <div class="modal-container" style="max-width: 480px;">
-        <!-- Close Button -->
-        <button type="button" class="modal-close-btn" id="closeAddEventModalBtn" aria-label="Close Modal">
-            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-
-        <div class="modal-header">
-            <h3 class="modal-title" id="addEventModalTitle">Add Event</h3>
-            <p class="modal-subtitle">Create a new event for ACM Amtics.</p>
-        </div>
-
-        <form id="addEventForm" novalidate>
-            <!-- Field 1: Event Name -->
-            <div class="modal-form-group">
-                <label class="modal-form-label" for="eventNameInput">Event Name</label>
-                <div class="input-with-icon-wrapper">
-                    <span class="input-left-icon">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                    </span>
-                    <input type="text" id="eventNameInput" name="name" class="modal-input" placeholder="Enter event name" required />
-                </div>
-                <div class="form-error-msg" id="eventNameError">Please enter a valid event name.</div>
-            </div>
-
-            <!-- Field 2: Date -->
-            <div class="modal-form-group">
-                <label class="modal-form-label" for="eventDateInput">Date</label>
-                <div class="input-with-icon-wrapper">
-                    <span class="input-left-icon">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    </span>
-                    <input type="date" id="eventDateInput" name="date" class="modal-input" required />
-                </div>
-                <div class="form-error-msg" id="eventDateError">Please select a valid event date.</div>
-            </div>
-
-            <!-- Field 3: Time -->
-            <div class="modal-form-group">
-                <label class="modal-form-label" for="eventTimeInput">Time</label>
-                <div class="input-with-icon-wrapper">
-                    <span class="input-left-icon">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </span>
-                    <select id="eventTimeInput" name="time" class="modal-select" required>
-                        <option value="" disabled selected>Select time</option>
-                        <option value="10:00 AM - 1:00 PM">10:00 AM - 1:00 PM</option>
-                        <option value="11:00 AM - 1:30 PM">11:00 AM - 1:30 PM</option>
-                        <option value="02:00 PM - 04:30 PM">02:00 PM - 04:30 PM</option>
-                        <option value="03:00 PM - 05:00 PM">03:00 PM - 05:00 PM</option>
-                        <option value="09:00 AM - 09:00 PM">09:00 AM - 09:00 PM</option>
-                        <option value="10:30 AM - 01:30 PM">10:30 AM - 01:30 PM</option>
-                    </select>
-                    <svg class="select-right-chevron" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="events-empty-state">
+                <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                 </div>
-                <div class="form-error-msg" id="eventTimeError">Please select or provide event time.</div>
+                <h3 class="empty-state-title">No events found</h3>
+                <p class="empty-state-text">
+                    @(string.IsNullOrWhiteSpace(Model.SearchQuery) 
+                        ? "There are currently no events matching your selected filter criteria." 
+                        : $"No results found for \"{Model.SearchQuery}\". Try adjusting your search keywords.")
+                </p>
+                <a href="@Url.Action("Index", "Events", new { tab = Model.ActiveTab })" class="btn-clear-filters">
+                    Reset Filters
+                </a>
             </div>
+        }
 
-            <!-- Field 4: Venue -->
-            <div class="modal-form-group">
-                <label class="modal-form-label" for="eventVenueInput">Venue</label>
-                <div class="input-with-icon-wrapper">
-                    <span class="input-left-icon">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </span>
-                    <input type="text" id="eventVenueInput" name="venue" class="modal-input" placeholder="Enter venue (e.g. Seminar Hall, AMTICS)" required />
-                </div>
-                <div class="form-error-msg" id="eventVenueError">Please specify the event venue.</div>
-            </div>
-
-            <!-- Field 5: Category -->
-            <div class="modal-form-group">
-                <label class="modal-form-label" for="eventCategoryInput">Category</label>
-                <div class="input-with-icon-wrapper">
-                    <span class="input-left-icon">
-                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                        </svg>
-                    </span>
-                    <select id="eventCategoryInput" name="category" class="modal-select" required>
-                        <option value="" disabled selected>Enter category (e.g. Workshop, Seminar, Talk)</option>
-                        <option value="Workshop">Workshop</option>
-                        <option value="Seminar">Seminar</option>
-                        <option value="Competition">Competition</option>
-                        <option value="Talk">Talk</option>
-                    </select>
-                    <svg class="select-right-chevron" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </div>
-                <div class="form-error-msg" id="eventCategoryError">Please choose an event category.</div>
-            </div>
-
-            <!-- Footer Buttons -->
-            <div class="modal-footer">
-                <button type="button" class="btn-secondary" id="cancelAddEventBtn">Cancel</button>
-                <button type="submit" class="modal-btn-submit" id="submitAddEventBtn">Add Event</button>
-            </div>
-        </form>
     </div>
 </div>
-
-<!-- Toast Notification Container -->
-<div class="toast-container" id="toastContainer" aria-live="polite"></div>
-
-@section Scripts {
-    <script src="~/js/admin-events.js" asp-append-version="true"></script>
-}

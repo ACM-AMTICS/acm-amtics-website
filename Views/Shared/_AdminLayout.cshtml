@@ -33,7 +33,7 @@
         <aside class="admin-sidebar" id="adminSidebar">
             <!-- Brand / Logo -->
             <div class="sidebar-brand">
-                <a href="@(isCoordinator ? "/Events" : "/Dashboard")" class="brand-link">
+                <a href="@(isCoordinator ? "/Events/Manage" : "/Dashboard")" class="brand-link">
                     <img src="~/images/acm-logo.svg" alt="ACM Amtics Logo" class="brand-logo-img" />
                     <div class="brand-text-group">
                         <span class="brand-title">ACM AMTICS</span>
@@ -60,7 +60,7 @@
                         </li>
                         <!-- Events & Attendance -->
                         <li class="nav-item">
-                            <a href="/Events" class="nav-link @(ViewBag.ActiveMenu == "Events" ? "active" : "")">
+                            <a href="/Events/Manage" class="nav-link @(ViewBag.ActiveMenu == "Events" ? "active" : "")">
                                 <span class="nav-icon">
                                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
