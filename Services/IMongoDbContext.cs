@@ -8,6 +8,7 @@ namespace acm_amtics_website.Services
         IMongoCollection<Member>? MembersCollection { get; }
         IMongoCollection<EventItem>? EventsCollection { get; }
         IMongoCollection<AttendanceRecord>? AttendanceCollection { get; }
+        IMongoCollection<ProjectItem>? ProjectsCollection { get; }
         IMongoCollection<User>? AdminsCollection { get; }
         bool IsConnected { get; }
         string ConnectionString { get; }

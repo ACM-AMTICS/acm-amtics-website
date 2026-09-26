@@ -1,0 +1,424 @@
+@model acm_amtics_website.Models.ProjectsViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Student Projects - ACM AMTICS";
+}
+
+<!-- Ambient Decorative Background Gradients & Dot Grids -->
+<div class="events-ambient-bg" aria-hidden="true">
+    <div class="events-blob-top-left"></div>
+    <div class="events-blob-top-right"></div>
+    <div class="events-blob-bottom-left"></div>
+    <div class="events-dot-pattern dot-pattern-left"></div>
+    <div class="events-dot-pattern dot-pattern-right"></div>
+</div>
+
+<div class="projects-page-wrapper">
+    <div class="projects-container">
+
+        <!-- Breadcrumb Row -->
+        <nav class="events-breadcrumb-wrapper" aria-label="Breadcrumb">
+            <ol class="events-breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="/" class="breadcrumb-link">
+                        <svg class="breadcrumb-home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="breadcrumb-separator" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                    </svg>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span>Projects</span>
+                </li>
+            </ol>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="projects-hero-section">
+            <div class="projects-hero-content">
+                <h1 class="projects-hero-title">
+                    Student <span class="title-highlight">Projects</span>
+                </h1>
+                <p class="projects-hero-subtitle">
+                    Explore innovative projects built by our members. From open source contributions to real-world solutions, these projects showcase the creativity and technical skills of the AMTICS community.
+                </p>
+            </div>
+
+            <!-- Hero Right Decorative Stack Visual -->
+            <div class="projects-hero-decor" aria-hidden="true">
+                <!-- Decorative Wavy Curved Line on Left -->
+                <svg class="decor-wavy-line" viewBox="0 0 100 50" fill="none">
+                    <path d="M5,35 Q40,5 65,30 T95,20" stroke="#DDD6FE" stroke-width="2" stroke-linecap="round" />
+                </svg>
+
+                <!-- Background Subtle Dot Grid Matrix -->
+                <div class="decor-hero-dot-grid"></div>
+
+                <!-- Layered Stack Card -->
+                <div class="decor-stack-card">
+                    <div class="decor-stack-glow"></div>
+                    <div class="decor-stack-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Top Layer -->
+                            <path d="M24 7L42 17L24 27L6 17L24 7Z" fill="#7C3AED" />
+                            <!-- Middle Layer -->
+                            <path d="M42 23L24 33L6 23M42 29L24 39L6 29" stroke="#7C3AED" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Handwritten Annotations Group on the Right -->
+                <div class="handwritten-notes-projects">
+                    <span class="handwritten-word word-build">Build</span>
+                    <span class="handwritten-word word-innovate">Innovate</span>
+                    <span class="handwritten-word word-collaborate">Collaborate</span>
+                    <span class="handwritten-word word-impact">Create Impact</span>
+                    <!-- Hand-drawn curved arrow pointing back toward the card -->
+                    <svg class="handwritten-arrow-projects" viewBox="0 0 70 50" fill="none">
+                        <path d="M55,8 C40,24 24,32 10,34" stroke="#7C3AED" stroke-width="1.8" stroke-dasharray="3,2" stroke-linecap="round" />
+                        <path d="M12,27 L8,35 L17,37" stroke="#7C3AED" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search + Filter Toolbar Form -->
+        <section class="events-filter-toolbar-section">
+            <form method="get" action="@Url.Action("Index", "Projects")" class="events-filter-toolbar" id="projectsFilterForm">
+                <!-- Search Box -->
+                <div class="filter-search-box">
+                    <svg class="filter-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" 
+                           name="search" 
+                           id="projectSearchInput" 
+                           class="filter-search-input" 
+                           placeholder="Search projects by name, technology or keyword..." 
+                           value="@Model.SearchQuery" 
+                           autocomplete="off" 
+                           aria-label="Search projects" />
+                    @if (!string.IsNullOrWhiteSpace(Model.SearchQuery))
+                    {
+                        <a href="@Url.Action("Index", "Projects", new { category = Model.SelectedCategory, technology = Model.SelectedTechnology, year = Model.SelectedYear, sortBy = Model.SortBy })" class="search-clear-btn" aria-label="Clear search">&times;</a>
+                    }
+                </div>
+
+                <!-- Dropdowns Group -->
+                <div class="filter-select-group">
+                    <!-- Category Dropdown -->
+                    <div class="filter-select-wrapper">
+                        <select name="category" class="filter-select" id="filterCategorySelect" onchange="this.form.submit()" aria-label="Filter by category">
+                            <option value="">All Categories</option>
+                            @foreach (var cat in Model.AvailableCategories)
+                            {
+                                <option value="@cat" selected="@(string.Equals(Model.SelectedCategory, cat, StringComparison.OrdinalIgnoreCase))">@cat</option>
+                            }
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    <!-- Technology Dropdown -->
+                    <div class="filter-select-wrapper">
+                        <select name="technology" class="filter-select" id="filterTechSelect" onchange="this.form.submit()" aria-label="Filter by technology">
+                            <option value="">All Technologies</option>
+                            @foreach (var tech in Model.AvailableTechnologies)
+                            {
+                                <option value="@tech" selected="@(string.Equals(Model.SelectedTechnology, tech, StringComparison.OrdinalIgnoreCase))">@tech</option>
+                            }
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+
+                    <!-- Year Dropdown -->
+                    <div class="filter-select-wrapper">
+                        <select name="year" class="filter-select" id="filterYearSelect" onchange="this.form.submit()" aria-label="Filter by year">
+                            <option value="">All Years</option>
+                            @foreach (var yr in Model.AvailableYears)
+                            {
+                                <option value="@yr" selected="@(Model.SelectedYear == yr)">@yr</option>
+                            }
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Right: Sort Control -->
+                <div class="filter-sort-wrapper">
+                    <span class="sort-prefix-label">
+                        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="margin-right: 0.35rem;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                        </svg>
+                        Sort by
+                    </span>
+                    <div class="sort-select-wrapper">
+                        <select name="sortBy" class="sort-select" id="sortBySelect" onchange="this.form.submit()" aria-label="Sort projects">
+                            <option value="recent" selected="@(Model.SortBy == "recent")">Most Recent</option>
+                            <option value="oldest" selected="@(Model.SortBy == "oldest")">Oldest</option>
+                            <option value="az" selected="@(Model.SortBy == "az")">A-Z</option>
+                            <option value="za" selected="@(Model.SortBy == "za")">Z-A</option>
+                        </select>
+                        <svg class="filter-select-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- Project Count Section Header -->
+        <section class="events-list-header">
+            <h2 class="events-section-title">
+                All Projects <span class="events-count-badge">(@Model.TotalCount)</span>
+            </h2>
+            <p class="events-section-subtitle">
+                A collection of member-built projects, open source contributions and innovative solutions.
+            </p>
+        </section>
+
+        <!-- 4-Column Project Cards Grid -->
+        @if (Model.Projects != null && Model.Projects.Count > 0)
+        {
+            <div class="projects-grid-4col" id="projectsGrid">
+                @foreach (var proj in Model.Projects)
+                {
+                    var catLower = (proj.Category ?? "Web App").ToLowerInvariant();
+                    var catTagClass = catLower switch
+                    {
+                        "web app" => "tag-purple",
+                        "ai/ml" => "tag-purple",
+                        "mobile app" => "tag-purple",
+                        "cybersecurity" => "tag-pink",
+                        "developer tool" => "tag-purple",
+                        "open source" => "tag-cyan",
+                        _ => "tag-purple"
+                    };
+
+                    var subCatLower = (proj.SubCategory ?? "").ToLowerInvariant();
+                    var subCatTagClass = subCatLower switch
+                    {
+                        "sustainability" => "tag-green",
+                        "education" => "tag-blue",
+                        "campus utility" => "tag-blue",
+                        "open source" => "tag-cyan",
+                        "health & wellness" => "tag-green",
+                        "productivity" => "tag-blue",
+                        "social impact" => "tag-green",
+                        "community" => "tag-blue",
+                        _ => "tag-blue"
+                    };
+
+                    var fallbackImg = "/images/projects/ecotrack.svg";
+                    var cardImage = !string.IsNullOrWhiteSpace(proj.ImageUrl) ? proj.ImageUrl : fallbackImg;
+                    var detailUrl = Url.Action("Details", "Projects", new { id = proj.Slug ?? proj.Id });
+
+                    <article class="public-project-card">
+                        <!-- Top Image -->
+                        <div class="project-card-media">
+                            <a href="@detailUrl" tabindex="-1" aria-hidden="true">
+                                <img src="@cardImage" 
+                                     alt="@proj.Title" 
+                                     class="project-img" 
+                                     loading="lazy" 
+                                     onerror="this.onerror=null; this.src='@fallbackImg';" />
+                            </a>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="project-card-body">
+                            <!-- Category and SubCategory Tags -->
+                            <div class="project-tags-row">
+                                <span class="project-tag-pill @catTagClass">@proj.Category</span>
+                                @if (!string.IsNullOrWhiteSpace(proj.SubCategory))
+                                {
+                                    <span class="project-tag-pill @subCatTagClass">@proj.SubCategory</span>
+                                }
+                            </div>
+
+                            <!-- Title -->
+                            <h3 class="project-title">
+                                <a href="@detailUrl" class="project-title-link">
+                                    @proj.Title
+                                </a>
+                            </h3>
+
+                            <!-- Short Description -->
+                            <p class="project-desc">
+                                @proj.ShortDescription
+                            </p>
+
+                            <!-- Technology Chips -->
+                            <div class="project-tech-chips">
+                                @if (proj.Technologies != null)
+                                {
+                                    foreach (var tech in proj.Technologies.Take(3))
+                                    {
+                                        <span class="tech-chip">@tech</span>
+                                    }
+                                }
+                            </div>
+
+                            <!-- Team and Year Row -->
+                            <div class="project-team-meta-row">
+                                <div class="project-team-block">
+                                    <!-- Overlapping Avatars -->
+                                    <div class="project-avatars-cluster">
+                                        @if (proj.TeamMembers != null && proj.TeamMembers.Count > 0)
+                                        {
+                                            @foreach (var member in proj.TeamMembers.Take(3))
+                                            {
+                                                var memberProfileUrl = !string.IsNullOrWhiteSpace(member.MemberId) 
+                                                    ? Url.Action("MemberProfile", "Profile", new { id = member.MemberId }) 
+                                                    : Url.Action("MemberProfile", "Profile", new { id = "65a100000000000000000000" });
+                                                var avatarSrc = !string.IsNullOrWhiteSpace(member.AvatarUrl) ? member.AvatarUrl : "/images/avatars/avatar-1.jpg";
+
+                                                <a href="@memberProfileUrl" class="team-avatar-link" title="@member.Name (@member.Role)">
+                                                    <img src="@avatarSrc" alt="@member.Name" class="cluster-avatar-img" />
+                                                </a>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <img src="/images/avatars/avatar-1.jpg" alt="Team member" class="cluster-avatar-img" />
+                                        }
+                                    </div>
+
+                                    <!-- Team Name -->
+                                    @{
+                                        var leadMemberId = proj.TeamMembers?.FirstOrDefault()?.MemberId ?? "65a100000000000000000000";
+                                        var teamProfileUrl = Url.Action("MemberProfile", "Profile", new { id = leadMemberId });
+                                    }
+                                    <a href="@teamProfileUrl" class="project-team-name-link" title="View team public profile">
+                                        @proj.TeamName
+                                    </a>
+                                </div>
+
+                                <!-- Year Badge -->
+                                <div class="project-year-badge">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" class="year-calendar-icon">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2" />
+                                        <line x1="16" y1="2" x2="16" y2="6" stroke-width="2" />
+                                        <line x1="8" y1="2" x2="8" y2="6" stroke-width="2" />
+                                        <line x1="3" y1="10" x2="21" y2="10" stroke-width="2" />
+                                    </svg>
+                                    <span>@proj.Year</span>
+                                </div>
+                            </div>
+
+                            <!-- View Project Action CTA -->
+                            <div class="project-card-action">
+                                <a href="@detailUrl" class="view-project-link">
+                                    <span>View Project</span>
+                                    <svg class="view-project-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <!-- Centered Pagination Bar -->
+            @if (Model.TotalPages > 1)
+            {
+                <nav class="events-pagination-nav" aria-label="Projects pagination">
+                    <ul class="events-pagination-list">
+                        <!-- Previous Page -->
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-nav-item">
+                                <a href="@Url.Action("Index", "Projects", new { page = Model.CurrentPage - 1, search = Model.SearchQuery, category = Model.SelectedCategory, technology = Model.SelectedTechnology, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                                   class="page-nav-btn prev-btn" 
+                                   aria-label="Previous page">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-nav-item disabled">
+                                <span class="page-nav-btn prev-btn disabled" aria-disabled="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </span>
+                            </li>
+                        }
+
+                        <!-- Numbered Pages -->
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            var pageNum = i;
+                            <li class="page-nav-item">
+                                <a href="@Url.Action("Index", "Projects", new { page = pageNum, search = Model.SearchQuery, category = Model.SelectedCategory, technology = Model.SelectedTechnology, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                                   class="page-num-btn @(pageNum == Model.CurrentPage ? "active" : "")" 
+                                   aria-current="@(pageNum == Model.CurrentPage ? "page" : null)">
+                                    @pageNum
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Next Page -->
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-nav-item">
+                                <a href="@Url.Action("Index", "Projects", new { page = Model.CurrentPage + 1, search = Model.SearchQuery, category = Model.SelectedCategory, technology = Model.SelectedTechnology, year = Model.SelectedYear, sortBy = Model.SortBy })" 
+                                   class="page-nav-btn next-btn" 
+                                   aria-label="Next page">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-nav-item disabled">
+                                <span class="page-nav-btn next-btn disabled" aria-disabled="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            }
+        }
+        else
+        {
+            <!-- Empty State -->
+            <div class="events-empty-state">
+                <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                </div>
+                <h3 class="empty-state-title">No projects found</h3>
+                <p class="empty-state-text">
+                    @(string.IsNullOrWhiteSpace(Model.SearchQuery) 
+                        ? "There are currently no projects matching your selected filter criteria." 
+                        : $"No projects found for \"{Model.SearchQuery}\". Try adjusting your search keywords.")
+                </p>
+                <a href="@Url.Action("Index", "Projects")" class="btn-clear-filters">
+                    Reset Filters
+                </a>
+            </div>
+        }
+
+    </div>
+</div>

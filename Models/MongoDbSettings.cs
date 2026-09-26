@@ -8,5 +8,6 @@ namespace acm_amtics_website.Models
         public string MembersCollectionName { get; set; } = "Members";
         public string EventsCollectionName { get; set; } = "Events";
         public string AttendanceCollectionName { get; set; } = "Attendance";
+        public string ProjectsCollectionName { get; set; } = "Projects";
     }
 }

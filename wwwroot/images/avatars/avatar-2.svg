@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <circle cx="50" cy="50" r="50" fill="#E0E7FF"/>
+  <!-- Head & Hair -->
+  <circle cx="50" cy="40" r="20" fill="#FBBF24"/>
+  <path d="M30,35 Q50,15 70,35 Q50,22 30,35 Z" fill="#1E293B"/>
+  <!-- Eyes -->
+  <circle cx="44" cy="40" r="2.5" fill="#1E293B"/>
+  <circle cx="56" cy="40" r="2.5" fill="#1E293B"/>
+  <!-- Smile -->
+  <path d="M45,48 Q50,53 55,48" stroke="#1E293B" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- Shoulders -->
+  <path d="M20,95 C20,70 32,65 50,65 C68,65 80,70 80,95 Z" fill="#4F46E5"/>
+</svg>

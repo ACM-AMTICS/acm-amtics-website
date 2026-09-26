@@ -1,0 +1,191 @@
+@model acm_amtics_website.Models.ProjectItem
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = $"{Model?.Title ?? "Project Details"} - ACM AMTICS";
+    var fallbackImg = "/images/projects/ecotrack.svg";
+    var projectImg = !string.IsNullOrWhiteSpace(Model?.ImageUrl) ? Model.ImageUrl : fallbackImg;
+}
+
+<!-- Ambient Background -->
+<div class="events-ambient-bg" aria-hidden="true">
+    <div class="events-blob-top-left"></div>
+    <div class="events-blob-top-right"></div>
+</div>
+
+<div class="event-details-page-wrapper">
+    <div class="projects-container">
+
+        <!-- Top Navigation / Breadcrumb -->
+        <div class="project-details-top-bar">
+            <a href="/Projects" class="back-to-projects-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Back to Projects</span>
+            </a>
+
+            <nav class="events-breadcrumb-wrapper" aria-label="Breadcrumb" style="margin-bottom: 0;">
+                <ol class="events-breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/" class="breadcrumb-link">
+                            <svg class="breadcrumb-home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Projects" class="breadcrumb-link">Projects</a>
+                    </li>
+                    <li class="breadcrumb-separator" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span>@(Model?.Title ?? "Project")</span>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Project Hero Card Banner -->
+        <article class="project-details-card">
+            <!-- Header Info -->
+            <div class="project-details-header">
+                <div class="project-tags-row" style="margin-bottom: 0.75rem;">
+                    <span class="project-tag-pill tag-purple">@Model?.Category</span>
+                    @if (!string.IsNullOrWhiteSpace(Model?.SubCategory))
+                    {
+                        <span class="project-tag-pill tag-green">@Model.SubCategory</span>
+                    }
+                    <span class="project-status-pill status-completed">@Model?.Status</span>
+                </div>
+                <h1 class="project-details-title">@Model?.Title</h1>
+                <p class="project-details-subtitle">@Model?.ShortDescription</p>
+            </div>
+
+            <!-- Main Layout Grid -->
+            <div class="project-details-grid">
+                <!-- Left Main Content -->
+                <div class="project-details-main">
+                    <!-- Featured Visual Media -->
+                    <div class="project-details-media">
+                        <img src="@projectImg" 
+                             alt="@Model?.Title" 
+                             class="project-details-img" 
+                             onerror="this.onerror=null; this.src='@fallbackImg';" />
+                    </div>
+
+                    <!-- Overview Section -->
+                    <div class="project-content-section">
+                        <h2 class="project-section-heading">Project Overview</h2>
+                        <p class="project-section-body">
+                            @(string.IsNullOrWhiteSpace(Model?.FullDescription) ? Model?.ShortDescription : Model.FullDescription)
+                        </p>
+                    </div>
+
+                    <!-- Technologies Used Section -->
+                    <div class="project-content-section">
+                        <h2 class="project-section-heading">Technologies &amp; Architecture</h2>
+                        <div class="project-tech-chips-large">
+                            @if (Model?.Technologies != null)
+                            {
+                                foreach (var tech in Model.Technologies)
+                                {
+                                    <span class="tech-chip-lg">@tech</span>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Team Contributors Section -->
+                    <div class="project-content-section">
+                        <h2 class="project-section-heading">Team &amp; Contributors</h2>
+                        <div class="project-contributors-grid">
+                            @if (Model?.TeamMembers != null && Model.TeamMembers.Count > 0)
+                            {
+                                foreach (var member in Model.TeamMembers)
+                                {
+                                    var profileUrl = !string.IsNullOrWhiteSpace(member.MemberId) 
+                                        ? Url.Action("MemberProfile", "Profile", new { id = member.MemberId }) 
+                                        : Url.Action("MemberProfile", "Profile", new { id = "65a100000000000000000000" });
+                                    var avatarSrc = !string.IsNullOrWhiteSpace(member.AvatarUrl) ? member.AvatarUrl : "/images/avatars/avatar-1.jpg";
+
+                                    <a href="@profileUrl" class="contributor-profile-card">
+                                        <img src="@avatarSrc" alt="@member.Name" class="contributor-avatar" />
+                                        <div class="contributor-info">
+                                            <span class="contributor-name">@member.Name</span>
+                                            <span class="contributor-role">@(member.Role ?? "Contributor")</span>
+                                        </div>
+                                        <svg class="contributor-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar Details -->
+                <aside class="project-details-sidebar">
+                    <!-- Project Action Card -->
+                    <div class="sidebar-action-card">
+                        <h3 class="sidebar-heading">Project Links</h3>
+                        <div class="sidebar-links-list">
+                            @if (!string.IsNullOrWhiteSpace(Model?.GithubUrl))
+                            {
+                                <a href="@Model.GithubUrl" target="_blank" rel="noopener noreferrer" class="btn-github-action">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                    </svg>
+                                    <span>GitHub Repository</span>
+                                </a>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(Model?.LiveDemoUrl))
+                            {
+                                <a href="@Model.LiveDemoUrl" target="_blank" rel="noopener noreferrer" class="btn-demo-action">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                    <span>Live Demonstration</span>
+                                </a>
+                            }
+                        </div>
+
+                        <!-- Meta Info List -->
+                        <div class="sidebar-meta-list">
+                            <div class="sidebar-meta-item">
+                                <span class="meta-label">Team</span>
+                                <span class="meta-val">@Model?.TeamName</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span class="meta-label">Year</span>
+                                <span class="meta-val">@Model?.Year</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span class="meta-label">Category</span>
+                                <span class="meta-val">@Model?.Category</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span class="meta-label">Status</span>
+                                <span class="meta-val">@Model?.Status</span>
+                            </div>
+                            <div class="sidebar-meta-item">
+                                <span class="meta-label">Chapter</span>
+                                <span class="meta-val">ACM AMTICS Student Chapter</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </article>
+
+    </div>
+</div>

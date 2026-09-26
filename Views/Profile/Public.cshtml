@@ -1,0 +1,147 @@
+@model acm_amtics_website.Models.PublicMemberProfileViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = $"{Model.Member.Name} - Member Profile - ACM AMTICS";
+}
+
+<!-- Ambient Background -->
+<div class="events-ambient-bg" aria-hidden="true">
+    <div class="events-blob-top-left"></div>
+    <div class="events-blob-top-right"></div>
+</div>
+
+<div class="public-profile-page-wrapper">
+    <div class="projects-container">
+
+        <!-- Top Bar Navigation & Breadcrumbs -->
+        <div class="project-details-top-bar">
+            <a href="/Projects" class="back-to-projects-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Back to Projects</span>
+            </a>
+
+            <nav class="events-breadcrumb-wrapper" aria-label="Breadcrumb" style="margin-bottom: 0;">
+                <ol class="events-breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="/" class="breadcrumb-link">
+                            <svg class="breadcrumb-home-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-separator" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/Projects" class="breadcrumb-link">Projects</a>
+                    </li>
+                    <li class="breadcrumb-separator" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span>@Model.Member.Name</span>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Profile Hero Card -->
+        <div class="public-profile-card">
+            <div class="public-profile-header">
+                <div class="public-profile-avatar-box">
+                    @if (!string.IsNullOrWhiteSpace(Model.Member.AvatarUrl))
+                    {
+                        <img src="@Model.Member.AvatarUrl" alt="@Model.Member.Name" class="profile-header-img" />
+                    }
+                    else
+                    {
+                        <div class="profile-header-initials">@Model.Member.Initials</div>
+                    }
+                </div>
+                <div class="public-profile-info">
+                    <div class="profile-role-tag-row">
+                        <span class="profile-badge-pill">@Model.Member.Role</span>
+                        <span class="profile-status-pill">ACM Member</span>
+                    </div>
+                    <h1 class="public-profile-name">@Model.Member.Name</h1>
+                    <p class="public-profile-dept">@Model.Department</p>
+                    <p class="public-profile-bio">@Model.Bio</p>
+
+                    <!-- Skills Chips -->
+                    <div class="profile-skills-list">
+                        @foreach (var skill in Model.Skills)
+                        {
+                            <span class="profile-skill-chip">@skill</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member's Student Projects Section -->
+        <div class="member-projects-section">
+            <h2 class="member-projects-title">Projects Contributed</h2>
+            <p class="member-projects-subtitle">Innovative projects built with fellow student teams at ACM AMTICS.</p>
+
+            @if (Model.Projects != null && Model.Projects.Count > 0)
+            {
+                <div class="projects-grid-4col" style="margin-top: 1.5rem;">
+                    @foreach (var proj in Model.Projects)
+                    {
+                        <article class="public-project-card">
+                            <div class="project-card-media">
+                                <a href="@Url.Action("Details", "Projects", new { id = proj.Slug ?? proj.Id })">
+                                    <img src="@proj.ImageUrl" alt="@proj.Title" class="project-img" loading="lazy" />
+                                </a>
+                            </div>
+                            <div class="project-card-body">
+                                <div class="project-tags-row">
+                                    <span class="project-tag-pill tag-purple">@proj.Category</span>
+                                    @if (!string.IsNullOrWhiteSpace(proj.SubCategory))
+                                    {
+                                        <span class="project-tag-pill tag-green">@proj.SubCategory</span>
+                                    }
+                                </div>
+                                <h3 class="project-title">
+                                    <a href="@Url.Action("Details", "Projects", new { id = proj.Slug ?? proj.Id })" class="project-title-link">
+                                        @proj.Title
+                                    </a>
+                                </h3>
+                                <p class="project-desc">@proj.ShortDescription</p>
+                                <div class="project-tech-chips">
+                                    @foreach (var tech in proj.Technologies.Take(3))
+                                    {
+                                        <span class="tech-chip">@tech</span>
+                                    }
+                                </div>
+                                <div class="project-card-action">
+                                    <a href="@Url.Action("Details", "Projects", new { id = proj.Slug ?? proj.Id })" class="view-project-link">
+                                        <span>View Project</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="events-empty-state" style="margin-top: 1.5rem;">
+                    <p class="empty-state-text">Explore more collaborative projects across the chapter.</p>
+                    <a href="/Projects" class="btn-clear-filters">Browse All Projects</a>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>

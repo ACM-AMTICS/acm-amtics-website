@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="satBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#052E16"/>
+      <stop offset="100%" stop-color="#021E0F"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="340" fill="url(#satBg)"/>
+
+  <!-- Satellite Terrain Texture -->
+  <g opacity="0.35">
+    <path d="M0,0 Q150,120 300,50 T600,100 L600,340 L0,340 Z" fill="#14532D"/>
+    <path d="M120,80 Q240,240 400,160 T600,280 L600,340 L120,340 Z" fill="#166534"/>
+  </g>
+
+  <!-- Crosshairs / Radar HUD -->
+  <circle cx="300" cy="170" r="100" fill="none" stroke="#22C55E" stroke-width="1.5" stroke-dasharray="8,6" opacity="0.6"/>
+  <circle cx="300" cy="170" r="50" fill="none" stroke="#22C55E" stroke-width="1" opacity="0.4"/>
+  <line x1="160" y1="170" x2="440" y2="170" stroke="#22C55E" stroke-width="1" opacity="0.3"/>
+  <line x1="300" y1="30" x2="300" y2="310" stroke="#22C55E" stroke-width="1" opacity="0.3"/>
+
+  <!-- AI Target Bounding Boxes -->
+  <g transform="translate(240, 110)">
+    <rect width="120" height="90" fill="none" stroke="#EF4444" stroke-width="2" stroke-dasharray="4,2"/>
+    <rect width="90" height="20" fill="#EF4444" opacity="0.9"/>
+    <text x="6" y="14" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="700" fill="#FFF">CRITICAL FLOOD: 94%</text>
+  </g>
+
+  <g transform="translate(100, 180)">
+    <rect width="90" height="60" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
+    <rect width="80" height="18" fill="#F59E0B" opacity="0.9"/>
+    <text x="6" y="13" font-family="sans-serif" font-size="9" font-weight="700" fill="#1E293B">ROADWAY BLOCKED</text>
+  </g>
+
+  <!-- Top Status Banner -->
+  <g transform="translate(30, 25)">
+    <rect width="210" height="32" rx="8" fill="#064E3B" stroke="rgba(34, 197, 94, 0.4)"/>
+    <circle cx="16" cy="16" r="5" fill="#22C55E"/>
+    <text x="28" y="20" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="700" fill="#86EFAC">AI INFERENCE &bull; MULTISPECTRAL</text>
+  </g>
+</svg>

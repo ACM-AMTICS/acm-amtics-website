@@ -73,6 +73,7 @@ namespace acm_amtics_website.Services
             var membersCol = settings.Value.MembersCollectionName ?? "Members";
             var eventsCol = settings.Value.EventsCollectionName ?? "Events";
             var attendanceCol = settings.Value.AttendanceCollectionName ?? "Attendance";
+            var projectsCol = settings.Value.ProjectsCollectionName ?? "Projects";
             var adminsCol = settings.Value.UsersCollectionName ?? "Admins";
 
             if (_isConnected && _database != null)
@@ -80,6 +81,7 @@ namespace acm_amtics_website.Services
                 MembersCollection = _database.GetCollection<Member>(membersCol);
                 EventsCollection = _database.GetCollection<EventItem>(eventsCol);
                 AttendanceCollection = _database.GetCollection<AttendanceRecord>(attendanceCol);
+                ProjectsCollection = _database.GetCollection<ProjectItem>(projectsCol);
                 AdminsCollection = _database.GetCollection<User>(adminsCol);
             }
         }
@@ -124,6 +126,7 @@ namespace acm_amtics_website.Services
         public IMongoCollection<Member>? MembersCollection { get; }
         public IMongoCollection<EventItem>? EventsCollection { get; }
         public IMongoCollection<AttendanceRecord>? AttendanceCollection { get; }
+        public IMongoCollection<ProjectItem>? ProjectsCollection { get; }
         public IMongoCollection<User>? AdminsCollection { get; }
         public bool IsConnected => _isConnected;
         public string ConnectionString => _connectionString;

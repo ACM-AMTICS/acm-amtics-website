@@ -12,6 +12,7 @@ builder.Services.AddSingleton<IMongoDbContext, MongoDbContext>();
 builder.Services.AddSingleton<IUserService, UserService>();
 builder.Services.AddSingleton<IMemberService, MemberService>();
 builder.Services.AddSingleton<IEventService, EventService>();
+builder.Services.AddSingleton<IProjectService, ProjectService>();
 builder.Services.AddSingleton<IAttendanceService, AttendanceService>();
 builder.Services.AddSingleton<IDashboardService, DashboardService>();
 
@@ -58,9 +59,10 @@ using (var scope = app.Services.CreateScope())
     var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
     await userService.SeedDefaultAdminAsync();
 
-    // Trigger constructor seeding for Members, Events, and Attendance collections in MongoDB
+    // Trigger constructor seeding for Members, Events, Projects, and Attendance collections in MongoDB
     scope.ServiceProvider.GetRequiredService<IMemberService>();
     scope.ServiceProvider.GetRequiredService<IEventService>();
+    scope.ServiceProvider.GetRequiredService<IProjectService>();
     scope.ServiceProvider.GetRequiredService<IAttendanceService>();
 }
 
