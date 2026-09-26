@@ -11,5 +11,6 @@ namespace acm_amtics_website.Services
         Task<AttendanceRecord> AddAttendanceRecordAsync(AttendanceRecord record);
         Task<List<AttendanceRecord>> GetAttendanceForEventAsync(string eventId);
         Task<int> GetTotalAttendeesCountAsync();
+        Task<bool> DeleteAttendeesByEventIdAsync(string eventId);
     }
 }

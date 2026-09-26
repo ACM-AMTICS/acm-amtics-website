@@ -298,10 +298,46 @@
     // --------------------------------------------------------------------------
     // 5. Add Event Modal Handling
     // --------------------------------------------------------------------------
+    // 5. Add/Edit Event Modal Handling
+    // --------------------------------------------------------------------------
+    const markAsCompletedBtn = document.getElementById('markAsCompletedBtn');
+    const eventStatusInput = document.getElementById('eventStatusInput');
+    const statusText = document.getElementById('statusText');
+    const markCompletedBtnText = document.getElementById('markCompletedBtnText');
+    const markCompletedCheckIcon = document.getElementById('markCompletedCheckIcon');
+
+    function updateStatusUI(status) {
+        if (!eventStatusInput) return;
+        const isCompleted = (status || '').toLowerCase() === 'completed';
+        eventStatusInput.value = isCompleted ? 'Completed' : 'Upcoming';
+        if (statusText) statusText.textContent = isCompleted ? 'Completed' : 'Upcoming';
+        if (markCompletedBtnText) markCompletedBtnText.textContent = isCompleted ? 'Completed ✓' : 'Mark as Completed';
+        if (markCompletedCheckIcon) markCompletedCheckIcon.style.display = isCompleted ? 'inline-block' : 'none';
+        if (markAsCompletedBtn) {
+            if (isCompleted) {
+                markAsCompletedBtn.style.background = 'rgba(16, 185, 129, 0.15)';
+                markAsCompletedBtn.style.color = '#34d399';
+                markAsCompletedBtn.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            } else {
+                markAsCompletedBtn.style.background = '';
+                markAsCompletedBtn.style.color = '';
+                markAsCompletedBtn.style.borderColor = '';
+            }
+        }
+    }
+
     function setupModal() {
         if (openAddEventModalBtn) {
             openAddEventModalBtn.addEventListener('click', () => {
                 openAddModal();
+            });
+        }
+
+        if (markAsCompletedBtn) {
+            markAsCompletedBtn.addEventListener('click', () => {
+                const current = (eventStatusInput.value || '').toLowerCase();
+                const next = current === 'completed' ? 'Upcoming' : 'Completed';
+                updateStatusUI(next);
             });
         }
 
@@ -314,13 +350,6 @@
             });
         }
 
-        // Default Date to Today
-        const dateInput = document.getElementById('eventDateInput');
-        if (dateInput && !dateInput.value) {
-            const today = new Date().toISOString().split('T')[0];
-            dateInput.value = today;
-        }
-
         if (addEventForm) {
             addEventForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -329,17 +358,86 @@
         }
     }
 
-    function openAddModal() {
+    function openModalContainer() {
         if (!addEventModalOverlay) return;
         addEventModalOverlay.classList.add('open');
         addEventModalOverlay.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
 
-        // Focus first input
         setTimeout(() => {
             const firstInput = document.getElementById('eventNameInput');
             if (firstInput) firstInput.focus();
         }, 100);
+    }
+
+    function openAddModal() {
+        if (!addEventModalOverlay) return;
+
+        if (addEventForm) addEventForm.reset();
+        clearFormErrors();
+
+        const eventIdInput = document.getElementById('eventIdInput');
+        const modalTitle = document.getElementById('addEventModalTitle');
+        const modalSubtitle = document.getElementById('addEventModalSubtitle');
+        const descInput = document.getElementById('eventDescriptionInput');
+        const imgInput = document.getElementById('eventImageUrlInput');
+
+        if (eventIdInput) eventIdInput.value = '';
+        if (modalTitle) modalTitle.textContent = 'Add Event';
+        if (modalSubtitle) modalSubtitle.textContent = 'Create a new event for ACM Amtics.';
+        if (submitAddEventBtn) submitAddEventBtn.textContent = 'Add Event';
+        if (descInput) descInput.value = '';
+        if (imgInput) imgInput.value = '';
+        
+        const dateInput = document.getElementById('eventDateInput');
+        if (dateInput) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
+        updateStatusUI('Upcoming');
+        openModalContainer();
+    }
+
+    async function openEditModal(id) {
+        if (!addEventModalOverlay) return;
+        try {
+            clearFormErrors();
+            const res = await fetch(`/api/events/${id}`);
+            if (!res.ok) throw new Error('Failed to fetch event details.');
+            const ev = await res.json();
+
+            const eventIdInput = document.getElementById('eventIdInput');
+            const modalTitle = document.getElementById('addEventModalTitle');
+            const modalSubtitle = document.getElementById('addEventModalSubtitle');
+            const nameInput = document.getElementById('eventNameInput');
+            const dateInput = document.getElementById('eventDateInput');
+            const timeInput = document.getElementById('eventTimeInput');
+            const venueInput = document.getElementById('eventVenueInput');
+            const categoryInput = document.getElementById('eventCategoryInput');
+            const descInput = document.getElementById('eventDescriptionInput');
+            const imgInput = document.getElementById('eventImageUrlInput');
+
+            if (eventIdInput) eventIdInput.value = ev.id || '';
+            if (modalTitle) modalTitle.textContent = 'Edit Event';
+            if (modalSubtitle) modalSubtitle.textContent = 'Update details for this ACM Amtics event.';
+            if (submitAddEventBtn) submitAddEventBtn.textContent = 'Save Changes';
+
+            if (nameInput) nameInput.value = ev.name || '';
+            if (dateInput && ev.date) {
+                dateInput.value = new Date(ev.date).toISOString().split('T')[0];
+            }
+            if (timeInput) timeInput.value = ev.time || '10:00 AM - 1:00 PM';
+            if (venueInput) venueInput.value = ev.venue || '';
+            if (categoryInput) categoryInput.value = ev.category || 'Workshop';
+            if (descInput) descInput.value = ev.description || '';
+            if (imgInput) imgInput.value = ev.imageUrl || '';
+
+            updateStatusUI(ev.status || 'Upcoming');
+            openModalContainer();
+        } catch (err) {
+            console.error('Error opening edit modal:', err);
+            showToast('Error loading event data.', 'error');
+        }
     }
 
     function closeAddModal() {
@@ -358,11 +456,17 @@
     async function handleAddEventSubmit() {
         clearFormErrors();
 
+        const eventIdInput = document.getElementById('eventIdInput');
+        const isEdit = eventIdInput && eventIdInput.value.trim().length > 0;
+        const eventId = isEdit ? eventIdInput.value.trim() : null;
+
         const nameInput = document.getElementById('eventNameInput');
         const dateInput = document.getElementById('eventDateInput');
         const timeInput = document.getElementById('eventTimeInput');
         const venueInput = document.getElementById('eventVenueInput');
         const categoryInput = document.getElementById('eventCategoryInput');
+        const descInput = document.getElementById('eventDescriptionInput');
+        const imgInput = document.getElementById('eventImageUrlInput');
 
         let hasError = false;
 
@@ -395,15 +499,20 @@
             time: timeInput.value.trim(),
             venue: venueInput.value.trim(),
             category: categoryInput.value.trim(),
-            description: `${nameInput.value.trim()} conducted by ACM AMTICS Student Chapter.`
+            description: descInput ? descInput.value.trim() : `${nameInput.value.trim()} conducted by ACM AMTICS Student Chapter.`,
+            imageUrl: imgInput ? imgInput.value.trim() : null,
+            status: eventStatusInput ? eventStatusInput.value.trim() : 'Upcoming'
         };
+
+        const url = isEdit ? `/api/events/${eventId}` : '/api/events';
+        const method = isEdit ? 'PUT' : 'POST';
 
         try {
             submitAddEventBtn.disabled = true;
-            submitAddEventBtn.textContent = 'Adding...';
+            submitAddEventBtn.textContent = isEdit ? 'Saving...' : 'Adding...';
 
-            const res = await fetch('/api/events', {
-                method: 'POST',
+            const res = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -412,20 +521,20 @@
 
             if (!res.ok) {
                 const errData = await res.json().catch(() => ({}));
-                throw new Error(errData.message || 'Failed to create event.');
+                throw new Error(errData.message || `Failed to ${isEdit ? 'update' : 'create'} event.`);
             }
 
             closeAddModal();
-            showToast('Event created successfully!', 'success');
-            currentPage = 1;
+            showToast(`Event ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
+            if (!isEdit) currentPage = 1;
             loadEvents();
             loadEventsStats();
         } catch (err) {
             console.error('Error submitting event:', err);
-            showToast(err.message || 'Error creating event.', 'error');
+            showToast(err.message || `Error ${isEdit ? 'updating' : 'creating'} event.`, 'error');
         } finally {
             submitAddEventBtn.disabled = false;
-            submitAddEventBtn.textContent = 'Add Event';
+            submitAddEventBtn.textContent = isEdit ? 'Save Changes' : 'Add Event';
         }
     }
 
@@ -445,14 +554,11 @@
             });
         });
 
-        // Edit buttons
+        // Edit buttons: Open modal with event prefilled
         document.querySelectorAll('.edit-event-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
                 const id = btn.getAttribute('data-id');
-                showToast('Event editor ready. Redirecting to attendees...', 'info');
-                setTimeout(() => {
-                    window.location.href = `/Events/${id}/Attendees`;
-                }, 500);
+                await openEditModal(id);
             });
         });
     }

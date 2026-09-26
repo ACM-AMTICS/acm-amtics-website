@@ -21,6 +21,10 @@ namespace acm_amtics_website.Models
         public string Category { get; set; } = "Workshop";
 
         public string? Description { get; set; }
+
+        public string? ImageUrl { get; set; }
+
+        public string? Status { get; set; }
     }
 
     public class EventsStatsDto

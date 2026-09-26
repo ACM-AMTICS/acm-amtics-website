@@ -35,16 +35,8 @@ namespace acm_amtics_website.Services
                 {
                     try
                     {
-                        var allowedEventIds = new[] { "65b000000000000000000001", "65b000000000000000000004" };
-                        var deleteFilter = Builders<AttendanceRecord>.Filter.Nin(a => a.EventId, allowedEventIds);
-                        var deleteResult = _context.AttendanceCollection.DeleteMany(deleteFilter);
-                        if (deleteResult.DeletedCount > 0)
-                        {
-                            _logger.LogInformation("Cleaned up {Count} attendance records for removed events from MongoDB.", deleteResult.DeletedCount);
-                        }
-
                         var count = _context.AttendanceCollection.CountDocuments(FilterDefinition<AttendanceRecord>.Empty);
-                        if (count == 0)
+                        if (count == 0 && initialRecords.Count > 0)
                         {
                             _logger.LogInformation("Seeding {Count} attendance records into MongoDB...", initialRecords.Count);
                             _context.AttendanceCollection.InsertMany(initialRecords);
@@ -310,6 +302,31 @@ namespace acm_amtics_website.Services
             {
                 return _fallbackAttendance.Count;
             }
+        }
+
+        public async Task<bool> DeleteAttendeesByEventIdAsync(string eventId)
+        {
+            if (string.IsNullOrWhiteSpace(eventId)) return false;
+
+            if (_context.IsConnected && _context.AttendanceCollection != null)
+            {
+                try
+                {
+                    var filter = Builders<AttendanceRecord>.Filter.Eq(a => a.EventId, eventId);
+                    await _context.AttendanceCollection.DeleteManyAsync(filter);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error deleting attendance records for event {EventId}", eventId);
+                }
+            }
+
+            lock (_lock)
+            {
+                _fallbackAttendance.RemoveAll(a => a.EventId == eventId);
+            }
+
+            return true;
         }
 
         private static List<AttendanceRecord> GenerateInitialAttendance()

@@ -339,100 +339,74 @@
             </a>
         </div>
 
-        <div class="cards-3col-grid">
-            <!-- Event 1 -->
-            <article class="event-card-item">
-                <div class="card-image-box">
-                    <a href="/Events/Details/65b000000000000000000001" tabindex="-1">
-                        <img src="~/images/events/web-dev-workshop.jpg" alt="Web Development Workshop" class="card-banner-img" loading="lazy" />
-                    </a>
-                </div>
-                <div class="card-content-block">
-                    <div class="card-meta-pills">
-                        <span class="meta-tag tag-purple">Workshop</span>
-                        <span class="meta-date">
-                            <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            24 Aug 2024
-                        </span>
-                    </div>
-                    <h3 class="card-item-title">
-                        <a href="/Events/Details/65b000000000000000000001" style="color: inherit; text-decoration: none;">Web Development Workshop</a>
-                    </h3>
-                    <p class="card-item-description">Hands-on session on modern web development with industry experts.</p>
-                    <div class="card-footer-action">
-                        <a href="/Events/Details/65b000000000000000000001" class="btn-circle-action" aria-label="Event Details">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </article>
+        @if (Model.RecentEvents != null && Model.RecentEvents.Count > 0)
+        {
+            <div class="cards-3col-grid">
+                @foreach (var ev in Model.RecentEvents)
+                {
+                    var catLower = (ev.Category ?? "Workshop").ToLowerInvariant();
+                    var tagClass = catLower switch
+                    {
+                        "workshop" => "tag-purple",
+                        "seminar" => "tag-blue",
+                        "competition" => "tag-coral",
+                        "hackathon" => "tag-coral",
+                        "talk" => "tag-purple",
+                        _ => "tag-purple"
+                    };
 
-            <!-- Event 2 -->
-            <article class="event-card-item">
-                <div class="card-image-box">
-                    <a href="/Events/Details/65b000000000000000000012" tabindex="-1">
-                        <img src="~/images/events/ai-ml-intro.jpg" alt="Introduction to AI and Machine Learning" class="card-banner-img" loading="lazy" />
-                    </a>
-                </div>
-                <div class="card-content-block">
-                    <div class="card-meta-pills">
-                        <span class="meta-tag tag-blue">Seminar</span>
-                        <span class="meta-date">
-                            <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            10 Nov 2024
-                        </span>
-                    </div>
-                    <h3 class="card-item-title">
-                        <a href="/Events/Details/65b000000000000000000012" style="color: inherit; text-decoration: none;">Introduction to AI/ML</a>
-                    </h3>
-                    <p class="card-item-description">An engaging seminar on the fundamentals of Artificial Intelligence and Machine Learning.</p>
-                    <div class="card-footer-action">
-                        <a href="/Events/Details/65b000000000000000000012" class="btn-circle-action" aria-label="Event Details">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </article>
+                    var fallbackImg = catLower switch
+                    {
+                        "workshop" => "/images/events/web-dev-workshop.jpg",
+                        "seminar" => "/images/events/ai-ml-intro.jpg",
+                        "competition" => "/images/events/acm-hackathon.jpg",
+                        "hackathon" => "/images/events/acm-hackathon.jpg",
+                        "talk" => "/images/events/open-source-session.jpg",
+                        _ => "/images/events/ui-ux-workshop.jpg"
+                    };
 
-            <!-- Event 3 -->
-            <article class="event-card-item">
-                <div class="card-image-box">
-                    <a href="/Events/Details/65b000000000000000000013" tabindex="-1">
-                        <img src="~/images/events/acm-hackathon.jpg" alt="ACM Hackathon 2024" class="card-banner-img" loading="lazy" />
-                    </a>
-                </div>
-                <div class="card-content-block">
-                    <div class="card-meta-pills">
-                        <span class="meta-tag tag-coral">Competition</span>
-                        <span class="meta-date">
-                            <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            5 Oct 2024
-                        </span>
-                    </div>
-                    <h3 class="card-item-title">
-                        <a href="/Events/Details/65b000000000000000000013" style="color: inherit; text-decoration: none;">ACM Hackathon 2024</a>
-                    </h3>
-                    <p class="card-item-description">A 24-hour hackathon to build innovative solutions for real-world problems.</p>
-                    <div class="card-footer-action">
-                        <a href="/Events/Details/65b000000000000000000013" class="btn-circle-action" aria-label="Event Details">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </article>
-        </div>
+                    var cardImg = !string.IsNullOrWhiteSpace(ev.ImageUrl) ? ev.ImageUrl : fallbackImg;
+                    var dateFormatted = ev.Date.ToString("d MMM yyyy");
+
+                    <article class="event-card-item">
+                        <div class="card-image-box">
+                            <a href="/Events/Details/@ev.Id" tabindex="-1">
+                                <img src="@cardImg" alt="@ev.Name" class="card-banner-img" loading="lazy" onerror="this.onerror=null; this.src='@fallbackImg';" />
+                            </a>
+                        </div>
+                        <div class="card-content-block">
+                            <div class="card-meta-pills">
+                                <span class="meta-tag @tagClass">@(string.IsNullOrWhiteSpace(ev.Category) ? "Workshop" : ev.Category)</span>
+                                <span class="meta-date">
+                                    <svg class="meta-calendar-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    @dateFormatted
+                                </span>
+                            </div>
+                            <h3 class="card-item-title">
+                                <a href="/Events/Details/@ev.Id" style="color: inherit; text-decoration: none;">@ev.Name</a>
+                            </h3>
+                            <p class="card-item-description">@(string.IsNullOrWhiteSpace(ev.Description) ? "Session organized by ACM AMTICS Student Chapter." : ev.Description)</p>
+                            <div class="card-footer-action">
+                                <a href="/Events/Details/@ev.Id" class="btn-circle-action" aria-label="Event Details">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                }
+            </div>
+        }
+        else
+        {
+            <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted); background: var(--card-bg, rgba(255,255,255,0.03)); border-radius: 1rem; border: 1px dashed var(--border-color, rgba(255,255,255,0.1));">
+                <p style="font-weight: 600; font-size: 1rem; color: var(--text-primary);">No events scheduled yet</p>
+                <p style="font-size: 0.875rem; margin-top: 0.35rem;">Check back soon for new events &amp; workshops from ACM AMTICS!</p>
+            </div>
+        }
     </div>
 </section>
 
