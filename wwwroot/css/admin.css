@@ -435,8 +435,8 @@ body.admin-body {
    ========================================================================== */
 .admin-content-body {
     flex: 1;
-    padding: 2rem;
-    max-width: 1400px;
+    padding: 1.5rem 2rem 2.5rem 2rem;
+    max-width: 1560px;
     width: 100%;
     margin: 0 auto;
 }

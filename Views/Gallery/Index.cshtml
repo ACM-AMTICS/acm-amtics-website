@@ -1,0 +1,200 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Gallery - ACM AMTICS";
+}
+
+<link rel="stylesheet" href="~/css/gallery.css" asp-append-version="true" />
+
+<div class="gallery-page-container">
+    <!-- Header Row -->
+    <div class="gallery-header-row">
+        <div class="gallery-header-left">
+            <h1 class="gallery-page-title">Chapter <span class="gallery-title-gradient">Gallery</span></h1>
+            <p class="gallery-page-subtitle">A visual celebration of our hackathons, workshops, conferences, and student achievements at AMTICS.</p>
+        </div>
+        <div class="gallery-header-actions">
+            <button type="button" class="btn-gallery-upload" onclick="openUploadModal()">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                <span>Upload Photo</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="gallery-stats-grid">
+        <div class="gallery-stat-card">
+            <div class="gallery-stat-icon icon-purple">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <div class="gallery-stat-info">
+                <span class="gallery-stat-val" id="totalPhotosCount">48</span>
+                <span class="gallery-stat-lbl">Captured Moments</span>
+            </div>
+        </div>
+
+        <div class="gallery-stat-card">
+            <div class="gallery-stat-icon icon-blue">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <div class="gallery-stat-info">
+                <span class="gallery-stat-val">6</span>
+                <span class="gallery-stat-lbl">Active Albums</span>
+            </div>
+        </div>
+
+        <div class="gallery-stat-card">
+            <div class="gallery-stat-icon icon-green">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <div class="gallery-stat-info">
+                <span class="gallery-stat-val">18</span>
+                <span class="gallery-stat-lbl">Documented Events</span>
+            </div>
+        </div>
+
+        <div class="gallery-stat-card">
+            <div class="gallery-stat-icon icon-amber">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+            </div>
+            <div class="gallery-stat-info">
+                <span class="gallery-stat-val">1.4K+</span>
+                <span class="gallery-stat-lbl">Community Likes</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="gallery-toolbar-card">
+        <div class="gallery-categories-list" id="galleryCategoryFilter">
+            <button class="gallery-cat-pill active" onclick="filterGalleryCategory('all', this)">All Photos</button>
+            <button class="gallery-cat-pill" onclick="filterGalleryCategory('hackathon', this)">Hackathons</button>
+            <button class="gallery-cat-pill" onclick="filterGalleryCategory('workshop', this)">Workshops</button>
+            <button class="gallery-cat-pill" onclick="filterGalleryCategory('talk', this)">Tech Talks</button>
+            <button class="gallery-cat-pill" onclick="filterGalleryCategory('campus', this)">Campus & Team</button>
+        </div>
+
+        <div class="gallery-search-box">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="gallerySearchInput" class="gallery-search-input" placeholder="Search gallery by event or tag..." onkeyup="searchGalleryPhotos()" />
+        </div>
+    </div>
+
+    <!-- Photo Grid -->
+    <div class="gallery-grid" id="galleryPhotoGrid">
+        <!-- Rendered by gallery.js -->
+    </div>
+</div>
+
+<!-- Lightbox Modal -->
+<div class="gallery-lightbox-modal" id="galleryLightboxModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="gallery-lightbox-overlay" onclick="closeLightbox()"></div>
+    <div class="gallery-lightbox-container">
+        <button type="button" class="btn-close-lightbox" onclick="closeLightbox()" aria-label="Close Preview">&times;</button>
+        <button type="button" class="btn-lightbox-nav btn-lightbox-prev" onclick="prevLightboxImage()" aria-label="Previous Photo">&#10094;</button>
+        <button type="button" class="btn-lightbox-nav btn-lightbox-next" onclick="nextLightboxImage()" aria-label="Next Photo">&#10095;</button>
+
+        <div class="gallery-lightbox-image-wrap">
+            <img src="" alt="" id="lightboxImg" class="gallery-lightbox-img" />
+        </div>
+
+        <div class="gallery-lightbox-caption-bar">
+            <div class="lightbox-caption-info">
+                <h3 id="lightboxTitle" class="lightbox-caption-title"></h3>
+                <p id="lightboxMeta" class="lightbox-caption-meta"></p>
+            </div>
+            <div class="lightbox-caption-actions">
+                <button type="button" class="btn-lightbox-action" id="lightboxLikeBtn" onclick="toggleLightboxLike()">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span id="lightboxLikes">45</span>
+                </button>
+                <a href="#" download id="lightboxDownloadBtn" class="btn-lightbox-action" title="Download High-Res">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span>Download</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Photo Modal -->
+<div class="gallery-upload-modal" id="galleryUploadModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="gallery-upload-overlay" onclick="closeUploadModal()"></div>
+    <div class="gallery-upload-card">
+        <div class="upload-modal-header">
+            <div class="upload-modal-title-group">
+                <div class="upload-modal-icon">
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="upload-title">Add Chapter Photo</h3>
+                    <p class="upload-subtitle">Share high-resolution highlights from recent ACM AMTICS events.</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close-modal" onclick="closeUploadModal()">&times;</button>
+        </div>
+
+        <form id="galleryUploadForm" onsubmit="handleGalleryUpload(event)" class="upload-form-body">
+            <div class="form-group">
+                <label class="form-label" for="photoTitleInput">Photo Title / Caption *</label>
+                <input type="text" id="photoTitleInput" class="form-control" placeholder="e.g. CodeStorm 2025 Grand Finale Winners" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="photoCategorySelect">Category *</label>
+                    <select id="photoCategorySelect" class="form-control">
+                        <option value="hackathon">Hackathons</option>
+                        <option value="workshop">Workshops</option>
+                        <option value="talk">Tech Talks</option>
+                        <option value="campus">Campus & Team</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="photoDateInput">Event Date *</label>
+                    <input type="date" id="photoDateInput" class="form-control" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="photoUrlInput">Image URL or Select Preset</label>
+                <input type="text" id="photoUrlInput" class="form-control" placeholder="https://... or choose below" value="/images/amtics-building.jpg" />
+                <div class="preset-images-row">
+                    <button type="button" class="preset-img-btn" onclick="selectPresetImg('/images/amtics-building.jpg')">Campus</button>
+                    <button type="button" class="preset-img-btn" onclick="selectPresetImg('/images/projects/ecotrack.jpg')">Tech Fair</button>
+                    <button type="button" class="preset-img-btn" onclick="selectPresetImg('/images/projects/learnmate.jpg')">Workshop</button>
+                    <button type="button" class="preset-img-btn" onclick="selectPresetImg('/images/projects/amtics-navigator.jpg')">Hackathon</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="photoDescInput">Event Highlights / Description</label>
+                <textarea id="photoDescInput" class="form-control" rows="3" placeholder="Brief note about the moment and participants..."></textarea>
+            </div>
+
+            <div class="upload-form-actions">
+                <button type="button" class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
+                <button type="submit" class="btn-save-photo">Publish to Gallery</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/gallery.js" asp-append-version="true"></script>

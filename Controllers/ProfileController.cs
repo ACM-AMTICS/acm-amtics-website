@@ -22,5 +22,18 @@ namespace acm_amtics_website.Controllers
             ViewBag.MongoConnection = _mongoDbContext.ConnectionString;
             return View();
         }
+
+        [HttpGet]
+        [Route("MemberProfile")]
+        [Route("Members/Profile")]
+        [Route("Profile/Member")]
+        [Route("Profile/Member/{id}")]
+        public IActionResult MemberProfile(string? id)
+        {
+            ViewBag.ActiveMenu = "Heads";
+            ViewBag.IsMongoConnected = _mongoDbContext.IsConnected;
+            ViewBag.MemberId = id;
+            return View("MemberProfile");
+        }
     }
 }

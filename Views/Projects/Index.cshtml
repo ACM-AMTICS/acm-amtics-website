@@ -1,0 +1,205 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "My Projects - ACM AMTICS";
+}
+
+<link rel="stylesheet" href="~/css/projects.css" asp-append-version="true" />
+
+<div class="projects-page-container">
+    <!-- Breadcrumb Row -->
+    <nav class="projects-breadcrumb-nav" aria-label="Breadcrumb">
+        <a href="/Dashboard">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span>Home</span>
+        </a>
+        <span class="breadcrumb-sep">&rsaquo;</span>
+        <a href="/Profile">Profile</a>
+        <span class="breadcrumb-sep">&rsaquo;</span>
+        <span class="breadcrumb-current">My Projects</span>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="projects-header-row">
+        <div class="projects-header-left">
+            <h1 class="projects-main-title">
+                My <span class="projects-title-gradient">Projects</span>
+            </h1>
+            <p class="projects-main-subtitle">
+                Manage your submitted projects, track evaluation status, and showcase your engineering work to the ACM AMTICS community.
+            </p>
+        </div>
+        <div class="projects-header-actions">
+            <button type="button" class="btn-submit-new-project" onclick="openNewProjectModal()">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Submit New Project</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 4 Metrics Stat Cards -->
+    <div class="projects-metrics-grid">
+        <div class="projects-metric-card" onclick="filterProjectStatus('all', this)">
+            <div class="projects-metric-icon icon-purple">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+            </div>
+            <div class="projects-metric-info">
+                <span class="projects-metric-val" id="totalProjectsStat">4</span>
+                <span class="projects-metric-lbl">Total Submitted</span>
+            </div>
+        </div>
+
+        <div class="projects-metric-card" onclick="filterProjectStatus('featured', this)">
+            <div class="projects-metric-icon icon-green">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+            </div>
+            <div class="projects-metric-info">
+                <span class="projects-metric-val" id="featuredProjectsStat">1</span>
+                <span class="projects-metric-lbl">Featured Project</span>
+            </div>
+        </div>
+
+        <div class="projects-metric-card" onclick="filterProjectStatus('approved', this)">
+            <div class="projects-metric-icon icon-blue">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="projects-metric-info">
+                <span class="projects-metric-val" id="approvedProjectsStat">1</span>
+                <span class="projects-metric-lbl">Approved Projects</span>
+            </div>
+        </div>
+
+        <div class="projects-metric-card" onclick="filterProjectStatus('review', this)">
+            <div class="projects-metric-icon icon-amber">
+                <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="projects-metric-info">
+                <span class="projects-metric-val" id="reviewProjectsStat">2</span>
+                <span class="projects-metric-lbl">Under Review</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter Toolbar -->
+    <div class="projects-toolbar-card">
+        <div class="projects-filter-pills" id="projectStatusFilters">
+            <button type="button" class="proj-filter-pill active" onclick="filterProjectStatus('all', this)">All Projects (<span id="countAll">4</span>)</button>
+            <button type="button" class="proj-filter-pill" onclick="filterProjectStatus('featured', this)">Featured (<span id="countFeatured">1</span>)</button>
+            <button type="button" class="proj-filter-pill" onclick="filterProjectStatus('approved', this)">Approved (<span id="countApproved">1</span>)</button>
+            <button type="button" class="proj-filter-pill" onclick="filterProjectStatus('review', this)">Under Review (<span id="countReview">2</span>)</button>
+        </div>
+
+        <div class="projects-search-wrap">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input type="text" id="projectsSearchInput" class="projects-search-input" placeholder="Search by title, tech stack, or description..." onkeyup="searchProjects()" />
+        </div>
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="projects-cards-grid" id="userProjectsGrid">
+        <!-- Rendered by projects.js -->
+    </div>
+</div>
+
+<!-- Project Details Modal -->
+<div class="project-modal" id="projectDetailsModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="project-modal-overlay" onclick="closeProjectDetailsModal()"></div>
+    <div class="project-modal-container">
+        <button type="button" class="btn-close-modal" onclick="closeProjectDetailsModal()">&times;</button>
+        <div class="project-details-body" id="projectDetailsContent">
+            <!-- Populated dynamically -->
+        </div>
+    </div>
+</div>
+
+<!-- Submit / Add New Project Modal -->
+<div class="project-modal" id="projectSubmitModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="project-modal-overlay" onclick="closeProjectSubmitModal()"></div>
+    <div class="project-modal-container">
+        <div class="project-modal-header">
+            <div class="project-modal-title-wrap">
+                <div class="modal-icon-badge">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="modal-title">Submit Project for Review</h3>
+                    <p class="modal-subtitle">Submit your team's project to be featured in the ACM AMTICS showcase.</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close-modal" onclick="closeProjectSubmitModal()">&times;</button>
+        </div>
+
+        <form id="projectSubmissionForm" onsubmit="handleProjectSubmit(event)" class="project-form">
+            <div class="form-group">
+                <label class="form-label" for="projTitleInput">Project Title *</label>
+                <input type="text" id="projTitleInput" class="form-control" placeholder="e.g. EcoTrack: Smart Campus Energy Monitor" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="projCategoryInput">Category *</label>
+                    <select id="projCategoryInput" class="form-control">
+                        <option value="Web Development">Web Development</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence / ML</option>
+                        <option value="Mobile App">Mobile App (Flutter / Android / iOS)</option>
+                        <option value="IoT & Hardware">IoT & Embedded Systems</option>
+                        <option value="Cybersecurity">Cybersecurity & Cloud</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projTechStackInput">Tech Stack (comma-separated) *</label>
+                    <input type="text" id="projTechStackInput" class="form-control" placeholder="e.g. React, Node.js, MongoDB, Tailwind" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="projGithubInput">GitHub Repository Link</label>
+                    <input type="url" id="projGithubInput" class="form-control" placeholder="https://github.com/..." />
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="projLiveInput">Live Demo / Deployment Link</label>
+                    <input type="url" id="projLiveInput" class="form-control" placeholder="https://..." />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="projImageSelect">Project Cover Image</label>
+                <input type="text" id="projImageSelect" class="form-control" value="/images/projects/ecotrack.jpg" />
+                <div class="preset-covers-row">
+                    <button type="button" class="preset-cover-pill" onclick="setProjectCover('/images/projects/ecotrack.jpg')">EcoTrack</button>
+                    <button type="button" class="preset-cover-pill" onclick="setProjectCover('/images/projects/learnmate.jpg')">LearnMate AI</button>
+                    <button type="button" class="preset-cover-pill" onclick="setProjectCover('/images/projects/amtics-navigator.jpg')">Navigator 3D</button>
+                    <button type="button" class="preset-cover-pill" onclick="setProjectCover('/images/amtics-building.jpg')">Campus Connect</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="projDescInput">Brief Description & Problem Solved *</label>
+                <textarea id="projDescInput" class="form-control" rows="3" placeholder="Explain the project objective, features, and target users..." required></textarea>
+            </div>
+
+            <div class="modal-form-actions">
+                <button type="button" class="btn-cancel" onclick="closeProjectSubmitModal()">Cancel</button>
+                <button type="submit" class="btn-save-project">Submit Project</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/projects.js" asp-append-version="true"></script>

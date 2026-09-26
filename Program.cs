@@ -4,6 +4,44 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load .env configuration if present
+var currentDir = Directory.GetCurrentDirectory();
+var envFiles = new[]
+{
+    Path.Combine(currentDir, ".env"),
+    Path.Combine(currentDir, "..", ".env")
+};
+
+foreach (var envPath in envFiles)
+{
+    if (File.Exists(envPath))
+    {
+        foreach (var line in File.ReadAllLines(envPath))
+        {
+            var trimmed = line.Trim();
+            if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("#")) continue;
+            var parts = trimmed.Split('=', 2);
+            if (parts.Length == 2)
+            {
+                var key = parts[0].Trim();
+                var val = parts[1].Trim().Trim('"', '\'');
+                Environment.SetEnvironmentVariable(key, val);
+                if (key.Equals("MONGODB_URI", StringComparison.OrdinalIgnoreCase) || 
+                    key.Equals("MONGODB_CONNECTIONSTRING", StringComparison.OrdinalIgnoreCase))
+                {
+                    builder.Configuration["MongoDB:ConnectionString"] = val;
+                }
+                if (key.Equals("MONGODB_DB_NAME", StringComparison.OrdinalIgnoreCase) || 
+                    key.Equals("MONGODB_DATABASE", StringComparison.OrdinalIgnoreCase))
+                {
+                    builder.Configuration["MongoDB:DatabaseName"] = val;
+                }
+            }
+        }
+        break;
+    }
+}
+
 // Configure MongoDB options
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB"));
 
