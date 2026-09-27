@@ -81,6 +81,7 @@ namespace acm_amtics_website.Services
                 EventsCollection = _database.GetCollection<EventItem>(eventsCol);
                 AttendanceCollection = _database.GetCollection<AttendanceRecord>(attendanceCol);
                 AdminsCollection = _database.GetCollection<User>(adminsCol);
+                ProfilesCollection = _database.GetCollection<UserProfile>("UserProfiles");
             }
         }
 
@@ -125,6 +126,7 @@ namespace acm_amtics_website.Services
         public IMongoCollection<EventItem>? EventsCollection { get; }
         public IMongoCollection<AttendanceRecord>? AttendanceCollection { get; }
         public IMongoCollection<User>? AdminsCollection { get; }
+        public IMongoCollection<UserProfile>? ProfilesCollection { get; }
         public bool IsConnected => _isConnected;
         public string ConnectionString => _connectionString;
         public string DatabaseName => _databaseName;

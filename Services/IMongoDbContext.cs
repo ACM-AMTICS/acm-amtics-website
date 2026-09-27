@@ -9,6 +9,7 @@ namespace acm_amtics_website.Services
         IMongoCollection<EventItem>? EventsCollection { get; }
         IMongoCollection<AttendanceRecord>? AttendanceCollection { get; }
         IMongoCollection<User>? AdminsCollection { get; }
+        IMongoCollection<UserProfile>? ProfilesCollection { get; }
         bool IsConnected { get; }
         string ConnectionString { get; }
         string DatabaseName { get; }

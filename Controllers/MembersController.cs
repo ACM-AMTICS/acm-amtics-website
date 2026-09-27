@@ -1,8 +1,10 @@
 using acm_amtics_website.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acm_amtics_website.Controllers
 {
+    [Authorize]
     public class MembersController : Controller
     {
         private readonly IMongoDbContext _mongoDbContext;

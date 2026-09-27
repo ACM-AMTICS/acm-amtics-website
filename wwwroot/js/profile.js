@@ -614,14 +614,21 @@
         const modal = document.getElementById('editProfileModal');
         if (!modal) return;
 
-        // Prefill inputs
-        document.getElementById('editNameInput').value = state.profile.name;
-        document.getElementById('editEmailInput').value = state.profile.email;
-        document.getElementById('editDeptInput').value = state.profile.department;
-        document.getElementById('editYearInput').value = state.profile.academicYear;
-        document.getElementById('editCollegeInput').value = state.profile.college;
-        document.getElementById('editBioInput').value = state.profile.bio;
-        document.getElementById('editQuoteInput').value = state.profile.quote;
+        // Prefill inputs only if empty (preserves server-rendered Razor database values)
+        const nameIn = document.getElementById('editNameInput');
+        if (nameIn && !nameIn.value) nameIn.value = state.profile.name;
+        const emailIn = document.getElementById('editEmailInput');
+        if (emailIn && !emailIn.value) emailIn.value = state.profile.email;
+        const deptIn = document.getElementById('editDeptInput');
+        if (deptIn && !deptIn.value) deptIn.value = state.profile.department;
+        const yearIn = document.getElementById('editYearInput');
+        if (yearIn && !yearIn.value) yearIn.value = state.profile.academicYear;
+        const collegeIn = document.getElementById('editCollegeInput');
+        if (collegeIn && !collegeIn.value) collegeIn.value = state.profile.college;
+        const bioIn = document.getElementById('editBioInput');
+        if (bioIn && !bioIn.value) bioIn.value = state.profile.bio;
+        const quoteIn = document.getElementById('editQuoteInput');
+        if (quoteIn && !quoteIn.value) quoteIn.value = state.profile.quote;
 
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -638,19 +645,44 @@
     window.saveProfileChanges = function (e) {
         if (e) e.preventDefault();
 
-        state.profile.name = document.getElementById('editNameInput').value.trim() || state.profile.name;
-        state.profile.email = document.getElementById('editEmailInput').value.trim() || state.profile.email;
-        state.profile.department = document.getElementById('editDeptInput').value.trim() || state.profile.department;
-        state.profile.academicYear = document.getElementById('editYearInput').value.trim() || state.profile.academicYear;
-        state.profile.college = document.getElementById('editCollegeInput').value.trim() || state.profile.college;
-        state.profile.bio = document.getElementById('editBioInput').value.trim() || state.profile.bio;
-        state.profile.quote = document.getElementById('editQuoteInput').value.trim() || state.profile.quote;
+        const name = document.getElementById('editNameInput')?.value?.trim();
+        const department = document.getElementById('editDeptInput')?.value?.trim();
+        const academicYear = document.getElementById('editYearInput')?.value?.trim();
+        const bio = document.getElementById('editBioInput')?.value?.trim();
+        const quote = document.getElementById('editQuoteInput')?.value?.trim();
 
-        saveState(state);
-        updateProfileUI();
-        closeEditProfileModal();
+        const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        if (tokenInput) {
+            headers['RequestVerificationToken'] = tokenInput.value;
+        }
 
-        showToast("Profile updated successfully!");
+        fetch('/profile/edit', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                name: name,
+                department: department,
+                academicYear: academicYear,
+                bio: bio,
+                quote: quote
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                showToast("Profile updated successfully!");
+                setTimeout(() => window.location.reload(), 600);
+            } else {
+                showToast(data.message || "Failed to update profile", "error");
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            showToast("Error updating profile", "error");
+        });
     };
 
     // Modal Control: Submit Project
@@ -849,8 +881,6 @@
 
     // Initialize on DOM Ready
     document.addEventListener('DOMContentLoaded', () => {
-        updateProfileUI();
-
         // Listen for topbar search
         const topSearch = document.getElementById('globalTopSearch');
         if (topSearch) {

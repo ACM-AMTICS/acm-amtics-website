@@ -53,6 +53,24 @@ public class HomeController : Controller
         return View(model);
     }
 
+    [HttpGet]
+    [Route("Projects")]
+    public IActionResult Projects()
+    {
+        ViewBag.ActiveMenu = "Projects";
+        ViewBag.PageTitle = "Projects Placeholder";
+        return View("Placeholder");
+    }
+
+    [HttpGet]
+    [Route("Gallery")]
+    public IActionResult Gallery()
+    {
+        ViewBag.ActiveMenu = "Gallery";
+        ViewBag.PageTitle = "Gallery Placeholder";
+        return View("Placeholder");
+    }
+
     public IActionResult Privacy()
     {
         return View();
@@ -64,3 +82,4 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
+
