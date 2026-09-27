@@ -1,5 +1,6 @@
 using acm_amtics_website.Models;
 using acm_amtics_website.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acm_amtics_website.Controllers
@@ -53,6 +54,7 @@ namespace acm_amtics_website.Controllers
         }
 
         // GET: /Events/Manage (Admin Events & Attendance page)
+        [Authorize]
         [HttpGet]
         [Route("Events/Manage")]
         public IActionResult Manage()
@@ -81,6 +83,7 @@ namespace acm_amtics_website.Controllers
         }
 
         // GET: /Events/{id}/Attendees
+        [Authorize]
         [HttpGet]
         [Route("Events/{id}/Attendees")]
         public async Task<IActionResult> Attendees(string id)

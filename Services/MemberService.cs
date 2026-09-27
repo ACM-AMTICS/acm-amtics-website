@@ -8,15 +8,17 @@ namespace acm_amtics_website.Services
     {
         private readonly IMongoDbContext _context;
         private readonly IUserService _userService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<MemberService> _logger;
         private static readonly List<Member> _fallbackMembers = new();
         private static readonly object _lock = new();
         private static bool _seeded = false;
 
-        public MemberService(IMongoDbContext context, IUserService userService, ILogger<MemberService> logger)
+        public MemberService(IMongoDbContext context, IUserService userService, IServiceProvider serviceProvider, ILogger<MemberService> logger)
         {
             _context = context;
             _userService = userService;
+            _serviceProvider = serviceProvider;
             _logger = logger;
             EnsureDataSeeded();
         }
@@ -187,6 +189,22 @@ namespace acm_amtics_website.Services
             if (string.Equals(member.Role, "Coordinator", StringComparison.OrdinalIgnoreCase))
             {
                 await _userService.UpsertCoordinatorUserAsync(member.Email, member.Name, member.AssignedEventId, member.AssignedEventName);
+            }
+
+            try
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var profileService = scope.ServiceProvider.GetService<IProfileService>();
+                    if (profileService != null)
+                    {
+                        await profileService.EnsureProfileCreatedAsync(member.Email, member.Name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Failed to auto-create UserProfile for new member {Email}", member.Email);
             }
 
             return member;

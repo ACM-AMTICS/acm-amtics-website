@@ -1,8 +1,10 @@
 using acm_amtics_website.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acm_amtics_website.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly IDashboardService _dashboardService;

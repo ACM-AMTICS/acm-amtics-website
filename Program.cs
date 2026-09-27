@@ -52,6 +52,7 @@ builder.Services.AddSingleton<IMemberService, MemberService>();
 builder.Services.AddSingleton<IEventService, EventService>();
 builder.Services.AddSingleton<IAttendanceService, AttendanceService>();
 builder.Services.AddSingleton<IDashboardService, DashboardService>();
+builder.Services.AddSingleton<IProfileService, ProfileService>();
 
 // Configure Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

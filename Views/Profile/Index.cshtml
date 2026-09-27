@@ -1,6 +1,12 @@
+@model acm_amtics_website.Models.ProfileViewModel
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "My Profile";
+    var p = Model?.Profile ?? new acm_amtics_website.Models.UserProfile();
+    var publicSlug = acm_amtics_website.Models.UserProfile.GenerateSlug(p.Email);
+    var earnedBadgesCount = Model?.Badges?.Count(b => b.Earned) ?? 0;
+    var eventsCount = Model?.AttendedEvents?.Count ?? 0;
+    var rolesCount = Model?.CoordinatorRoles?.Count ?? 0;
 }
 
 <!-- Profile Page Container -->
@@ -46,40 +52,36 @@
     <div class="profile-hero-card">
         <div class="profile-hero-left">
             <div class="profile-avatar-container">
-                <img src="/images/avatars/ayesha-khan.jpg" alt="Ayesha Khan" class="profile-avatar-img user-profile-avatar" onerror="this.src='/images/avatars/avatar-1.jpg'" />
-                <button type="button" class="profile-avatar-camera-btn" onclick="triggerAvatarUpload()" title="Change profile photo" aria-label="Change profile photo">
-                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </button>
+                <div class="profile-avatar-circle" style="width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #9333ea, #6d28d9); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 2.25rem; font-weight: 800;">
+                    @(!string.IsNullOrWhiteSpace(p.Name) ? p.Name.Substring(0, 1).ToUpper() : "M")
+                </div>
             </div>
 
             <div class="profile-info-group">
                 <div class="profile-name-row">
-                    <h2 class="profile-user-name user-profile-name">Ayesha Khan</h2>
-                    <span class="profile-member-badge">Member</span>
+                    <h2 class="profile-user-name user-profile-name">@p.Name</h2>
+                    <span class="profile-member-badge">@(Model?.MemberRecord?.Role ?? "Member")</span>
                 </div>
                 <div class="profile-user-headline user-profile-dept">
-                    3rd Year &bull; Computer Science & Engineering
+                    @p.AcademicYear &bull; @p.Department
                 </div>
                 <div class="profile-meta-row">
                     <div class="profile-meta-item">
                         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <span class="user-profile-email">ayesha.k@amtics.ac.in</span>
+                        <span class="user-profile-email">@p.Email</span>
                     </div>
                     <div class="profile-meta-item">
                         <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
-                        <span class="user-profile-college">AMTICS, Gandhinagar</span>
+                        <span class="user-profile-college">@p.College</span>
                     </div>
                 </div>
                 <p class="profile-user-bio user-profile-bio">
-                    Passionate about design, technology and community building. Excited to learn, collaborate and create meaningful impact with ACM AMTICS.
+                    @p.Bio
                 </p>
             </div>
         </div>
@@ -88,7 +90,7 @@
             <div class="profile-quote-card">
                 <span class="profile-quote-icon">&ldquo;</span>
                 <span class="profile-quote-text">
-                    <span class="user-profile-quote">Ideas grow when shared.</span>
+                    <span class="user-profile-quote">@p.Quote</span>
                     <span class="profile-quote-rocket">&nbsp;&nbsp;&#128640;</span>
                 </span>
             </div>
@@ -100,7 +102,7 @@
                     </svg>
                     <span>Edit Profile</span>
                 </button>
-                <a href="/MemberProfile" class="btn-preview-public" title="View Public Member Profile">
+                <a href="/profile/@publicSlug" class="btn-preview-public" title="View Public Member Profile">
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
@@ -121,7 +123,7 @@
                     </svg>
                 </div>
                 <div class="profile-stat-data">
-                    <span class="profile-stat-number" id="statBadgesNum">6</span>
+                    <span class="profile-stat-number" id="statBadgesNum">@earnedBadgesCount</span>
                     <span class="profile-stat-label">Badges Earned</span>
                 </div>
             </div>
@@ -141,7 +143,7 @@
                     </svg>
                 </div>
                 <div class="profile-stat-data">
-                    <span class="profile-stat-number" id="statEventsNum">12</span>
+                    <span class="profile-stat-number" id="statEventsNum">@eventsCount</span>
                     <span class="profile-stat-label">Events Attended</span>
                 </div>
             </div>
@@ -161,7 +163,7 @@
                     </svg>
                 </div>
                 <div class="profile-stat-data">
-                    <span class="profile-stat-number" id="statProjectsNum">4</span>
+                    <span class="profile-stat-number" id="statProjectsNum">0</span>
                     <span class="profile-stat-label">Projects Submitted</span>
                 </div>
             </div>
@@ -181,7 +183,7 @@
                     </svg>
                 </div>
                 <div class="profile-stat-data">
-                    <span class="profile-stat-number" id="statRolesNum">2</span>
+                    <span class="profile-stat-number" id="statRolesNum">@rolesCount</span>
                     <span class="profile-stat-label">Coordinator Roles</span>
                 </div>
             </div>
@@ -329,7 +331,7 @@
                             </div>
                             <div class="quick-info-content">
                                 <span class="quick-info-label">Member Since</span>
-                                <span class="quick-info-val">Aug 2024</span>
+                                <span class="quick-info-val">@p.MemberSince</span>
                             </div>
                         </div>
 
@@ -342,7 +344,7 @@
                             </div>
                             <div class="quick-info-content">
                                 <span class="quick-info-label">Academic Year</span>
-                                <span class="quick-info-val user-profile-year">3rd Year (2025 &ndash; 2026)</span>
+                                <span class="quick-info-val user-profile-year">@p.AcademicYear</span>
                             </div>
                         </div>
 
@@ -354,7 +356,7 @@
                             </div>
                             <div class="quick-info-content">
                                 <span class="quick-info-label">Department</span>
-                                <span class="quick-info-val">Computer Science & Engineering</span>
+                                <span class="quick-info-val user-profile-dept-text">@p.Department</span>
                             </div>
                         </div>
 
@@ -366,7 +368,7 @@
                             </div>
                             <div class="quick-info-content">
                                 <span class="quick-info-label">College</span>
-                                <span class="quick-info-val user-profile-college">AMTICS, Gandhinagar</span>
+                                <span class="quick-info-val user-profile-college">@p.College</span>
                             </div>
                         </div>
                     </div>
@@ -440,174 +442,55 @@
             </div>
 
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:1.25rem; margin-top:1.5rem;">
-                <!-- Detailed Badge Cards -->
-                <div class="profile-event-row" style="padding:1.25rem; cursor:pointer;" onclick="openBadgeDetailModal(window.acmProfileState ? window.acmProfileState.badges[0] : null)">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
-                            <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
-                                <defs>
-                                    <linearGradient id="det-b1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#8B5CF6" />
-                                        <stop offset="100%" stop-color="#6D28D9" />
-                                    </linearGradient>
-                                </defs>
-                                <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b1)" />
-                            </svg>
-                            <div class="badge-icon-overlay">
-                                <svg width="26" height="26" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                @if (Model?.Badges != null && Model.Badges.Any())
+                {
+                    @foreach (var badge in Model.Badges)
+                    {
+                        <div class="profile-event-row" style="padding:1.25rem;">
+                            <div style="display:flex; align-items:center; gap:1.25rem;">
+                                <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
+                                    <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
+                                        <defs>
+                                            <linearGradient id="det-b-@badge.Id" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="@(badge.Earned ? "#8B5CF6" : "#94A3B8")" />
+                                                <stop offset="100%" stop-color="@(badge.Earned ? "#6D28D9" : "#64748B")" />
+                                            </linearGradient>
+                                        </defs>
+                                        <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b-@badge.Id)" />
+                                    </svg>
+                                    <div class="badge-icon-overlay">
+                                        <svg width="26" height="26" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div style="font-weight:700; font-size:1rem; color:#111827;">@badge.Title</div>
+                                    <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">@badge.Description</div>
+                                    <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+                                        <span class="badge-status-pill @(badge.Earned ? "badge-status-unlocked" : "badge-status-locked")">
+                                            @(badge.Earned ? "Earned ✓" : "Locked")
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div>
-                            <div style="font-weight:700; font-size:1rem; color:#111827;">Active Member</div>
-                            <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">Participated in 5+ chapter events</div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-                                <span class="badge-status-pill badge-status-unlocked">Earned &bull; 12/5 Events</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-event-row" style="padding:1.25rem; cursor:pointer;">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
-                            <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
-                                <defs>
-                                    <linearGradient id="det-b2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#10B981" />
-                                        <stop offset="100%" stop-color="#059669" />
-                                    </linearGradient>
-                                </defs>
-                                <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b2)" />
-                            </svg>
-                            <div class="badge-icon-overlay">
-                                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5-3.512M9 20H4v-2a3 3 0 015-3.512M12 11a4 4 0 100-8 4 4 0 000 8zm0 2a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="font-weight:700; font-size:1rem; color:#111827;">Event Enthusiast</div>
-                            <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">Attended 10+ chapter events</div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-                                <span class="badge-status-pill badge-status-unlocked">Earned &bull; 12/10 Events</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-event-row" style="padding:1.25rem; cursor:pointer;">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
-                            <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
-                                <defs>
-                                    <linearGradient id="det-b3" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#F59E0B" />
-                                        <stop offset="100%" stop-color="#D97706" />
-                                    </linearGradient>
-                                </defs>
-                                <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b3)" />
-                            </svg>
-                            <div class="badge-icon-overlay">
-                                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="font-weight:700; font-size:1rem; color:#111827;">Project Contributor</div>
-                            <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">Submitted 3+ technical projects</div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-                                <span class="badge-status-pill badge-status-unlocked">Earned &bull; 4/3 Projects</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-event-row" style="padding:1.25rem; cursor:pointer;">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
-                            <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
-                                <defs>
-                                    <linearGradient id="det-b4" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#06B6D4" />
-                                        <stop offset="100%" stop-color="#0284C7" />
-                                    </linearGradient>
-                                </defs>
-                                <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b4)" />
-                            </svg>
-                            <div class="badge-icon-overlay">
-                                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="font-weight:700; font-size:1rem; color:#111827;">Idea Sharer</div>
-                            <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">Shared innovative workshop ideas</div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-                                <span class="badge-status-pill badge-status-unlocked">Earned &bull; Active</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-event-row" style="padding:1.25rem; cursor:pointer;">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
-                            <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
-                                <defs>
-                                    <linearGradient id="det-b5" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#EC4899" />
-                                        <stop offset="100%" stop-color="#BE185D" />
-                                    </linearGradient>
-                                </defs>
-                                <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b5)" />
-                            </svg>
-                            <div class="badge-icon-overlay">
-                                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="font-weight:700; font-size:1rem; color:#111827;">Community Builder</div>
-                            <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">Volunteered for student initiatives</div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-                                <span class="badge-status-pill badge-status-unlocked">Earned &bull; Active</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="profile-event-row" style="padding:1.25rem; cursor:pointer;">
-                    <div style="display:flex; align-items:center; gap:1.25rem;">
-                        <div class="badge-shape-wrap" style="width:70px; height:70px; margin:0;">
-                            <svg class="badge-hex-svg" viewBox="0 0 100 100" fill="none">
-                                <defs>
-                                    <linearGradient id="det-b6" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" stop-color="#64748B" />
-                                        <stop offset="100%" stop-color="#475569" />
-                                    </linearGradient>
-                                </defs>
-                                <polygon points="50,4 90,26 90,74 50,96 10,74 10,26" fill="url(#det-b6)" />
-                            </svg>
-                            <div class="badge-icon-overlay">
-                                <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-                            </div>
-                        </div>
-                        <div>
-                            <div style="font-weight:700; font-size:1rem; color:#111827;">Leadership</div>
-                            <div style="font-size:0.8125rem; color:#6B7280; margin-top:0.2rem;">Served as Event Coordinator</div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
-                                <span class="badge-status-pill badge-status-unlocked">Earned &bull; 2 Roles</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    }
+                }
+                else
+                {
+                    <p style="font-size:0.875rem; color:#6B7280;">No badges found.</p>
+                }
             </div>
         </div>
     </div>
 
     <!-- ==============================================
-         TAB 3: EVENT HISTORY (All 12 events)
+         TAB 3: EVENT HISTORY
          ============================================== -->
     <div class="profile-tab-section" id="tabSection-events" style="display:none;">
         <div class="profile-section-card">
             <div class="profile-card-header">
                 <div>
-                    <h2 class="profile-card-title" style="font-size:1.35rem;">Attended Events History (12 Total)</h2>
+                    <h2 class="profile-card-title" style="font-size:1.35rem;">Attended Events History (@eventsCount Total)</h2>
                     <p class="profile-card-subtitle">Official check-in record of your attendance at ACM AMTICS workshops, seminars, and hackathons.</p>
                 </div>
                 <button type="button" class="btn-open-ticket" onclick="openEventTicketModal()" style="width:auto; padding:0.5rem 1rem; font-size:0.8125rem;">
@@ -616,89 +499,29 @@
             </div>
 
             <div class="profile-items-list" style="margin-top:1.25rem;">
-                <div class="profile-event-row">
-                    <div class="profile-event-left">
-                        <img src="/images/events/ui-ux-workshop.jpg" alt="UI/UX Design Workshop" class="profile-item-thumb" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name">UI/UX Design Workshop</div>
-                            <div class="profile-item-meta">14 Dec 2025 &bull; Lab 3, AMTICS</div>
+                @if (Model?.AttendedEvents != null && Model.AttendedEvents.Any())
+                {
+                    @foreach (var evt in Model.AttendedEvents)
+                    {
+                        <div class="profile-event-row">
+                            <div class="profile-event-left">
+                                <img src="@(string.IsNullOrWhiteSpace(evt.ImageUrl) ? "/images/events/ui-ux-workshop.jpg" : evt.ImageUrl)" alt="@evt.Name" class="profile-item-thumb" onerror="this.src='/images/events/ui-ux-workshop.jpg'" />
+                                <div class="profile-item-info">
+                                    <div class="profile-item-name">@evt.Name</div>
+                                    <div class="profile-item-meta">@evt.Date.ToString("dd MMM yyyy") &bull; @(evt.Venue ?? "AMTICS Campus")</div>
+                                </div>
+                            </div>
+                            <div class="profile-event-right">
+                                <span class="pill-tag pill-tag-workshop">@(evt.Category ?? "Event")</span>
+                                <span class="pill-status-attended">&check; Attended</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="pill-tag pill-tag-workshop">Workshop</span>
-                        <span class="pill-status-attended">&check; Attended</span>
-                    </div>
-                </div>
-
-                <div class="profile-event-row">
-                    <div class="profile-event-left">
-                        <img src="/images/events/ai-ml-intro.jpg" alt="Introduction to AI/ML" class="profile-item-thumb" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name">Introduction to AI/ML</div>
-                            <div class="profile-item-meta">25 Sep 2025 &bull; Auditorium</div>
-                        </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="pill-tag pill-tag-seminar">Seminar</span>
-                        <span class="pill-status-attended">&check; Attended</span>
-                    </div>
-                </div>
-
-                <div class="profile-event-row">
-                    <div class="profile-event-left">
-                        <img src="/images/events/acm-hackathon.jpg" alt="ACM Hackathon 2025" class="profile-item-thumb" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name">ACM Hackathon 2025</div>
-                            <div class="profile-item-meta">10 Oct 2025 &bull; Main Hall</div>
-                        </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="pill-tag pill-tag-competition">Competition</span>
-                        <span class="pill-status-attended">&check; Attended</span>
-                    </div>
-                </div>
-
-                <div class="profile-event-row">
-                    <div class="profile-event-left">
-                        <img src="/images/events/open-source-session.jpg" alt="Open Source & GSoC Talk" class="profile-item-thumb" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name">Open Source & GSoC Talk</div>
-                            <div class="profile-item-meta">5 Sep 2025 &bull; Seminar Hall 2</div>
-                        </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="pill-tag pill-tag-workshop">Workshop</span>
-                        <span class="pill-status-attended">&check; Attended</span>
-                    </div>
-                </div>
-
-                <div class="profile-event-row">
-                    <div class="profile-event-left">
-                        <img src="/images/events/flutter-workshop.jpg" alt="Flutter App Development" class="profile-item-thumb" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name">Flutter App Development</div>
-                            <div class="profile-item-meta">18 Aug 2025 &bull; Lab 1</div>
-                        </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="pill-tag pill-tag-workshop">Workshop</span>
-                        <span class="pill-status-attended">&check; Attended</span>
-                    </div>
-                </div>
-
-                <div class="profile-event-row">
-                    <div class="profile-event-left">
-                        <img src="/images/events/web-dev-workshop.jpg" alt="Web Dev Bootcamp 2025" class="profile-item-thumb" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name">Web Dev Bootcamp 2025</div>
-                            <div class="profile-item-meta">20 Jul 2025 &bull; Online</div>
-                        </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="pill-tag pill-tag-workshop">Workshop</span>
-                        <span class="pill-status-attended">&check; Attended</span>
-                    </div>
-                </div>
+                    }
+                }
+                else
+                {
+                    <p style="font-size:0.875rem; color:#6B7280; padding:1rem 0;">No attended events recorded yet.</p>
+                }
             </div>
         </div>
     </div>
@@ -713,75 +536,27 @@
                     <h2 class="profile-card-title" style="font-size:1.35rem;">Submitted Projects</h2>
                     <p class="profile-card-subtitle">Projects submitted for chapter showcase, hackathon entries, or review.</p>
                 </div>
-                <button type="button" class="btn-primary-purple" onclick="openSubmitProjectModal()" style="font-size:0.875rem; padding:0.6rem 1.15rem;">
-                    + Submit New Project
-                </button>
+                <a href="@Model?.FormGoogleUrl" target="_blank" rel="noopener noreferrer" class="btn-primary-purple" style="font-size:0.875rem; padding:0.6rem 1.15rem; text-decoration:none;">
+                    + Submit New Project (Google Form)
+                </a>
             </div>
 
-            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:1.25rem; margin-top:1.25rem;">
-                <!-- Project 1 -->
-                <div class="profile-section-card" style="padding:1.25rem;">
-                    <img src="/images/projects/ecotrack.jpg" alt="EcoTrack" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:1rem;" />
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="font-size:1.05rem; font-weight:700; color:#111827;">EcoTrack</h4>
-                        <span class="pill-project-review">Under Review</span>
-                    </div>
-                    <p style="font-size:0.8125rem; color:#6B7280; margin:0.5rem 0 1rem 0; line-height:1.45;">
-                        A web platform to help students track their carbon footprint across campus and incentivize eco-friendly habits.
-                    </p>
-                    <div style="font-size:0.75rem; color:#9CA3AF; display:flex; justify-content:space-between;">
-                        <span>Submitted: 15 Sep 2025</span>
-                        <a href="https://github.com" target="_blank" style="color:#7C3AED; font-weight:600; text-decoration:none;">GitHub &rarr;</a>
-                    </div>
+            <div style="margin-top:1.5rem; background:#F9FAFB; border:2px dashed #E5E7EB; border-radius:16px; padding:3rem 2rem; text-align:center;">
+                <div style="width:60px; height:60px; border-radius:50%; background:#EDE9FE; color:#7C3AED; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem auto;">
+                    <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
                 </div>
-
-                <!-- Project 2 -->
-                <div class="profile-section-card" style="padding:1.25rem;">
-                    <img src="/images/projects/learnmate.jpg" alt="LearnMate" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:1rem;" />
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="font-size:1.05rem; font-weight:700; color:#111827;">LearnMate</h4>
-                        <span class="pill-project-featured">Featured</span>
-                    </div>
-                    <p style="font-size:0.8125rem; color:#6B7280; margin:0.5rem 0 1rem 0; line-height:1.45;">
-                        AI powered study assistant with flashcards, conversational tutor, and personalized question generation.
-                    </p>
-                    <div style="font-size:0.75rem; color:#9CA3AF; display:flex; justify-content:space-between;">
-                        <span>Submitted: 5 Sep 2025</span>
-                        <a href="https://github.com" target="_blank" style="color:#7C3AED; font-weight:600; text-decoration:none;">GitHub &rarr;</a>
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="profile-section-card" style="padding:1.25rem;">
-                    <img src="/images/projects/amtics-navigator.jpg" alt="AMTICS Navigator" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:1rem;" />
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="font-size:1.05rem; font-weight:700; color:#111827;">AMTICS Navigator</h4>
-                        <span class="pill-project-review">Under Review</span>
-                    </div>
-                    <p style="font-size:0.8125rem; color:#6B7280; margin:0.5rem 0 1rem 0; line-height:1.45;">
-                        A 3D mobile interactive navigation guide helping new students navigate between labs, auditorium and faculties.
-                    </p>
-                    <div style="font-size:0.75rem; color:#9CA3AF; display:flex; justify-content:space-between;">
-                        <span>Submitted: 22 Aug 2025</span>
-                        <a href="https://github.com" target="_blank" style="color:#7C3AED; font-weight:600; text-decoration:none;">GitHub &rarr;</a>
-                    </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="profile-section-card" style="padding:1.25rem;">
-                    <img src="/images/projects/campus-connect.jpg" alt="Campus Connect" style="width:100%; height:160px; object-fit:cover; border-radius:12px; margin-bottom:1rem;" />
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h4 style="font-size:1.05rem; font-weight:700; color:#111827;">Campus Connect</h4>
-                        <span class="pill-project-approved">Approved</span>
-                    </div>
-                    <p style="font-size:0.8125rem; color:#6B7280; margin:0.5rem 0 1rem 0; line-height:1.45;">
-                        A resource sharing and peer learning collaboration platform connecting students across AMTICS.
-                    </p>
-                    <div style="font-size:0.75rem; color:#9CA3AF; display:flex; justify-content:space-between;">
-                        <span>Submitted: 10 Aug 2025</span>
-                        <a href="https://github.com" target="_blank" style="color:#7C3AED; font-weight:600; text-decoration:none;">GitHub &rarr;</a>
-                    </div>
-                </div>
+                <h3 style="font-size:1.15rem; font-weight:700; color:#111827; margin-bottom:0.5rem;">No Submitted Projects</h3>
+                <p style="font-size:0.875rem; color:#6B7280; max-width:480px; margin:0 auto 1.5rem auto; line-height:1.5;">
+                    You haven't submitted any projects yet. Click below to open the official Google Form and submit your project to the chapter showcase.
+                </p>
+                <a href="@Model?.FormGoogleUrl" target="_blank" rel="noopener noreferrer" class="btn-primary-purple" style="display:inline-flex; align-items:center; gap:0.5rem; padding:0.65rem 1.35rem; text-decoration:none;">
+                    <span>Open Google Form</span>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
             </div>
         </div>
     </div>
@@ -793,39 +568,35 @@
         <div class="profile-section-card">
             <div class="profile-card-header">
                 <div>
-                    <h2 class="profile-card-title" style="font-size:1.35rem;">Leadership & Coordinator Experience</h2>
+                    <h2 class="profile-card-title" style="font-size:1.35rem;">Leadership & Coordinator Experience (@rolesCount Total)</h2>
                     <p class="profile-card-subtitle">Roles where you helped coordinate, lead, and organize student chapter activities.</p>
                 </div>
             </div>
 
             <div class="profile-items-list" style="margin-top:1.25rem;">
-                <div class="profile-event-row" style="padding:1.25rem;">
-                    <div class="profile-event-left">
-                        <img src="/images/events/ui-ux-workshop.jpg" alt="UI/UX Workshop" class="profile-item-thumb" style="width:60px; height:60px;" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name" style="font-size:1.05rem;">UI/UX Workshop 2025</div>
-                            <div style="font-weight:600; color:#4B5563; font-size:0.875rem;">Design & Outreach Coordinator</div>
-                            <div class="profile-item-meta">Date: 14 Dec 2025 &bull; In charge of visual branding, workshop materials and speaker coordination.</div>
+                @if (Model?.CoordinatorRoles != null && Model.CoordinatorRoles.Any())
+                {
+                    @foreach (var role in Model.CoordinatorRoles)
+                    {
+                        <div class="profile-event-row" style="padding:1.25rem;">
+                            <div class="profile-event-left">
+                                <img src="@(string.IsNullOrWhiteSpace(role.Image) ? "/images/events/ui-ux-workshop.jpg" : role.Image)" alt="@role.EventName" class="profile-item-thumb" style="width:60px; height:60px;" onerror="this.src='/images/events/ui-ux-workshop.jpg'" />
+                                <div class="profile-item-info">
+                                    <div class="profile-item-name" style="font-size:1.05rem;">@role.EventName</div>
+                                    <div style="font-weight:600; color:#4B5563; font-size:0.875rem;">@role.RoleTitle</div>
+                                    <div class="profile-item-meta">Date: @role.Date</div>
+                                </div>
+                            </div>
+                            <div class="profile-event-right">
+                                <span class="@(role.Status == "Current" ? "role-badge-current" : "role-badge-past")" style="font-size:0.8125rem; padding:0.3rem 0.8rem;">@role.Status</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="role-badge-current" style="font-size:0.8125rem; padding:0.3rem 0.8rem;">Current Role</span>
-                    </div>
-                </div>
-
-                <div class="profile-event-row" style="padding:1.25rem;">
-                    <div class="profile-event-left">
-                        <img src="/images/events/acm-hackathon.jpg" alt="ACM Hackathon 2025" class="profile-item-thumb" style="width:60px; height:60px;" />
-                        <div class="profile-item-info">
-                            <div class="profile-item-name" style="font-size:1.05rem;">ACM Hackathon 2025</div>
-                            <div style="font-weight:600; color:#4B5563; font-size:0.875rem;">Logistics Coordinator</div>
-                            <div class="profile-item-meta">Date: 10 Oct 2025 &bull; Managed participant registrations, venue setup, and judge hospitality.</div>
-                        </div>
-                    </div>
-                    <div class="profile-event-right">
-                        <span class="role-badge-past" style="font-size:0.8125rem; padding:0.3rem 0.8rem;">Past Role</span>
-                    </div>
-                </div>
+                    }
+                }
+                else
+                {
+                    <p style="font-size:0.875rem; color:#6B7280; padding:1rem 0;">No coordinator assignments on record.</p>
+                }
             </div>
         </div>
     </div>
@@ -837,21 +608,21 @@
         <div class="profile-section-card">
             <h2 class="profile-card-title" style="font-size:1.35rem; margin-bottom:1rem;">Recent Activity Timeline</h2>
             <div style="display:flex; flex-direction:column; gap:1.25rem; border-left:2px solid #EDE9FE; padding-left:1.5rem; margin-left:0.75rem;">
-                <div>
-                    <span style="font-size:0.75rem; color:#8B5CF6; font-weight:700;">14 DEC 2025</span>
-                    <div style="font-weight:700; color:#111827; margin-top:0.15rem;">Served as Coordinator at UI/UX Design Workshop</div>
-                    <p style="font-size:0.8125rem; color:#6B7280;">Helped run check-ins and mentored 45+ attendees on Figma prototypes.</p>
-                </div>
-                <div>
-                    <span style="font-size:0.75rem; color:#8B5CF6; font-weight:700;">15 SEP 2025</span>
-                    <div style="font-weight:700; color:#111827; margin-top:0.15rem;">Submitted Project "EcoTrack"</div>
-                    <p style="font-size:0.8125rem; color:#6B7280;">Entered project for review in chapter green software initiative.</p>
-                </div>
-                <div>
-                    <span style="font-size:0.75rem; color:#8B5CF6; font-weight:700;">5 SEP 2025</span>
-                    <div style="font-weight:700; color:#111827; margin-top:0.15rem;">Unlocked "Event Enthusiast" Badge</div>
-                    <p style="font-size:0.8125rem; color:#6B7280;">Attended 10+ chapter technical events & workshops.</p>
-                </div>
+                @if (Model?.AttendedEvents != null && Model.AttendedEvents.Any())
+                {
+                    @foreach (var evt in Model.AttendedEvents)
+                    {
+                        <div>
+                            <span style="font-size:0.75rem; color:#8B5CF6; font-weight:700;">@evt.Date.ToString("dd MMM yyyy").ToUpper()</span>
+                            <div style="font-weight:700; color:#111827; margin-top:0.15rem;">Attended "@evt.Name"</div>
+                            <p style="font-size:0.8125rem; color:#6B7280;">Checked in at @(evt.Venue ?? "AMTICS Campus")</p>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p style="font-size:0.875rem; color:#6B7280;">No recent activity recorded.</p>
+                }
             </div>
         </div>
     </div>
@@ -899,9 +670,9 @@
                 <div class="ticket-role-pill">MEMBER</div>
 
                 <!-- Member Name & Department -->
-                <div class="ticket-holder-name" id="ticketHolderName">Ayesha Khan</div>
-                <div class="ticket-holder-dept" id="ticketHolderDept">3rd Year &bull; Computer Science & Engineering</div>
-
+                <div class="ticket-holder-name" id="ticketHolderName">@p.Name</div>
+                <div class="ticket-holder-dept" id="ticketHolderDept">@p.AcademicYear &bull; @p.Department</div>
+                
                 <!-- High-res crisp QR code centered -->
                 <div class="ticket-qr-container">
                     <svg class="ticket-qr-code-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -961,7 +732,7 @@
                 </div>
 
                 <!-- Ticket Identifier code -->
-                <div class="ticket-code-id" id="ticketCodeDisplay">#AMTICS-2024-087</div>
+                <div class="ticket-code-id" id="ticketCodeDisplay">#AMTICS-@publicSlug.ToUpper()</div>
             </div>
 
             <!-- Perforated Divider Line with Cutout Notches -->
@@ -988,7 +759,7 @@
                         </svg>
                     </div>
                     <div class="ticket-metric-label">Member Since</div>
-                    <div class="ticket-metric-sub" id="ticketMemberSince">Aug 2024</div>
+                    <div class="ticket-metric-sub" id="ticketMemberSince">@p.MemberSince</div>
                 </div>
 
                 <!-- Col 3: Authorized Member -->
@@ -1053,34 +824,35 @@
         </div>
 
         <form id="editProfileForm" onsubmit="saveProfileChanges(event)">
+            @Html.AntiForgeryToken()
             <div class="edit-form-grid">
                 <div class="form-group-custom">
                     <label for="editNameInput">Full Name</label>
-                    <input type="text" id="editNameInput" class="form-input-custom" required />
+                    <input type="text" id="editNameInput" class="form-input-custom" value="@p.Name" required />
                 </div>
                 <div class="form-group-custom">
-                    <label for="editEmailInput">Email Address</label>
-                    <input type="email" id="editEmailInput" class="form-input-custom" required />
+                    <label for="editEmailInput">Email Address (Read-only)</label>
+                    <input type="email" id="editEmailInput" class="form-input-custom" value="@p.Email" disabled style="opacity: 0.7; cursor: not-allowed;" />
                 </div>
                 <div class="form-group-custom">
                     <label for="editDeptInput">Department</label>
-                    <input type="text" id="editDeptInput" class="form-input-custom" required />
+                    <input type="text" id="editDeptInput" class="form-input-custom" value="@p.Department" required />
                 </div>
                 <div class="form-group-custom">
                     <label for="editYearInput">Academic Year</label>
-                    <input type="text" id="editYearInput" class="form-input-custom" required />
+                    <input type="text" id="editYearInput" class="form-input-custom" value="@p.AcademicYear" required />
                 </div>
                 <div class="form-group-custom edit-form-full">
-                    <label for="editCollegeInput">College & Campus</label>
-                    <input type="text" id="editCollegeInput" class="form-input-custom" required />
+                    <label for="editCollegeInput">College & Campus (Read-only)</label>
+                    <input type="text" id="editCollegeInput" class="form-input-custom" value="@p.College" disabled style="opacity: 0.7; cursor: not-allowed;" />
                 </div>
                 <div class="form-group-custom edit-form-full">
                     <label for="editBioInput">About Me / Bio</label>
-                    <textarea id="editBioInput" class="form-input-custom" rows="3"></textarea>
+                    <textarea id="editBioInput" class="form-input-custom" rows="3">@p.Bio</textarea>
                 </div>
                 <div class="form-group-custom edit-form-full">
                     <label for="editQuoteInput">Inspirational Quote</label>
-                    <input type="text" id="editQuoteInput" class="form-input-custom" />
+                    <input type="text" id="editQuoteInput" class="form-input-custom" value="@p.Quote" />
                 </div>
             </div>
 
