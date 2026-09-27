@@ -58,8 +58,7 @@ public class HomeController : Controller
     public IActionResult Projects()
     {
         ViewBag.ActiveMenu = "Projects";
-        ViewBag.PageTitle = "Projects Placeholder";
-        return View("Placeholder");
+        return View();
     }
 
     [HttpGet]
@@ -67,8 +66,24 @@ public class HomeController : Controller
     public IActionResult Gallery()
     {
         ViewBag.ActiveMenu = "Gallery";
-        ViewBag.PageTitle = "Gallery Placeholder";
-        return View("Placeholder");
+        return View();
+    }
+
+    [HttpGet]
+    [Route("Heads")]
+    [Route("Team")]
+    public IActionResult Team()
+    {
+        ViewBag.ActiveMenu = "Heads";
+        return View();
+    }
+
+    [HttpGet]
+    [Route("Contributors")]
+    public IActionResult Contributors()
+    {
+        ViewBag.ActiveMenu = "Contributors";
+        return View();
     }
 
     public IActionResult Privacy()
@@ -82,4 +97,3 @@ public class HomeController : Controller
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
-

@@ -1,0 +1,31 @@
+@{ ViewData["Title"] = "Contributors"; }
+<link rel="stylesheet" href="~/css/showcase.css" asp-append-version="true" />
+<section class="showcase-page team-page">
+  <div class="showcase-hero team-hero">
+    <div>
+      <div class="crumb"><a href="/">⌂ Home</a><span>›</span> <a href="/Heads">Team</a><span>›</span> Contributors</div>
+      <h1>Our <em>Contributors</em></h1>
+      <h2>The people who make it happen</h2>
+      <p>Meet the students who bring ACM AMTICS events, projects and community initiatives to life through their time, creativity and technical skills.</p>
+      <div class="value-pills"><span>♧ Community</span><span>⌘ Creativity</span><span>✦ Shared Impact</span></div>
+    </div>
+    <div class="hero-art team-art"><span>✦</span><small>Every contribution<br/>moves us forward</small></div>
+  </div>
+  @{ var contributors = new[] {
+    new {Name="Mohammed Ali",Year="3rd Year · CSE",Desc="Contributed to events, content and community initiatives.",Img="photo-1506794778202-cad84cf45f1d",Area="Events & Community"},
+    new {Name="Riya Sharma",Year="3rd Year · CSE",Desc="Creates thoughtful designs and social media content for the chapter.",Img="photo-1534528741775-53994a69daeb",Area="Design & Media"},
+    new {Name="Devansh Jain",Year="2nd Year · CSE",Desc="Supports event delivery and helps build technical initiatives.",Img="photo-1500648767791-00dcc994a43e",Area="Technology"},
+    new {Name="Kriti Singh",Year="3rd Year · IT",Desc="Helps with content creation, communications and event management.",Img="photo-1531123897727-8f129e1688ce",Area="Content & Events"},
+    new {Name="Aarav Patel",Year="2nd Year · CSE",Desc="Volunteers at workshops and supports fellow members during sessions.",Img="photo-1506794778202-cad84cf45f1d",Area="Workshops"},
+    new {Name="Mira Desai",Year="2nd Year · AI&DS",Desc="Brings ideas to life through visual storytelling and photography.",Img="photo-1544005313-94ddf0286df2",Area="Photography"},
+    new {Name="Kabir Shah",Year="1st Year · CSE",Desc="Helps welcome new members and build an inclusive community.",Img="photo-1500648767791-00dcc994a43e",Area="Community"},
+    new {Name="Anaya Mehta",Year="2nd Year · IT",Desc="Contributes to event planning, outreach and student engagement.",Img="photo-1534528741775-53994a69daeb",Area="Outreach"}
+  }; }
+  <section class="team-section">
+    <div class="section-top"><div><h2>Meet Our <em>Contributors</em></h2><p>Students sharing their skills and energy across the ACM AMTICS community.</p></div><span class="year-chip">Academic Year 2025 - 2026</span></div>
+    <div class="people-grid four">
+      @foreach (var p in contributors) { <article class="person-card compact"><img src="https://images.unsplash.com/@(p.Img)?auto=format&fit=crop&w=600&q=80" alt="@p.Name"/><div><span class="role-chip">@p.Area</span><h3>@p.Name</h3><small>@p.Year</small><p>@p.Desc</p><div class="social-links">in　●　◎</div></div></article> }
+    </div>
+  </section>
+  <div class="contributor-cta"><h2>Want to contribute?</h2><p>Bring your ideas, skills and curiosity. There’s a place for you in the ACM AMTICS community.</p><a class="outline-button" href="/Account/Login">Get Involved　→</a></div>
+</section>
