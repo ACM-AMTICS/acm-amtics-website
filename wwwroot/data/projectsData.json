@@ -1,0 +1,22 @@
+{
+  "hero": {
+    "title": "Student Projects",
+    "description": "Explore innovative projects built by our members. From open source contributions to real-world solutions, these projects showcase the creativity and technical skills of the AMTICS community."
+  },
+  "categories": ["All Categories", "Web App", "AI/ML", "Mobile App", "Developer Tool", "Cybersecurity"],
+  "technologies": ["All Technologies", "React", "Python", "Flutter", "Next.js"],
+  "years": ["All Years", "2025", "2024", "2023"],
+  "items": [
+    {
+      "name": "ACM-Amtics-Website",
+      "category": "Web App",
+      "tag": "ACM",
+      "tech": "Dotnet · MongoDB",
+      "year": "2026",
+      "team": "ACM AMTICS",
+      "description": "A central platform to discover, register and manage all ACM AMTICS events and workshops.",
+      "image": "photo-1517248135467-4c7edcad34c4",
+      "githubUrl": "https://github.com/acm-amtics/acm-amtics-website"
+    }
+  ]
+}

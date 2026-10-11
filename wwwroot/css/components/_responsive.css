@@ -1,0 +1,1504 @@
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .hero-illustration {
+    order: -1;
+  }
+
+  .about-two-col-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .why-join-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .focus-cards-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cards-3col-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .bento-large-left {
+    grid-column: 1 / 3;
+    grid-row: auto;
+    height: 240px;
+  }
+
+  .footer-top-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+
+  .login-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .login-left-section {
+    align-items: center;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .login-title, .login-subtitle {
+    text-align: center;
+  }
+
+  .login-right-section {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .nav-menu-wrapper {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-medium);
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    display: none;
+    flex-direction: column;
+  }
+
+  .nav-menu-wrapper.open {
+    display: flex;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .mobile-only-auth {
+    display: block;
+    width: 100%;
+  }
+
+  .mobile-nav-toggle {
+    display: flex;
+  }
+
+  .header-actions {
+    display: none;
+  }
+
+  .hero-title {
+    font-size: 2.75rem;
+  }
+
+  .stats-elevated-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .stat-divider {
+    display: none;
+  }
+
+  .cards-3col-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .focus-cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  .about-features-2x2,
+  .benefits-grid-2x2 {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-bento-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-large-left {
+    grid-column: 1 / 2;
+  }
+
+  .cta-banner-container {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2.5rem 1.75rem;
+    gap: 1.75rem;
+  }
+
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footer-bottom-bar {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .login-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: 20px;
+  }
+
+  .login-title {
+    font-size: 30px;
+  }
+}
+
+
+/* ==========================================================================
+   Comprehensive UI Class Compatibility & Aliases for ACM AMTICS
+   Guarantees pixel-perfect rendering across all view compilation states
+   ========================================================================== */
+
+/* Hero Action Buttons */
+.btn-primary-solid {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.875rem 1.75rem !important;
+  background: var(--primary-gradient) !important;
+  color: #ffffff !important;
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.35) !important;
+  text-decoration: none !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.btn-primary-solid:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 28px rgba(99, 102, 241, 0.45) !important;
+  color: #ffffff !important;
+}
+
+.btn-secondary-solid {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.875rem 1.75rem !important;
+  background: #ffffff !important;
+  color: var(--text-medium) !important;
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  border: 1px solid var(--border-medium) !important;
+  border-radius: 9999px !important;
+  box-shadow: var(--shadow-sm) !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+.btn-secondary-solid:hover {
+  background: var(--border-light) !important;
+  color: var(--text-dark) !important;
+}
+
+.text-primary-solid {
+  background: var(--primary-gradient) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.badge-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+}
+
+.avatar-img-circle {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  border: 2.5px solid #ffffff !important;
+  object-fit: cover !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.avatar-initials {
+  margin-left: -10px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+.avatar-gradient-1 { background: #6366f1 !important; }
+.avatar-gradient-2 { background: #a855f7 !important; }
+.avatar-gradient-3 { background: #0ea5e9 !important; }
+
+/* Hero Graphic Orbits & Medallion */
+.hero-graphic-card {
+  position: relative !important;
+  width: 440px !important;
+  height: 440px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.graphic-circle-outer {
+  position: relative !important;
+  width: 320px !important;
+  height: 320px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.graphic-circle-outer::before {
+  content: "" !important;
+  position: absolute !important;
+  width: 320px !important;
+  height: 320px !important;
+  border-radius: 50% !important;
+  border: 1.5px dashed rgba(165, 180, 252, 0.45) !important;
+  animation: rotateSlow 40s linear infinite !important;
+}
+.graphic-circle-outer::after {
+  content: "" !important;
+  position: absolute !important;
+  width: 240px !important;
+  height: 240px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(199, 210, 254, 0.4) !important;
+}
+
+.graphic-circle-inner {
+  position: relative !important;
+  width: 170px !important;
+  height: 170px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, #6366f1 0%, #4338ca 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 0 60px rgba(99, 102, 241, 0.4), inset 0 2px 10px rgba(255, 255, 255, 0.3) !important;
+  padding: 12px !important;
+  z-index: 2 !important;
+}
+
+.graphic-logo {
+  width: 100px !important;
+  height: 100px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15)) !important;
+}
+
+.orbit-badge {
+  position: absolute !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(99, 102, 241, 0.12) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--primary) !important;
+  border: 1.5px solid rgba(224, 231, 255, 0.8) !important;
+  transition: transform 0.25s ease !important;
+  z-index: 5 !important;
+}
+.orbit-badge svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+.orbit-badge:hover {
+  transform: scale(1.15) !important;
+  color: var(--primary-hover) !important;
+}
+
+.badge-pos-top { top: -20px !important; left: 138px !important; }
+.badge-pos-right { top: 138px !important; right: -20px !important; }
+.badge-pos-bottom { bottom: 10px !important; right: 20px !important; }
+.badge-pos-left { bottom: 10px !important; left: 20px !important; }
+
+.handwritten-annotation {
+  position: absolute !important;
+  font-family: 'Caveat', cursive, sans-serif !important;
+  color: #64748b !important;
+  line-height: 1.15 !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+.annotation-top {
+  top: 15px !important;
+  left: -25px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+.annotation-bottom {
+  bottom: 20px !important;
+  right: -30px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+.handwritten-text {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+}
+.handwritten-arrow-curved {
+  width: 44px !important;
+  height: 28px !important;
+  color: #94a3b8 !important;
+}
+
+/* Stats Counter Card */
+.stats-card {
+  background: var(--bg-card) !important;
+  border-radius: var(--radius-xl) !important;
+  border: 1px solid var(--border-medium) !important;
+  box-shadow: var(--shadow-card) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-around !important;
+  padding: 1.75rem 2rem !important;
+}
+.stat-number {
+  font-size: 1.625rem !important;
+  font-weight: 800 !important;
+  color: var(--text-dark) !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* About Us & What We Do */
+.about-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1.15fr !important;
+  align-items: center !important;
+  gap: 4rem !important;
+}
+.section-tag {
+  display: inline-block !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: var(--primary) !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.5rem !important;
+}
+.section-title {
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  color: var(--text-dark) !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.2 !important;
+}
+.about-desc {
+  font-size: 1rem !important;
+  line-height: 1.7 !important;
+  color: var(--text-muted) !important;
+  margin-bottom: 1.25rem !important;
+}
+.link-arrow {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.75rem 1.5rem !important;
+  border: 1.5px solid var(--primary) !important;
+  color: var(--primary) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  border-radius: 9999px !important;
+  background: transparent !important;
+  text-decoration: none !important;
+  transition: all 0.25s ease !important;
+}
+.link-arrow:hover {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25) !important;
+}
+.link-arrow svg {
+  width: 16px !important;
+  height: 16px !important;
+  transition: transform 0.2s ease !important;
+}
+.link-arrow:hover svg {
+  transform: translateX(3px) !important;
+}
+
+.about-cards-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1.25rem !important;
+}
+.feature-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.feature-icon svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+.feature-title {
+  font-size: 1.0625rem !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  margin-bottom: 0.25rem !important;
+}
+.feature-desc {
+  font-size: 0.8125rem !important;
+  line-height: 1.45 !important;
+  color: var(--text-muted) !important;
+}
+
+.card-lavender { background-color: var(--pastel-purple-bg) !important; border-color: var(--pastel-purple-border) !important; }
+.card-sky      { background-color: var(--pastel-blue-bg) !important;   border-color: var(--pastel-blue-border) !important; }
+.card-indigo   { background-color: #f5f3ff !important;                 border-color: #ede9fe !important; }
+.card-emerald  { background-color: var(--pastel-green-bg) !important;  border-color: var(--pastel-green-border) !important; }
+
+/* Pillars / What We Do */
+.pillars-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.5rem !important;
+  margin-top: 2rem !important;
+}
+.pillar-card {
+  border-radius: var(--radius-xl) !important;
+  padding: 2rem 1.75rem !important;
+  border: 1px solid transparent !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.pillar-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+.pillar-purple { background-color: var(--pastel-purple-bg) !important; border-color: var(--pastel-purple-border) !important; }
+.pillar-blue   { background-color: var(--pastel-blue-bg) !important;   border-color: var(--pastel-blue-border) !important; }
+.pillar-indigo { background-color: #f5f3ff !important;                 border-color: #ede9fe !important; }
+.pillar-teal   { background-color: var(--pastel-green-bg) !important;  border-color: var(--pastel-green-border) !important; }
+
+.pillar-icon-box {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: var(--radius-md) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 1.25rem !important;
+}
+.pillar-icon-box svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+.pillar-title {
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  margin-bottom: 0.625rem !important;
+}
+.pillar-desc {
+  font-size: 0.875rem !important;
+  line-height: 1.55 !important;
+  color: var(--text-medium) !important;
+}
+
+/* Event & Project Grids & Cards */
+.events-grid,
+.projects-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.75rem !important;
+  margin-top: 2rem !important;
+}
+
+.event-card,
+.project-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-medium) !important;
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-sm) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: all 0.3s ease !important;
+}
+.event-card:hover,
+.project-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-hover) !important;
+  border-color: #cbd5e1 !important;
+}
+
+.event-img-wrap,
+.project-img-wrap {
+  position: relative !important;
+  width: 100% !important;
+  height: 190px !important;
+  overflow: hidden !important;
+  background-color: #0f172a !important;
+}
+.event-img,
+.project-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.4s ease !important;
+}
+.event-card:hover .event-img,
+.project-card:hover .project-img {
+  transform: scale(1.05) !important;
+}
+
+.event-category-badge,
+.project-badge {
+  position: absolute !important;
+  top: 1rem !important;
+  left: 1rem !important;
+  display: inline-block !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 9999px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+.badge-lavender { background: rgba(243, 232, 255, 0.95) !important; color: #7e22ce !important; }
+.badge-sky      { background: rgba(224, 242, 254, 0.95) !important; color: #0369a1 !important; }
+.badge-emerald  { background: rgba(220, 252, 231, 0.95) !important; color: #15803d !important; }
+.badge-indigo   { background: rgba(238, 242, 255, 0.95) !important; color: #4338ca !important; }
+
+.event-body,
+.project-body {
+  padding: 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+}
+
+.event-date {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  font-size: 0.8125rem !important;
+  color: var(--text-muted) !important;
+  margin-bottom: 0.625rem !important;
+}
+.event-date-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.event-card-title,
+.project-card-title {
+  font-size: 1.1875rem !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  line-height: 1.35 !important;
+  margin-bottom: 0.5rem !important;
+}
+.event-card-desc,
+.project-card-desc {
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  color: var(--text-muted) !important;
+  margin-bottom: 1.25rem !important;
+  flex: 1 !important;
+}
+
+.card-action-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: auto !important;
+  padding-top: 0.5rem !important;
+}
+.card-action-text {
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  color: var(--primary) !important;
+}
+.circle-arrow-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  border: 1px solid var(--border-medium) !important;
+  color: var(--text-medium) !important;
+  background: var(--bg-card) !important;
+  transition: all 0.2s ease !important;
+}
+.circle-arrow-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  transition: transform 0.2s ease !important;
+}
+.circle-arrow-btn:hover {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3) !important;
+}
+.circle-arrow-btn:hover svg {
+  transform: translateX(2px) !important;
+}
+
+/* Why Join ACM AMTICS */
+.why-join-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: center !important;
+  gap: 3.5rem !important;
+  margin-top: 2rem !important;
+}
+.team-photo-frame {
+  position: relative !important;
+  width: 100% !important;
+  height: 380px !important;
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-elevated) !important;
+}
+.photo-floating-badge {
+  position: absolute !important;
+  bottom: 1.5rem !important;
+  right: 1.5rem !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  padding: 0.875rem 1.25rem !important;
+  border-radius: var(--radius-lg) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  z-index: 5 !important;
+}
+.badge-icon-sparkle {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: var(--primary-gradient) !important;
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.badge-icon-sparkle svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+.floating-badge-title {
+  font-size: 0.9375rem !important;
+  font-weight: 800 !important;
+  color: var(--text-dark) !important;
+  line-height: 1.2 !important;
+}
+.floating-badge-sub {
+  font-size: 0.75rem !important;
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  margin-top: 0.15rem !important;
+}
+
+.benefits-list {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1.5rem !important;
+  margin-top: 1.5rem !important;
+}
+.benefit-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1rem !important;
+}
+
+/* Gallery Bento Grid */
+.gallery-grid {
+  display: grid !important;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr !important;
+  grid-template-rows: 170px 170px !important;
+  gap: 1rem !important;
+  margin-top: 2rem !important;
+}
+.bento-wide {
+  grid-column: 1 / 2 !important;
+  grid-row: 1 / 3 !important;
+}
+.bento-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.75) 0%, transparent 60%) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-end !important;
+  padding: 1rem !important;
+  opacity: 0 !important;
+  transition: opacity 0.25s ease !important;
+}
+.bento-item:hover .bento-overlay {
+  opacity: 1 !important;
+}
+.bento-badge {
+  display: inline-block !important;
+  font-size: 0.6875rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  color: #c7d2fe !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 0.25rem !important;
+}
+.bento-title {
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+}
+
+/* CTA Banner */
+.cta-content {
+  display: flex !important;
+  flex-direction: column !important;
+}
+.cta-tag {
+  display: inline-block !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  color: #ede9fe !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.5rem !important;
+}
+.cta-title {
+  font-size: 2.25rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.2 !important;
+  margin-bottom: 0.5rem !important;
+}
+.cta-subtitle {
+  font-size: 1rem !important;
+  color: #e0e7ff !important;
+  max-width: 580px !important;
+  line-height: 1.6 !important;
+}
+
+
+/* ==========================================================================
+   Full Structural Container Rules for Landing & Footer
+   ========================================================================== */
+.landing-page-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+.btn-primary-solid:hover .btn-icon,
+.btn-cta-white:hover .btn-icon,
+.link-arrow:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+.arrow-bottom {
+  transform: rotate(-5deg);
+}
+
+.stats-section {
+  position: relative;
+  z-index: 2;
+  padding: 0 2rem 2.5rem;
+  width: 100%;
+}
+.stats-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.about-section {
+  padding: 4.5rem 2rem;
+  width: 100%;
+}
+.about-left {
+  display: flex;
+  flex-direction: column;
+}
+.about-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.what-we-do-section {
+  padding: 4.5rem 2rem;
+  width: 100%;
+  background: rgba(248, 250, 252, 0.6);
+}
+.section-header-center {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 3rem;
+}
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+.events-section,
+.projects-section,
+.why-join-section,
+.gallery-section {
+  padding: 4.5rem 2rem;
+  width: 100%;
+}
+.section-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+}
+
+.why-join-left {
+  display: flex;
+  flex-direction: column;
+}
+.why-join-right {
+  display: flex;
+  flex-direction: column;
+}
+.why-join-desc {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.bento-standard {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-color: #0f172a;
+}
+.bento-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.bento-item:hover .bento-img {
+  transform: scale(1.06);
+}
+
+.cta-action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.footer-col-brand {
+  display: flex;
+  flex-direction: column;
+}
+.footer-brand-text {
+  display: flex;
+  flex-direction: column;
+}
+.footer-col-nav {
+  display: flex;
+  flex-direction: column;
+}
+.footer-col-heading {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.02em;
+}
+.footer-links-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.footer-links-list a {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+.footer-links-list a:hover {
+  color: #ffffff;
+  padding-left: 4px;
+}
+.footer-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+.footer-copyright {
+  color: #64748b;
+}
+.footer-tagline {
+  color: #818cf8;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+
+/* ==========================================================================
+   Refined Hero Graphic System: Big Prominent ACM AMTICS Medallion & Orbits
+   Matches exact reference mockup
+   ========================================================================== */
+.hero-illustration {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  padding: 1rem 0 !important;
+}
+
+.hero-visual-card,
+.hero-graphic-card {
+  position: relative !important;
+  width: 540px !important;
+  height: 540px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.hero-ambient-glow {
+  position: absolute !important;
+  width: 500px !important;
+  height: 500px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(224, 231, 255, 0.85) 0%, rgba(243, 232, 255, 0.45) 45%, transparent 70%) !important;
+  filter: blur(40px) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.graphic-orbits-wrapper,
+.graphic-circle-outer {
+  position: relative !important;
+  width: 440px !important;
+  height: 440px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 1 !important;
+}
+
+.orbit-circle-outer {
+  position: absolute !important;
+  width: 440px !important;
+  height: 440px !important;
+  border-radius: 50% !important;
+  border: 1.8px dashed #c7d2fe !important;
+  animation: rotateSlow 50s linear infinite !important;
+}
+
+.orbit-circle-middle {
+  position: absolute !important;
+  width: 330px !important;
+  height: 330px !important;
+  border-radius: 50% !important;
+  border: 1.2px solid rgba(199, 210, 254, 0.65) !important;
+}
+
+/* Big Vibrant Center Medallion */
+.orbit-center-medallion,
+.graphic-circle-inner {
+  position: relative !important;
+  width: 230px !important;
+  height: 230px !important;
+  border-radius: 50% !important;
+  background: #4f46e5 !important;
+  background: linear-gradient(145deg, #5b50eb 0%, #4338ca 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.42), 0 0 0 10px rgba(238, 242, 255, 0.6) !important;
+  z-index: 3 !important;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.orbit-center-medallion:hover,
+.graphic-circle-inner:hover {
+  transform: scale(1.05) !important;
+}
+
+.medallion-logo,
+.graphic-logo {
+  width: 175px !important;
+  height: 175px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.18)) !important;
+}
+
+/* 4 Orbiting Badges on 440px Ring */
+.floating-badge,
+.orbit-badge {
+  position: absolute !important;
+  width: 52px !important;
+  height: 52px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.16), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #4f46e5 !important;
+  border: 1.5px solid rgba(224, 231, 255, 0.9) !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  z-index: 5 !important;
+}
+
+.floating-badge:hover,
+.orbit-badge:hover {
+  transform: scale(1.18) !important;
+  box-shadow: 0 14px 30px rgba(99, 102, 241, 0.28) !important;
+  color: #4338ca !important;
+}
+
+.badge-code-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", monospace !important;
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: #4f46e5 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.floating-badge svg,
+.orbit-badge svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+.badge-top,
+.badge-pos-top {
+  top: -26px !important;
+  left: 194px !important;
+}
+
+.badge-right,
+.badge-pos-right {
+  top: 194px !important;
+  right: -26px !important;
+}
+
+.badge-bottom-right,
+.badge-pos-bottom {
+  bottom: 28px !important;
+  right: 48px !important;
+}
+
+.badge-bottom-left,
+.badge-pos-left {
+  bottom: 28px !important;
+  left: 48px !important;
+}
+
+/* Handwritten Notes (One line with dots & arrows) */
+.sketchy-note,
+.handwritten-annotation {
+  position: absolute !important;
+  font-family: 'Caveat', cursive, sans-serif !important;
+  color: #475569 !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+  white-space: nowrap !important;
+}
+
+.note-top-left,
+.annotation-top {
+  top: 20px !important;
+  left: -20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.note-top-left .note-text,
+.annotation-top .handwritten-text {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.note-bottom-right,
+.annotation-bottom {
+  bottom: -15px !important;
+  right: -10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+.note-bottom-right .note-text,
+.annotation-bottom .handwritten-text {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.note-arrow-curved,
+.handwritten-arrow-curved,
+.note-arrow-curved-rev {
+  width: 48px !important;
+  height: 28px !important;
+  color: #94a3b8 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Enhanced Header Branding */
+.acm-logo-img {
+  width: 52px !important;
+  height: 52px !important;
+  object-fit: contain !important;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+.brand-title {
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+  color: var(--text-dark) !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+}
+.brand-subtitle {
+  font-size: 0.8125rem !important;
+  font-weight: 600 !important;
+  color: var(--text-muted) !important;
+  letter-spacing: 0.03em !important;
+}
+
+
+/* ==========================================================================
+   Exact Visual Replication of Reference Graphic
+   - 4 Cardinal Dots (12, 3, 6, 9)
+   - 4 Diagonal Badges (10:30, 1:30, 4:30, 7:30)
+   - Iridescent Cyan-Blue Center Medallion with Big Bold ACM AMTICS Logo
+   - Stacked Handwritten Notes & Curved Doodle Arrows
+   - Soft Accents (Dot Grid, Circle)
+   ========================================================================== */
+
+.hero-illustration {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+}
+
+.hero-visual-card,
+.hero-graphic-card {
+  position: relative !important;
+  width: 540px !important;
+  height: 540px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.hero-ambient-glow {
+  position: absolute !important;
+  width: 500px !important;
+  height: 500px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(224, 231, 255, 0.85) 0%, rgba(243, 232, 255, 0.45) 45%, transparent 70%) !important;
+  filter: blur(40px) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+/* Background Accents */
+.decor-circle-soft {
+  position: absolute !important;
+  top: 10px !important;
+  right: 35px !important;
+  width: 68px !important;
+  height: 68px !important;
+  border-radius: 50% !important;
+  background: #c7d2fe !important;
+  opacity: 0.55 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.decor-dot-grid {
+  position: absolute !important;
+  bottom: 40px !important;
+  right: 20px !important;
+  width: 70px !important;
+  height: 50px !important;
+  background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px) !important;
+  background-size: 10px 10px !important;
+  opacity: 0.7 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Orbits Wrapper */
+.graphic-orbits-wrapper,
+.graphic-circle-outer {
+  position: relative !important;
+  width: 420px !important;
+  height: 420px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 2 !important;
+}
+
+.orbit-circle-outer {
+  position: absolute !important;
+  width: 420px !important;
+  height: 420px !important;
+  border-radius: 50% !important;
+  border: 1.8px dashed #c7d2fe !important;
+  animation: rotateSlow 60s linear infinite !important;
+}
+
+.orbit-circle-middle {
+  position: absolute !important;
+  width: 310px !important;
+  height: 310px !important;
+  border-radius: 50% !important;
+  border: 1.2px solid rgba(199, 210, 254, 0.6) !important;
+}
+
+/* 4 Cardinal Dots (12, 3, 6, 9) */
+.orbit-dot {
+  position: absolute !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background-color: #6366f1 !important;
+  z-index: 4 !important;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.6) !important;
+}
+
+.dot-top {
+  top: -5px !important;
+  left: 205px !important;
+}
+
+.dot-right {
+  top: 205px !important;
+  right: -5px !important;
+}
+
+.dot-bottom {
+  bottom: -5px !important;
+  left: 205px !important;
+}
+
+.dot-left {
+  top: 205px !important;
+  left: -5px !important;
+}
+
+/* Big Iridescent Center Medallion */
+.orbit-center-medallion,
+.graphic-circle-inner {
+  position: relative !important;
+  width: 220px !important;
+  height: 220px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 3 !important;
+  background: conic-gradient(from 180deg, #6366f1 0%, #38bdf8 30%, #a855f7 60%, #06b6d4 85%, #6366f1 100%) !important;
+  padding: 6px !important;
+  box-shadow: 0 16px 45px rgba(99, 102, 241, 0.38), 0 0 35px rgba(56, 189, 248, 0.45) !important;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.orbit-center-medallion:hover,
+.graphic-circle-inner:hover {
+  transform: scale(1.05) !important;
+}
+
+.medallion-inner-disc {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.medallion-logo,
+.graphic-logo {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+/* 4 Orbiting Diagonal Floating Badges */
+.floating-badge,
+.orbit-badge {
+  position: absolute !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.16), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #6366f1 !important;
+  border: 1.5px solid rgba(224, 231, 255, 0.95) !important;
+  z-index: 5 !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.floating-badge:hover,
+.orbit-badge:hover {
+  transform: scale(1.15) !important;
+  box-shadow: 0 14px 30px rgba(99, 102, 241, 0.28) !important;
+  color: #4338ca !important;
+}
+
+.badge-top-left {
+  top: 32px !important;
+  left: 32px !important;
+}
+
+.badge-top-right {
+  top: 32px !important;
+  right: 32px !important;
+}
+
+.badge-bottom-right {
+  bottom: 32px !important;
+  right: 32px !important;
+}
+
+.badge-bottom-left {
+  bottom: 32px !important;
+  left: 32px !important;
+}
+
+.badge-code-text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", monospace !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  color: #6366f1 !important;
+  letter-spacing: -0.05em !important;
+}
+
+.floating-badge svg,
+.orbit-badge svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Stacked Handwritten Notes */
+.sketchy-note {
+  position: absolute !important;
+  font-family: 'Caveat', cursive, sans-serif !important;
+  color: #64748b !important;
+  line-height: 1.1 !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.note-top-left {
+  top: 15px !important;
+  left: -10px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 8px !important;
+}
+
+.note-right-side {
+  top: 215px !important;
+  right: -85px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+}
+
+.note-stacked-lines {
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  letter-spacing: 0.01em !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.note-stacked-lines.text-right {
+  text-align: right !important;
+}
+
+.note-stacked-lines.text-left {
+  text-align: left !important;
+}
+
+.note-arrow-top-left {
+  width: 48px !important;
+  height: 38px !important;
+  color: #94a3b8 !important;
+  flex-shrink: 0 !important;
+}
+
+.note-arrow-right-side {
+  width: 48px !important;
+  height: 35px !important;
+  color: #94a3b8 !important;
+  flex-shrink: 0 !important;
+  margin-top: 4px !important;
+}
+
+

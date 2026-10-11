@@ -1,34 +1,29 @@
 {
   "hero": {
-    "badge": "Association for Computing Machinery",
+    "badge": "Association for Computing Machinery Student Chapter AMTICS",
     "titleLine1": "Build. Collaborate.",
     "titleLine2": "Inspire.",
     "subtitle": "ACM AMTICS Student Chapter",
     "description": "A community of learners, builders, and changemakers from the Department of Computer Science & Engineering, AMTICS. We organize events, workshops, projects and initiatives to explore, learn and grow together.",
     "exploreEventsText": "Explore Events",
     "learnMoreText": "Learn More",
-    "communityStatsText": "Join 500+ students growing with ACM AMTICS"
+    "communityStatsText": "Join 150+ students growing with ACM AMTICS"
   },
   "stats": [
     {
       "icon": "users",
-      "number": "500+",
+      "number": "150+",
       "label": "Active Members"
     },
     {
       "icon": "calendar",
-      "number": "30+",
+      "number": "3",
       "label": "Events Conducted"
     },
     {
       "icon": "folder",
-      "number": "60+",
+      "number": "3",
       "label": "Student Projects"
-    },
-    {
-      "icon": "trophy",
-      "number": "10+",
-      "label": "Awards & Recognitions"
     }
   ],
   "about": {
@@ -115,35 +110,6 @@
         "title": "ACM Hackathon 2025",
         "description": "A 24-hour hackathon to build innovative solutions for real-world problems.",
         "image": "/images/events/acm-hackathon.jpg"
-      }
-    ]
-  },
-  "projectsSection": {
-    "sectionTag": "PROJECTS",
-    "title": "Student Projects",
-    "subtitle": "Innovative projects built by our talented community members.",
-    "viewAllText": "View All Projects",
-    "projects": [
-      {
-        "id": "1",
-        "title": "Campus Connect",
-        "description": "A platform to connect students, share resources and collaborate on projects.",
-        "tags": ["Web App", "Open Source"],
-        "image": "/images/projects/campus-connect.jpg"
-      },
-      {
-        "id": "2",
-        "title": "Amal Tracker",
-        "description": "A productive habit tracking app for Ramzan with a clean and minimal UI.",
-        "tags": ["Flutter", "Mobile App"],
-        "image": "/images/projects/amal-tracker.jpg"
-      },
-      {
-        "id": "3",
-        "title": "Neograb",
-        "description": "A hyperlocal commerce platform connecting local shops and customers.",
-        "tags": ["Full Stack", "Production"],
-        "image": "/images/projects/neograb.jpg"
       }
     ]
   },

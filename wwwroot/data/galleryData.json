@@ -1,0 +1,101 @@
+{
+  "hero": {
+    "title": "Gallery",
+    "highlightTitle": "Gallery",
+    "subtitle": "Moments that inspire",
+    "description": "A glimpse into our events, workshops, hackathons and community initiatives. Relive the memories and see the vibrant journey of ACM AMTICS."
+  },
+  "categories": ["All", "Events", "Workshops", "Hackathons", "Talks & Seminars", "Competitions", "Community"],
+  "items": [
+    {
+      "title": "UI/UX Design Workshop",
+      "category": "Workshops",
+      "date": "2024-12-14",
+      "displayDate": "14 Dec 2024",
+      "count": "24",
+      "image": "photo-1516321318423-f06f85e504b3"
+    },
+    {
+      "title": "ACM Hackathon 2024",
+      "category": "Hackathons",
+      "date": "2024-10-10",
+      "displayDate": "10 Oct 2024",
+      "count": "36",
+      "image": "photo-1522071820081-009f0129c71c"
+    },
+    {
+      "title": "Introduction to AI/ML",
+      "category": "Talks",
+      "date": "2024-09-25",
+      "displayDate": "25 Sep 2024",
+      "count": "28",
+      "image": "photo-1475721027785-f74eccf877e2"
+    },
+    {
+      "title": "Tech for Social Good",
+      "category": "Talks",
+      "date": "2024-09-18",
+      "displayDate": "18 Sep 2024",
+      "count": "42",
+      "image": "photo-1511632765486-a01980e01a18"
+    },
+    {
+      "title": "Open Source and GSoC Session",
+      "category": "Talks",
+      "date": "2024-08-02",
+      "displayDate": "2 Aug 2024",
+      "count": "21",
+      "image": "photo-1519389950473-47ba0277781c"
+    },
+    {
+      "title": "Flutter Development Workshop",
+      "category": "Workshops",
+      "date": "2024-07-05",
+      "displayDate": "5 Jul 2024",
+      "count": "32",
+      "image": "photo-1516321318423-f06f85e504b3"
+    },
+    {
+      "title": "Career Guidance Session",
+      "category": "Talks",
+      "date": "2024-11-20",
+      "displayDate": "20 Nov 2024",
+      "count": "18",
+      "image": "photo-1523580494863-6f3031224c94"
+    },
+    {
+      "title": "Community Meet",
+      "category": "Community",
+      "date": "2024-04-12",
+      "displayDate": "12 Apr 2024",
+      "count": "30",
+      "image": "photo-1529156069898-49953e39b3ac"
+    },
+    {
+      "title": "Annual Tech Fest",
+      "category": "Events",
+      "date": "2024-03-28",
+      "displayDate": "28 Mar 2024",
+      "count": "50",
+      "image": "photo-1540575467063-178a50c2df87"
+    }
+  ],
+  "reels": [
+    {
+      "title": "Highlights from Web Development Workshop ✨",
+      "ariaLabel": "Highlights from Web Development Workshop",
+      "img": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=700&q=85",
+      "imgAlt": "Web development workshop highlights",
+      "duration": "0:45",
+      "url": "#"
+    },
+    {
+      "title": "ACM Cultural Night Highlights 💜",
+      "ariaLabel": "ACM Cultural Night highlights",
+      "img": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=700&q=85",
+      "imgAlt": "ACM cultural night",
+      "duration": "0:32",
+      "url": "#"
+    }
+  ]
+}

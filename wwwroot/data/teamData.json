@@ -1,0 +1,147 @@
+{
+  "hero": {
+    "title": "Our Team",
+    "subtitle": "The People Behind ACM AMTICS",
+    "description": "A passionate group of students, leaders, and contributors working together to build a vibrant tech community at AMTICS. Meet the people who make ideas happen.",
+    "pills": ["♧ Ideas to Solutions", "♧ People & Community", "⌘ Technology for Impact"]
+  },
+  "currentTeam": {
+    "title": "Current Team Members",
+    "subtitle": "Meet our current team driving ACM AMTICS forward.",
+    "academicYear": "Academic Year 2025 - 2026",
+    "members": [
+      {
+        "name": "Ayesha Khan",
+        "role": "Chairperson",
+        "year": "3rd Year · CSE",
+        "description": "Leading the vision and growth of ACM AMTICS.",
+        "image": "photo-1534528741775-53994a69daeb",
+        "linkedinUrl": "https://linkedin.com/in/ayeshakhan",
+        "githubUrl": "https://github.com/ayeshakhan",
+        "portfolioUrl": "https://ayeshakhan.dev"
+      },
+      {
+        "name": "Rohan Mehta",
+        "role": "Vice Chairperson",
+        "year": "3rd Year · CSE",
+        "description": "Supporting initiatives and strengthening the community.",
+        "image": "photo-1500648767791-00dcc994a43e",
+        "linkedinUrl": "https://linkedin.com/in/rohanmehta",
+        "githubUrl": "https://github.com/rohanmehta",
+        "portfolioUrl": "https://rohanmehta.dev"
+      },
+      {
+        "name": "Zara Sheikh",
+        "role": "Secretary",
+        "year": "3rd Year · IT",
+        "description": "Managing operations and ensuring smooth coordination.",
+        "image": "photo-1531123897727-8f129e1688ce",
+        "linkedinUrl": "https://linkedin.com/in/zarasheikh",
+        "githubUrl": "https://github.com/zarasheikh",
+        "portfolioUrl": "https://zarasheikh.dev"
+      },
+      {
+        "name": "Arman Siddiqui",
+        "role": "Joint Secretary",
+        "year": "2nd Year · CSE",
+        "description": "Assisting in planning and execution of events.",
+        "image": "photo-1506794778202-cad84cf45f1d",
+        "linkedinUrl": "https://linkedin.com/in/armansiddiqui",
+        "githubUrl": "https://github.com/armansiddiqui",
+        "portfolioUrl": "https://armansiddiqui.dev"
+      },
+      {
+        "name": "Sana Khan",
+        "role": "Treasurer",
+        "year": "3rd Year · AI&DS",
+        "description": "Handling finances and resource management.",
+        "image": "photo-1544005313-94ddf0286df2",
+        "linkedinUrl": "https://linkedin.com/in/sanakhan",
+        "githubUrl": "https://github.com/sanakhan",
+        "portfolioUrl": "https://sanakhan.dev"
+      }
+    ]
+  },
+  "contributors": {
+    "title": "Contributors",
+    "subtitle": "Our amazing contributors who actively support our events, projects and community initiatives.",
+    "viewAllText": "View All Contributors",
+    "viewAllLink": "/Contributors",
+    "members": [
+      {
+        "name": "Mohammed Ali",
+        "year": "3rd Year · CSE",
+        "description": "Contributed to events, content and community initiatives.",
+        "image": "photo-1506794778202-cad84cf45f1d",
+        "linkedinUrl": "https://linkedin.com/in/mohammedali",
+        "githubUrl": "https://github.com/mohammedali",
+        "portfolioUrl": "https://mohammedali.dev"
+      },
+      {
+        "name": "Riya Sharma",
+        "year": "3rd Year · CSE",
+        "description": "Design and social media contributions.",
+        "image": "photo-1534528741775-53994a69daeb",
+        "linkedinUrl": "https://linkedin.com/in/riyasharma",
+        "githubUrl": "https://github.com/riyasharma",
+        "portfolioUrl": "https://riyasharma.dev"
+      },
+      {
+        "name": "Devansh Jain",
+        "year": "2nd Year · CSE",
+        "description": "Supported events and technical initiatives.",
+        "image": "photo-1500648767791-00dcc994a43e",
+        "linkedinUrl": "https://linkedin.com/in/devanshjain",
+        "githubUrl": "https://github.com/devanshjain",
+        "portfolioUrl": "https://devanshjain.dev"
+      },
+      {
+        "name": "Kriti Singh",
+        "year": "3rd Year · IT",
+        "description": "Helped in content creation and event management.",
+        "image": "photo-1531123897727-8f129e1688ce",
+        "linkedinUrl": "https://linkedin.com/in/kritisingh",
+        "githubUrl": "https://github.com/kritisingh",
+        "portfolioUrl": "https://kritisingh.dev"
+      }
+    ]
+  },
+  "previousHeads": {
+    "title": "Previous Head Members",
+    "subtitle": "Our past leaders who laid the foundation and helped ACM AMTICS grow into what it is today.",
+    "viewPastLink": "#",
+    "viewPastText": "View Past Teams",
+    "members": [
+      {
+        "name": "Karan Sharma",
+        "role": "Chairperson (2024 - 2025)",
+        "year": "3rd Year · CSE",
+        "description": "Led key initiatives and expanded the ACM community.",
+        "image": "photo-1506794778202-cad84cf45f1d",
+        "linkedinUrl": "https://linkedin.com/in/karansharma",
+        "githubUrl": "https://github.com/karansharma",
+        "portfolioUrl": "https://karansharma.dev"
+      },
+      {
+        "name": "Fatima Ansari",
+        "role": "Vice Chairperson (2024 - 2025)",
+        "year": "3rd Year · IT",
+        "description": "Strengthened collaborations and drove impactful events.",
+        "image": "photo-1544005313-94ddf0286df2",
+        "linkedinUrl": "https://linkedin.com/in/fatimaansari",
+        "githubUrl": "https://github.com/fatimaansari",
+        "portfolioUrl": "https://fatimaansari.dev"
+      },
+      {
+        "name": "Adnan Shaikh",
+        "role": "Secretary (2024 - 2025)",
+        "year": "3rd Year · CSE",
+        "description": "Managed operations and community engagement.",
+        "image": "photo-1500648767791-00dcc994a43e",
+        "linkedinUrl": "https://linkedin.com/in/adnanshaikh",
+        "githubUrl": "https://github.com/adnanshaikh",
+        "portfolioUrl": "https://adnanshaikh.dev"
+      }
+    ]
+  }
+}

@@ -46,7 +46,26 @@
                     <li><a href="/Projects" class="nav-link-item @(ViewBag.ActiveMenu == "Projects" ? "active" : "")">Projects</a></li>
                     <li><a href="/Gallery" class="nav-link-item @(ViewBag.ActiveMenu == "Gallery" ? "active" : "")">Gallery</a></li>
                     <li><a href="/Heads" class="nav-link-item @(ViewBag.ActiveMenu == "Heads" ? "active" : "")">Heads</a></li>
-                    <li><a href="/Contributors" class="nav-link-item @(ViewBag.ActiveMenu == "Contributors" ? "active" : "")">Contributors</a></li>
+                    <li class="mobile-only-auth">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <a asp-controller="Dashboard" asp-action="Index" class="btn-primary-purple mobile-nav-login-btn">
+                                <span>Dashboard</span>
+                                <svg class="btn-arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn-primary-purple mobile-nav-login-btn">
+                                <span>Login</span>
+                                <svg class="btn-arrow-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </a>
+                        }
+                    </li>
                 </ul>
             </nav>
 

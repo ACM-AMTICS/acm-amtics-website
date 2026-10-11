@@ -12,13 +12,26 @@ document.addEventListener("DOMContentLoaded", function () {
             renderAbout(data.about);
             renderFocus(data.whatWeDo);
             renderEvents(data.eventsSection);
-            renderProjects(data.projectsSection);
             renderWhyJoin(data.whyJoinSection);
             renderGallery(data.gallerySection);
             renderCTA(data.ctaSection);
         })
         .catch(err => {
             console.error('Error hydrating landing page:', err);
+        });
+
+    fetch('/data/projectsData.json')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load projectsData.json');
+            }
+            return response.json();
+        })
+        .then(data => {
+            renderProjects(data);
+        })
+        .catch(err => {
+            console.error('Error hydrating projects:', err);
         });
 });
 
@@ -106,37 +119,52 @@ function renderEvents(eventsSection) {
     `).join('');
 }
 
-function renderProjects(projectsSection) {
-    if (!projectsSection) return;
-    setText('projects-tag', projectsSection.sectionTag);
-    setText('projects-title', projectsSection.title);
-    setText('projects-subtitle', projectsSection.subtitle);
+function renderProjects(projectsData) {
+    if (!projectsData) return;
+    if (projectsData.hero) {
+        setText('projects-title', projectsData.hero.title);
+        setText('projects-subtitle', projectsData.hero.description);
+    } else {
+        setText('projects-tag', projectsData.sectionTag);
+        setText('projects-title', projectsData.title);
+        setText('projects-subtitle', projectsData.subtitle);
+    }
 
     const container = document.getElementById('projects-grid-container');
-    if (!container || !projectsSection.projects) return;
+    const items = projectsData.items || projectsData.projects;
+    if (!container || !items) return;
 
-    container.innerHTML = projectsSection.projects.map(proj => `
+    container.innerHTML = items.map(proj => {
+        const title = proj.name || proj.title;
+        const tags = proj.tags || [proj.category, proj.tag].filter(Boolean);
+        const imgUrl = proj.image && (proj.image.startsWith('http') || proj.image.startsWith('/'))
+            ? proj.image
+            : (proj.image ? `https://images.unsplash.com/${proj.image}?auto=format&fit=crop&w=900&q=80` : '');
+
+        return `
         <div class="project-card">
             <div class="project-img-holder">
+                ${imgUrl ? `<img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(title)}" class="project-banner-img" />` : `
                 <div class="project-img-preview">
                     <div class="preview-header-dots"><span></span><span></span><span></span></div>
                     <div class="preview-layout-mock"></div>
-                </div>
+                </div>`}
             </div>
             <div class="project-card-body">
-                <h3 class="project-title">${escapeHtml(proj.title)}</h3>
+                <h3 class="project-title">${escapeHtml(title)}</h3>
                 <p class="project-desc">${escapeHtml(proj.description)}</p>
                 <div class="project-tags-row">
-                    ${(proj.tags || []).map(t => `<span class="project-tag-pill">${escapeHtml(t)}</span>`).join('')}
+                    ${tags.map(t => `<span class="project-tag-pill">${escapeHtml(t)}</span>`).join('')}
                 </div>
                 <div class="project-card-footer">
-                    <button class="btn-card-circle" aria-label="View Project">
+                    <a href="${escapeHtml(proj.githubUrl || proj.github || '/Projects')}" class="btn-card-circle" aria-label="View Project" target="_blank" rel="noopener noreferrer">
                         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function renderWhyJoin(whyJoin) {

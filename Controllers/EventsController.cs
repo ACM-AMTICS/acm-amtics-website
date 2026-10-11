@@ -29,19 +29,9 @@ namespace acm_amtics_website.Controllers
             [FromQuery] int page = 1,
             [FromQuery] string? view = null)
         {
-            // If explicit admin management requested or coordinator redirected without public flag
+            // If explicit admin management requested
             if (string.Equals(view, "admin", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(view, "manage", StringComparison.OrdinalIgnoreCase))
-            {
-                return RedirectToAction(nameof(Manage));
-            }
-
-            if (User.Identity?.IsAuthenticated == true &&
-                string.IsNullOrEmpty(search) &&
-                string.IsNullOrEmpty(type) &&
-                !year.HasValue &&
-                !Request.Query.ContainsKey("tab") &&
-                !Request.Query.ContainsKey("public"))
             {
                 return RedirectToAction(nameof(Manage));
             }

@@ -41,7 +41,7 @@
                     <div class="avatar-circle avatar-bg-purple"><span>RP</span></div>
                     <div class="avatar-circle avatar-bg-blue"><span>SM</span></div>
                 </div>
-                <span class="community-text">Join @Model.ActiveMembersCount+ students growing with ACM AMTICS</span>
+                <span class="community-text">@Model.CommunityStatsText</span>
             </div>
         </div>
 
@@ -131,59 +131,109 @@
 <!-- STATS COUNTER SECTION -->
 <section class="stats-counter-section">
     <div class="stats-elevated-card">
-        <div class="stat-col">
-            <div class="stat-icon-box icon-box-purple">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-            </div>
-            <div class="stat-details">
-                <span class="stat-value">@Model.ActiveMembersCount+</span>
-                <span class="stat-label">Active Members</span>
-            </div>
-        </div>
+        @if (Model.Stats != null && Model.Stats.Count > 0)
+        {
+            var colors = new[] { "icon-box-purple", "icon-box-indigo", "icon-box-blue", "icon-box-violet" };
+            for (int i = 0; i < Model.Stats.Count; i++)
+            {
+                var st = Model.Stats[i];
+                var colorClass = colors[i % colors.Length];
+                
+                if (i > 0)
+                {
+                    <div class="stat-divider"></div>
+                }
 
-        <div class="stat-divider"></div>
+                <div class="stat-col">
+                    <div class="stat-icon-box @colorClass">
+                        @if (st.Icon == "users")
+                        {
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        }
+                        else if (st.Icon == "calendar")
+                        {
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        }
+                        else if (st.Icon == "folder")
+                        {
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                            </svg>
+                        }
+                        else
+                        {
+                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                            </svg>
+                        }
+                    </div>
+                    <div class="stat-details">
+                        <span class="stat-value">@st.Number</span>
+                        <span class="stat-label">@st.Label</span>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="stat-col">
+                <div class="stat-icon-box icon-box-purple">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">@Model.ActiveMembersDisplay</span>
+                    <span class="stat-label">Active Members</span>
+                </div>
+            </div>
 
-        <div class="stat-col">
-            <div class="stat-icon-box icon-box-indigo">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-            </div>
-            <div class="stat-details">
-                <span class="stat-value">@Model.EventsCount+</span>
-                <span class="stat-label">Events Conducted</span>
-            </div>
-        </div>
+            <div class="stat-divider"></div>
 
-        <div class="stat-divider"></div>
+            <div class="stat-col">
+                <div class="stat-icon-box icon-box-indigo">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">@Model.EventsCountDisplay</span>
+                    <span class="stat-label">Events Conducted</span>
+                </div>
+            </div>
 
-        <div class="stat-col">
-            <div class="stat-icon-box icon-box-blue">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
-            </div>
-            <div class="stat-details">
-                <span class="stat-value">@Model.ProjectsCount+</span>
-                <span class="stat-label">Student Projects</span>
-            </div>
-        </div>
+            <div class="stat-divider"></div>
 
-        <div class="stat-divider"></div>
+            <div class="stat-col">
+                <div class="stat-icon-box icon-box-blue">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">@Model.ProjectsCountDisplay</span>
+                    <span class="stat-label">Student Projects</span>
+                </div>
+            </div>
 
-        <div class="stat-col">
-            <div class="stat-icon-box icon-box-violet">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
+            <div class="stat-divider"></div>
+
+            <div class="stat-col">
+                <div class="stat-icon-box icon-box-violet">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                </div>
+                <div class="stat-details">
+                    <span class="stat-value">@Model.AwardsCountDisplay</span>
+                    <span class="stat-label">Awards & Recognitions</span>
+                </div>
             </div>
-            <div class="stat-details">
-                <span class="stat-value">@Model.AwardsCount+</span>
-                <span class="stat-label">Awards & Recognitions</span>
-            </div>
-        </div>
+        }
     </div>
 </section>
 
@@ -419,7 +469,7 @@
                 <h2 class="section-heading-large">Student Projects</h2>
                 <p class="section-subheading">Innovative projects built by our talented community members.</p>
             </div>
-            <a href="#projects" class="text-link-arrow">
+            <a href="/Projects" class="text-link-arrow">
                 <span>View All Projects</span>
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -428,71 +478,52 @@
         </div>
 
         <div class="cards-3col-grid">
-            <!-- Project 1 -->
-            <article class="project-card-item">
-                <div class="project-preview-box">
-                    <img src="~/images/projects/campus-connect.jpg" alt="Campus Connect Platform" class="project-banner-img" loading="lazy" />
-                </div>
-                <div class="project-content-block">
-                    <h3 class="card-item-title">Campus Connect</h3>
-                    <p class="card-item-description">A platform to connect students, share resources and collaborate on projects.</p>
-                    <div class="project-footer-row">
-                        <div class="project-tag-badges">
-                            <span class="badge-tag tag-soft-purple">Web App</span>
-                            <span class="badge-tag tag-soft-green">Open Source</span>
-                        </div>
-                        <a href="#projects" class="btn-circle-action" aria-label="View Project">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </article>
+            @if (Model.FeaturedProjects != null && Model.FeaturedProjects.Any())
+            {
+                foreach (var proj in Model.FeaturedProjects.Take(3))
+                {
+                    var imgSrc = !string.IsNullOrEmpty(proj.Image) && (proj.Image.StartsWith("http") || proj.Image.StartsWith("/"))
+                        ? proj.Image
+                        : (!string.IsNullOrEmpty(proj.Image) ? $"https://images.unsplash.com/{proj.Image}?auto=format&fit=crop&w=900&q=80" : "/images/projects/campus-connect.jpg");
+                    var projectUrl = !string.IsNullOrWhiteSpace(proj.GithubUrl) ? proj.GithubUrl : "/Projects";
+                    var isExternal = !string.IsNullOrWhiteSpace(proj.GithubUrl);
 
-            <!-- Project 2 -->
-            <article class="project-card-item">
-                <div class="project-preview-box">
-                    <img src="~/images/projects/amal-tracker.jpg" alt="Amal Tracker App" class="project-banner-img" loading="lazy" />
-                </div>
-                <div class="project-content-block">
-                    <h3 class="card-item-title">Amal Tracker</h3>
-                    <p class="card-item-description">A productive habit-tracking app for Ramadan with a clean and minimal UI.</p>
-                    <div class="project-footer-row">
-                        <div class="project-tag-badges">
-                            <span class="badge-tag tag-soft-blue">Flutter</span>
-                            <span class="badge-tag tag-soft-purple">Mobile App</span>
+                    <article class="project-card-item">
+                        <div class="project-preview-box">
+                            <img src="@imgSrc" alt="@proj.Name" class="project-banner-img" loading="lazy" />
                         </div>
-                        <a href="#projects" class="btn-circle-action" aria-label="View Project">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Project 3 -->
-            <article class="project-card-item">
-                <div class="project-preview-box">
-                    <img src="~/images/projects/neograb.jpg" alt="Neograb Commerce Dashboard" class="project-banner-img" loading="lazy" />
-                </div>
-                <div class="project-content-block">
-                    <h3 class="card-item-title">Neograb</h3>
-                    <p class="card-item-description">A hyperlocal eCommerce platform connecting local shops and customers.</p>
-                    <div class="project-footer-row">
-                        <div class="project-tag-badges">
-                            <span class="badge-tag tag-soft-purple">Full Stack</span>
-                            <span class="badge-tag tag-soft-green">Production</span>
+                        <div class="project-content-block">
+                            <h3 class="card-item-title">@proj.Name</h3>
+                            <p class="card-item-description">@proj.Description</p>
+                            <div class="project-footer-row">
+                                <div class="project-tag-badges">
+                                    @if (!string.IsNullOrWhiteSpace(proj.Category))
+                                    {
+                                        var catClass = proj.Category.Equals("Mobile App", StringComparison.OrdinalIgnoreCase) ? "tag-soft-blue" : "tag-soft-purple";
+                                        <span class="badge-tag @catClass">@proj.Category</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(proj.Tag))
+                                    {
+                                        var tagClass = proj.Tag.Equals("Open Source", StringComparison.OrdinalIgnoreCase) || proj.Tag.Equals("Production", StringComparison.OrdinalIgnoreCase)
+                                            ? "tag-soft-green"
+                                            : (proj.Tag.Equals("Mobile App", StringComparison.OrdinalIgnoreCase) ? "tag-soft-purple" : "tag-soft-blue");
+                                        <span class="badge-tag @tagClass">@proj.Tag</span>
+                                    }
+                                </div>
+                                <a href="@projectUrl"
+                                   class="btn-circle-action"
+                                   aria-label="View @proj.Name"
+                                   target="@(isExternal ? "_blank" : "_self")"
+                                   rel="@(isExternal ? "noopener noreferrer" : "")">
+                                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                    </svg>
+                                </a>
+                            </div>
                         </div>
-                        <a href="#projects" class="btn-circle-action" aria-label="View Project">
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </article>
+                    </article>
+                }
+            }
         </div>
     </div>
 </section>
