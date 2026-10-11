@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -99,10 +100,20 @@ namespace acm_amtics_website.Models
 
     public class EditProfileDto
     {
+        [Required(ErrorMessage = "Name is required.")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Name must be between 2 and 100 characters.")]
         public string Name { get; set; } = string.Empty;
+
+        [StringLength(100, ErrorMessage = "Department cannot exceed 100 characters.")]
         public string Department { get; set; } = string.Empty;
+
+        [StringLength(50, ErrorMessage = "Academic Year cannot exceed 50 characters.")]
         public string AcademicYear { get; set; } = string.Empty;
+
+        [StringLength(500, ErrorMessage = "Bio cannot exceed 500 characters.")]
         public string Bio { get; set; } = string.Empty;
+
+        [StringLength(200, ErrorMessage = "Quote cannot exceed 200 characters.")]
         public string Quote { get; set; } = string.Empty;
     }
 }

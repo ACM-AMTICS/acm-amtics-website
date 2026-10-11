@@ -28,18 +28,23 @@ namespace acm_amtics_website.Services
 
                 _fallbackUsers.Clear();
 
-                // 1. Seed requested Admin account: 24amtics131@gmail.com / 87654321
+                // Seed configurable Admin account from environment variables, or dev fallback
+                var adminEmail = (Environment.GetEnvironmentVariable("ADMIN_EMAIL") ?? "24amtics131@gmail.com").Trim().ToLowerInvariant();
+                var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD") ?? "87654321";
+                var adminName = Environment.GetEnvironmentVariable("ADMIN_FULLNAME") ?? "Admin";
+
                 _fallbackUsers.Add(new User
                 {
                     Id = "admin_auth_01",
-                    Email = "24amtics131@gmail.com",
-                    FullName = "Admin",
+                    Email = adminEmail,
+                    FullName = adminName,
                     Role = "Admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("87654321"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(adminPassword),
                     CreatedAt = DateTime.UtcNow
                 });
 
-                // 2. Seed requested Coordinator Member account: hetvi022gamil.com / hetvi
+                // Coordinator Member account for local/demo environment
+                var coordPassword = Environment.GetEnvironmentVariable("COORDINATOR_PASSWORD") ?? "hetvi";
                 _fallbackUsers.Add(new User
                 {
                     Id = "coord_hetvi_02",
@@ -47,7 +52,7 @@ namespace acm_amtics_website.Services
                     FullName = "Hetvi Dholiya",
                     Role = "Coordinator",
                     AssignedEventName = "Web Development Workshop",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("hetvi"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(coordPassword),
                     CreatedAt = DateTime.UtcNow
                 });
 
@@ -58,11 +63,11 @@ namespace acm_amtics_website.Services
                     FullName = "Hetvi Dholiya",
                     Role = "Coordinator",
                     AssignedEventName = "Web Development Workshop",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("hetvi"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(coordPassword),
                     CreatedAt = DateTime.UtcNow
                 });
 
-                // 3. Coordinator account matching design screenshots (Yahiya)
+                // Coordinator account (Yahiya)
                 _fallbackUsers.Add(new User
                 {
                     Id = "coord_yahiya_01",
@@ -70,7 +75,7 @@ namespace acm_amtics_website.Services
                     FullName = "Yahiya",
                     Role = "Coordinator",
                     AssignedEventName = "Web Development Workshop",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("hetvi"),
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(coordPassword),
                     CreatedAt = DateTime.UtcNow
                 });
 
@@ -118,10 +123,14 @@ namespace acm_amtics_website.Services
                     }
                     else
                     {
-                        // Ensure password, role and event are updated to latest
+                        // Preserve existing password hash - do NOT overwrite user credentials on restart
+                        if (!string.IsNullOrEmpty(existing.PasswordHash))
+                        {
+                            fallbackUser.PasswordHash = existing.PasswordHash;
+                        }
+
                         var update = Builders<User>.Update
                             .Set(u => u.Role, fallbackUser.Role)
-                            .Set(u => u.PasswordHash, fallbackUser.PasswordHash)
                             .Set(u => u.FullName, fallbackUser.FullName)
                             .Set(u => u.AssignedEventName, fallbackUser.AssignedEventName);
                         await _context.AdminsCollection.UpdateOneAsync(filter, update);

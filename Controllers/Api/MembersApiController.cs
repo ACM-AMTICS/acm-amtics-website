@@ -1,9 +1,11 @@
 using acm_amtics_website.Models;
 using acm_amtics_website.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acm_amtics_website.Controllers.Api
 {
+    [Authorize]
     [ApiController]
     [Route("api/members")]
     public class MembersApiController : ControllerBase

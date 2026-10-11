@@ -1,10 +1,11 @@
 using acm_amtics_website.Models;
 using acm_amtics_website.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Load .env configuration if present
+// Load .env configuration if present (primarily for local development)
 var currentDir = Directory.GetCurrentDirectory();
 var envFiles = new[]
 {
@@ -42,6 +43,21 @@ foreach (var envPath in envFiles)
     }
 }
 
+// Allow container/system environment variables to override or provide MongoDB settings
+var directMongoUri = Environment.GetEnvironmentVariable("MONGODB_URI") ?? 
+                     Environment.GetEnvironmentVariable("MONGODB_CONNECTIONSTRING");
+if (!string.IsNullOrWhiteSpace(directMongoUri))
+{
+    builder.Configuration["MongoDB:ConnectionString"] = directMongoUri;
+}
+
+var directDbName = Environment.GetEnvironmentVariable("MONGODB_DB_NAME") ?? 
+                   Environment.GetEnvironmentVariable("MONGODB_DATABASE");
+if (!string.IsNullOrWhiteSpace(directDbName))
+{
+    builder.Configuration["MongoDB:DatabaseName"] = directDbName;
+}
+
 // Configure MongoDB options
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDB"));
 
@@ -54,6 +70,16 @@ builder.Services.AddSingleton<IAttendanceService, AttendanceService>();
 builder.Services.AddSingleton<IDashboardService, DashboardService>();
 builder.Services.AddSingleton<IProfileService, ProfileService>();
 
+// Configure Antiforgery with header support for AJAX calls
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+    options.Cookie.Name = "ACM_AMTICS_XSRF";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
+
 // Configure Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -62,16 +88,48 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Account/Logout";
         options.Cookie.HttpOnly = true;
         options.Cookie.Name = "ACM_AMTICS_AUTH";
-        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
         options.SlidingExpiration = true;
+
+        // Return 401/403 for API requests instead of redirecting to login HTML
+        options.Events.OnRedirectToLogin = context =>
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            }
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        };
+
+        options.Events.OnRedirectToAccessDenied = context =>
+        {
+            if (context.Request.Path.StartsWithSegments("/api"))
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                return Task.CompletedTask;
+            }
+            context.Response.Redirect(context.RedirectUri);
+            return Task.CompletedTask;
+        };
     });
 
-// Add services to the container.
+// Health Checks
+builder.Services.AddHealthChecks();
+
+// Add MVC services
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+// Forwarded headers for reverse proxies (Nginx, Traefik, Docker, Cloud Run, Azure)
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -80,12 +138,25 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Security Headers Middleware
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
+    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+    context.Response.Headers.Append("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    await next();
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Health check endpoint for container orchestrators and load balancers
+app.MapHealthChecks("/health");
 
 app.MapControllerRoute(
     name: "default",

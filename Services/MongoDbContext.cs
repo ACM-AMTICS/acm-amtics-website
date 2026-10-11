@@ -17,27 +17,28 @@ namespace acm_amtics_website.Services
         {
             _logger = logger;
 
-            var rawConnectionString = Environment.GetEnvironmentVariable("MONGODB_URI")
+            var rawConnectionString = (Environment.GetEnvironmentVariable("MONGODB_URI")
                                        ?? configuration["MongoDB:ConnectionString"]
                                        ?? settings.Value.ConnectionString
-                                       ?? "mongodb://localhost:27017";
+                                       ?? string.Empty).Trim().Trim('"', '\'');
 
-            _databaseName = Environment.GetEnvironmentVariable("MONGODB_DB_NAME")
+            _databaseName = (Environment.GetEnvironmentVariable("MONGODB_DB_NAME")
                             ?? configuration["MongoDB:DatabaseName"]
                             ?? settings.Value.DatabaseName
-                            ?? "acm_amtics_admin_db";
+                            ?? "acm_amtics_admin_db").Trim().Trim('"', '\'');
 
-            // Candidate URLs if username prefix was omitted or needs resolution
-            var candidateUrls = BuildCandidateUrls(rawConnectionString);
+            if (string.IsNullOrWhiteSpace(_databaseName))
+            {
+                _databaseName = "acm_amtics_admin_db";
+            }
 
             MongoClient? successfulClient = null;
-            string activeConnectionString = candidateUrls.FirstOrDefault() ?? rawConnectionString;
 
-            foreach (var testUrl in candidateUrls)
+            if (!string.IsNullOrWhiteSpace(rawConnectionString))
             {
                 try
                 {
-                    var mongoUrl = new MongoUrl(testUrl);
+                    var mongoUrl = new MongoUrl(rawConnectionString);
                     var clientSettings = MongoClientSettings.FromUrl(mongoUrl);
                     clientSettings.ServerSelectionTimeout = TimeSpan.FromSeconds(3);
                     clientSettings.ConnectTimeout = TimeSpan.FromSeconds(3);
@@ -47,28 +48,30 @@ namespace acm_amtics_website.Services
 
                     // Test connectivity with ping command
                     var pingTask = db.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
-                    if (pingTask.Wait(2500))
+                    if (pingTask.Wait(3000))
                     {
                         _isConnected = true;
                         successfulClient = client;
                         _database = db;
-                        activeConnectionString = testUrl;
-                        _logger.LogInformation("Successfully connected to MongoDB Atlas at {DatabaseName}", _databaseName);
-                        break;
+                        _logger.LogInformation("Successfully connected to MongoDB database '{DatabaseName}'", _databaseName);
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogWarning("MongoDB connection attempt failed for candidate: {Message}", ex.Message);
+                    _logger.LogWarning("MongoDB connection attempt failed: {Message}", ex.Message);
                 }
+            }
+            else
+            {
+                _logger.LogInformation("No MongoDB connection string configured. Running in resilient in-memory fallback mode.");
             }
 
             if (!_isConnected || successfulClient == null)
             {
-                _logger.LogWarning("MongoDB Atlas could not be reached (check IP whitelist or credentials). Running in resilient in-memory fallback mode.");
+                _logger.LogWarning("MongoDB could not be reached. Running in resilient in-memory fallback mode.");
             }
 
-            _connectionString = activeConnectionString;
+            _connectionString = SanitizeConnectionString(rawConnectionString);
 
             var membersCol = settings.Value.MembersCollectionName ?? "Members";
             var eventsCol = settings.Value.EventsCollectionName ?? "Events";
@@ -85,41 +88,22 @@ namespace acm_amtics_website.Services
             }
         }
 
-        private static List<string> BuildCandidateUrls(string raw)
+        private static string SanitizeConnectionString(string raw)
         {
-            var list = new List<string>();
-            if (string.IsNullOrWhiteSpace(raw)) return list;
-
-            var trimmed = raw.Trim();
-
-            // If raw is already a complete URL
-            if (trimmed.StartsWith("mongodb://") || trimmed.StartsWith("mongodb+srv://"))
+            if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+            try
             {
-                list.Add(trimmed);
-
-                // If it contains the Atlas cluster and admin credentials
-                if (trimmed.Contains("cluster0.52az6h2.mongodb.net"))
-                {
-                    var candidates = new[] { "hetvi022", "hetvidholiya77", "hetvi", "admin", "acmamtics", "acm", "root" };
-                    foreach (var u in candidates)
-                    {
-                        var url = $"mongodb+srv://{u}:VijX5GRHT6dptkz2@cluster0.52az6h2.mongodb.net/?retryWrites=true&w=majority";
-                        if (!list.Contains(url)) list.Add(url);
-                    }
-                }
+                var url = new MongoUrl(raw);
+                if (string.IsNullOrEmpty(url.Username)) return raw;
+                // Mask password if present
+                var serverPart = string.Join(",", url.Servers.Select(s => $"{s.Host}:{s.Port}"));
+                var isSrv = raw.StartsWith("mongodb+srv://", StringComparison.OrdinalIgnoreCase);
+                return $"mongodb{(isSrv ? "+srv" : "")}://{url.Username}:******@{serverPart}/{url.DatabaseName}";
             }
-            else
+            catch
             {
-                // Handles input like ":VijX5GRHT6dptkz2@cluster0.52az6h2.mongodb.net/"
-                var clean = trimmed.TrimStart(':');
-                var candidates = new[] { "admin", "hetvi022", "hetvidholiya77", "hetvi", "acmamtics", "acm", "root" };
-                foreach (var u in candidates)
-                {
-                    list.Add($"mongodb+srv://{u}:{clean.TrimEnd('/')}/?retryWrites=true&w=majority");
-                }
+                return "mongodb://[configured]";
             }
-
-            return list;
         }
 
         public IMongoCollection<Member>? MembersCollection { get; }

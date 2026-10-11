@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace acm_amtics_website.Controllers.Api
 {
+    [Authorize]
     [ApiController]
     [Route("api/events")]
     public class EventsApiController : ControllerBase

@@ -44,7 +44,6 @@ namespace acm_amtics_website.Controllers
             ViewBag.ActiveMenu = "Profile";
             ViewBag.IsMongoConnected = _mongoDbContext.IsConnected;
             ViewBag.MongoDatabase = _mongoDbContext.DatabaseName;
-            ViewBag.MongoConnection = _mongoDbContext.ConnectionString;
 
             return View(vm);
         }
